@@ -1,0 +1,367 @@
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 50px;
+    animation: fadeInDown 1s ease;
+}
+
+.section-title h2 {
+    font-size: 36px;
+    margin-bottom: 15px;
+    position: relative;
+    display: inline-block;
+}
+
+.section-title h2:after {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 3px;
+    background-color: var(--primary-color);
+    margin: 15px auto 0;
+    animation: expandWidth 1.5s ease;
+}
+
+@keyframes expandWidth {
+    from { width: 0; }
+    to { width: 50px; }
+}
+
+.section-title p {
+    color: var(--text-light);
+    font-size: 18px;
+    animation: fadeInUp 1s ease 0.3s both;
+}
+
+.btn-primary {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px 30px;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn-primary:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: 0.5s;
+    z-index: -1;
+}
+
+.btn-primary:hover:before {
+    left: 100%;
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 102, 255, 0.3);
+}
+
+/* Variables */
+:root {
+    --primary-color: #4a6de5;
+    --secondary-color: #3a56b8;
+    --text-color: #333;
+    --transition-speed: 0.3s;
+    --border-radius: 25px;
+    --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+header {
+    background-color: #011730;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    animation: slideInDown 0.6s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all var(--transition-speed) ease;
+}
+
+header:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+@keyframes slideInDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Logo */
+.logo {
+    position: relative;
+    z-index: 5;
+}
+
+.logo img {
+    height: 50px;
+    transition: transform 0.5s ease;
+}
+
+.logo:hover img {
+    transform: scale(1.05);
+}
+
+/* Menú principal */
+.menu {
+    color: white;
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
+.menu li {
+    color: white;
+    margin-left: 35px;
+    opacity: 0;
+    animation: fadeInRight 0.5s ease forwards;
+    position: relative;
+}
+
+.menu li:nth-child(1) { animation-delay: 0.1s; }
+.menu li:nth-child(2) { animation-delay: 0.2s; }
+.menu li:nth-child(3) { animation-delay: 0.3s; }
+.menu li:nth-child(4) { animation-delay: 0.4s; }
+.menu li:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+/* Cambiar color del fondo y texto cuando el header tiene la clase 'scrolled' */
+header.scrolled {
+    background-color: white; /* Cambiar el fondo a blanco */
+}
+
+header.scrolled .menu a {
+    color: #011730; /* Cambiar el color del texto a un color oscuro cuando se hace scroll */
+}
+
+header.scrolled .menu a:hover {
+    color: var(--primary-color); /* Mantener el efecto hover */
+}
+
+header.scrolled .btn-contacto {
+    background-color: var(--primary-color); /* Cambiar el color del botón */
+}
+
+header.scrolled .btn-contacto:hover {
+    background-color: var(--secondary-color); /* Mantener el color de hover */
+}
+
+.menu a {
+    font-weight: 500;
+    color: white;
+    text-decoration: none;
+    transition: color var(--transition-speed) ease;
+    position: relative;
+    padding: 8px 0;
+    font-size: 16px;
+    display: block;
+}
+
+/* Efecto subrayado para enlaces normales */
+.menu a:not(.btn-contacto)::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: width var(--transition-speed) ease;
+    border-radius: 1px;
+}
+
+.menu a:not(.btn-contacto):hover::after,
+.menu a.active:not(.btn-contacto)::after {
+    width: 100%;
+}
+
+.menu a:hover {
+    color: var(--primary-color);
+}
+
+/* Indicador de página activa */
+.menu a.active {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Botón de contacto */
+.btn-contacto {
+    background-color: var(--primary-color);
+    color: white !important;
+    padding: 10px 24px;
+    border-radius: var(--border-radius);
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: all var(--transition-speed) ease;
+}
+
+.btn-contacto::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: 0.6s;
+}
+
+.btn-contacto:hover::before {
+    left: 100%;
+}
+
+.btn-contacto:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(74, 109, 229, 0.3);
+}
+
+.btn-contacto:active {
+    transform: translateY(0);
+}
+
+/* Menú móvil */
+.menu-toggle {
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 5px;
+    z-index: 5;
+    transition: transform var(--transition-speed) ease;
+}
+
+.menu-toggle:hover {
+    color: var(--primary-color);
+}
+
+.menu-toggle.active {
+    transform: rotate(90deg);
+}
+
+/* Media Queries para responsividad */
+@media (max-width: 991px) {
+    .menu-toggle {
+        display: block;
+    }
+    
+    .menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 280px;
+        height: 100vh;
+        background-color: white;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 80px 30px;
+        transition: right var(--transition-speed) ease;
+        box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .menu.active {
+        right: 0;
+    }
+    
+    .menu li {
+        margin: 15px 0;
+        width: 100%;
+        opacity: 1;
+        animation: none;
+    }
+    
+    .menu a {
+        font-size: 18px;
+    }
+    
+    .btn-contacto {
+        margin-top: 15px;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Efecto de superposición cuando se abre el menú */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity var(--transition-speed) ease, visibility var(--transition-speed) ease;
+    z-index: 4;
+}
+
+.overlay.active {
+    visibility: visible;
+    opacity: 1;
+}
