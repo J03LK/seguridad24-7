@@ -48,6 +48,7 @@ img {
 }
 
 .section-title {
+    color: white;
     text-align: center;
     margin-bottom: 50px;
     animation: fadeInDown 1s ease;
@@ -436,6 +437,7 @@ header.scrolled .btn-contacto:hover {
 
 /* Contenido en la parte superior del video */
 .hero-content {
+    color: white;
     position: relative;
     z-index: 2;
     max-width: 800px;
@@ -735,6 +737,7 @@ header.scrolled .btn-contacto:hover {
 }
 
 .contacto-info {
+    color:white;
     opacity: 0;
     transform: translateX(-30px);
     animation: fadeInLeft 0.8s ease 0.3s forwards;
@@ -926,6 +929,7 @@ footer:before {
 .footer-links,
 .footer-servicios,
 .footer-newsletter {
+    color: white;
     opacity: 0;
     transform: translateY(20px);
 }
@@ -937,6 +941,7 @@ footer:before {
 .footer-links h4,
 .footer-servicios h4,
 .footer-newsletter h4 {
+    color:white;
     margin-bottom: 20px;
     font-size: 18px;
     position: relative;
@@ -1048,9 +1053,10 @@ footer:before {
 }
 
 .copyright {
+    color:white;
     text-align: center;
     padding: 20px 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--secondary-color);
     opacity: 0;
     animation: fadeIn 1s ease 1s forwards;
 }

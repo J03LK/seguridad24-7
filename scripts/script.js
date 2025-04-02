@@ -9,6 +9,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const contactForm = document.getElementById('formulario-contacto');
     const newsletterForm = document.getElementById('newsletter-form');
     
+    // Aplicar clase scrolled al header en dispositivos móviles por defecto
+    if (window.innerWidth <= 991) {
+        header.classList.add('scrolled');
+    }
+    
     // Función para manejar el menú móvil
     function toggleMenu(isOpen) {
         menu.classList.toggle('active', isOpen);
@@ -73,11 +78,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const scrollPosition = window.scrollY;
             
             // Agregar o quitar la clase 'scrolled' en el header
-            const header = document.querySelector('header');
             if (scrollPosition > 0) {
                 header.classList.add('scrolled');
             } else {
-                header.classList.remove('scrolled');
+                // Solo quitar scrolled en móvil si se ha regresado al inicio
+                if (window.innerWidth > 991) {
+                    header.classList.remove('scrolled');
+                }
             }
     
             // Actualizar los enlaces activos según la posición del scroll
@@ -101,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Header con efecto de scroll
     function handleHeaderScroll() {
-        if (window.scrollY > 50) {
+        if (window.scrollY > 50 || window.innerWidth <= 991) {
             header.classList.add('scrolled');
         } else {
             header.classList.remove('scrolled');
@@ -109,6 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     window.addEventListener('scroll', handleHeaderScroll);
+    window.addEventListener('resize', handleHeaderScroll);
     
     // Inicializar el estado del header
     handleHeaderScroll();
@@ -299,11 +307,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Añadir estilos dinámicos para las notificaciones
+// Añadir estilos dinámicos para las notificaciones y corregir el menú móvil
 (function() {
     const style = document.createElement('style');
     style.textContent = `
-        .notification {
+        .notification {}
             position: fixed;
             bottom: 20px;
             right: 20px;
@@ -377,6 +385,36 @@ document.addEventListener('DOMContentLoaded', function() {
             padding: 5px 0;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
             background-color: rgba(255, 255, 255, 0.98);
+        }
+        
+        /* Corrección para el menú móvil */
+        @media (max-width: 991px) {
+            .menu {
+                background-color: white;
+            }
+            
+            .menu a {
+                color: #011730 !important; /* Forzar color oscuro para textos en el menú móvil */
+                font-weight: 500;
+            }
+            
+            .menu a:hover {
+                color: var(--primary-color) !important;
+            }
+            
+            .menu a.active {
+                color: var(--primary-color) !important;
+            }
+            
+            /* Asegurar que el botón de contacto mantenga su estilo */
+            .menu a.btn-contacto {
+                color: white !important;
+                background-color: var(--primary-color);
+            }
+            
+            .menu a.btn-contacto:hover {
+                background-color: var(--secondary-color);
+            }
         }
         
         /* Estilo para video cargado */
