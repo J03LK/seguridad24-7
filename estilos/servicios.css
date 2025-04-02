@@ -1,17 +1,30 @@
-/* General body styles */
-body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif; /* Usar Poppins para el diseño moderno */
-    height: 200%; /* Para permitir scroll en la página */
-    background-color: #011730; /* Fondo oscuro para la página */
-    color: #fff; /* Color general del texto */
-}
-
-
-/* Cargar fuente de Google Fonts para un estilo moderno */
+/* Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
 
-/* Section with background and text */
+/* Reset y base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    overflow-x: hidden;
+    font-family: 'Poppins', sans-serif;
+    background-color: #0A0A0A;
+    color: #fff;
+}
+
+/* Container principal */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Sección con imagen de fondo */
 .protection-products {
     background: url('../imagenes/security-guard-workspace.jpg') no-repeat center center fixed;
     background-size: cover;
@@ -24,58 +37,36 @@ body {
     transition: background 0.3s, filter 0.5s ease-in-out;
 }
 
-/* Estilo del título con fondo oscuro y texto blanco con highlight en color celeste */
 .protection-products h1 {
-    font-family: 'Poppins', sans-serif; /* Fuente Poppins */
     font-size: 4rem;
     font-weight: 700;
     margin-bottom: 20px;
-    letter-spacing: 2px; /* Espaciado para dar más elegancia */
-    color: #fff; /* Blanco por defecto */
+    letter-spacing: 2px;
+    color: #fff;
     transition: opacity 0.3s ease-in-out;
 }
 
 .protection-products h1 span {
-    color:black; /* Nuevo celeste (#88FEE7) para resaltar la palabra */
-    font-weight: 700; /* Hacerlo más grueso para el efecto */
+    color: #88FEE7;
+    font-weight: 700;
 }
 
-/* Estilo del párrafo con color plomo */
 .protection-products p {
     font-size: 1.25rem;
-    opacity: 1;
-    color: #6B7280; /* Plomo para el texto del párrafo */
+    color: #6B7280;
     transition: opacity 0.3s ease-in-out;
 }
 
-/* Styles for when the background is blurred */
+/* Blur cuando se necesite */
 .protection-products.blur-background {
-    filter: blur(5px); /* Desenfoque del fondo */
+    filter: blur(5px);
 }
 
-/* Styles for hidden title when scrolling down */
 .protection-products.hide-title h1 {
     opacity: 0;
 }
 
-/* Estilos base */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #0A0A0A;
-    color: #fff;
-}
-
-.container {
-    width: 80%;
-    margin: 0 auto;
-}
-
+/* Sección Guardia Virtual */
 .guardia-virtual {
     padding: 60px 0;
     text-align: center;
@@ -84,7 +75,7 @@ body {
 .section-title {
     font-size: 32px;
     font-weight: bold;
-    color: #00bcd4; /* Celeste */
+    color: #00bcd4;
     margin-bottom: 10px;
 }
 
@@ -94,6 +85,7 @@ body {
     color: #aaa;
 }
 
+/* Video */
 .video-container {
     position: relative;
     margin-bottom: 40px;
@@ -107,6 +99,7 @@ body {
     animation: scale-up 0.5s ease;
 }
 
+/* Íconos animados */
 .icons {
     display: flex;
     justify-content: center;
@@ -117,6 +110,7 @@ body {
     transform: translate(-50%, -50%);
     width: 100%;
     z-index: 2;
+    flex-wrap: wrap;
 }
 
 .icon {
@@ -127,21 +121,10 @@ body {
     animation: fade-in 1s forwards;
 }
 
-.icon:nth-child(1) {
-    animation-delay: 0.2s;
-}
-
-.icon:nth-child(2) {
-    animation-delay: 0.4s;
-}
-
-.icon:nth-child(3) {
-    animation-delay: 0.6s;
-}
-
-.icon:nth-child(4) {
-    animation-delay: 0.8s;
-}
+.icon:nth-child(1) { animation-delay: 0.2s; }
+.icon:nth-child(2) { animation-delay: 0.4s; }
+.icon:nth-child(3) { animation-delay: 0.6s; }
+.icon:nth-child(4) { animation-delay: 0.8s; }
 
 .icon img {
     width: 60px;
@@ -156,8 +139,8 @@ body {
 
 /* Animaciones */
 @keyframes fade-in {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 @keyframes scale-up {
@@ -165,6 +148,7 @@ body {
     100% { transform: scale(1); }
 }
 
+/* Botón demo */
 .demo-button-container {
     text-align: center;
 }
@@ -189,9 +173,64 @@ body {
     .icons {
         flex-direction: column;
         gap: 20px;
+        position: static;
+        transform: none;
+        margin-top: 20px;
     }
 
     .video-frame iframe {
         height: 300px;
+    }
+
+    .protection-products {
+        padding: 40px 15px;
+    }
+
+    .protection-products h1 {
+        font-size: 2.5rem;
+    }
+
+    .protection-products p {
+        font-size: 1rem;
+    }
+
+    .section-title {
+        font-size: 24px;
+    }
+
+    .section-description {
+        font-size: 16px;
+    }
+
+    .demo-button {
+        font-size: 16px;
+        padding: 8px 16px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .protection-products h1 {
+        font-size: 2rem;
+    }
+
+    .protection-products p {
+        font-size: 0.9rem;
+    }
+
+    .video-frame iframe {
+        height: 250px;
+    }
+
+    .section-title {
+        font-size: 20px;
+    }
+
+    .section-description {
+        font-size: 14px;
+    }
+
+    .demo-button {
+        font-size: 14px;
+        padding: 6px 14px;
     }
 }

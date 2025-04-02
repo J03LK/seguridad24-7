@@ -1,12 +1,12 @@
-
+/* General container settings */
 .container {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
-    
 }
 
+/* Link styles */
 a {
     text-decoration: none;
     color: inherit;
@@ -20,6 +20,7 @@ img {
     max-width: 100%;
 }
 
+/* Section title styles */
 .section-title {
     text-align: center;
     margin-bottom: 50px;
@@ -54,6 +55,7 @@ img {
     animation: fadeInUp 1s ease 0.3s both;
 }
 
+/* Button primary styles */
 .btn-primary {
     display: inline-block;
     background-color: var(--primary-color);
@@ -99,7 +101,7 @@ img {
     --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Header */
+/* Header styles */
 header {
     background-color: #011730;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
@@ -137,7 +139,7 @@ nav {
     margin: 0 auto;
 }
 
-/* Logo */
+/* Logo styles */
 .logo {
     position: relative;
     z-index: 5;
@@ -152,7 +154,7 @@ nav {
     transform: scale(1.05);
 }
 
-/* Menú principal */
+/* Main menu styles */
 .menu {
     color: white;
     display: flex;
@@ -186,25 +188,26 @@ nav {
         transform: translateX(0);
     }
 }
-/* Cambiar color del fondo y texto cuando el header tiene la clase 'scrolled' */
+
+/* Change background and text color on scroll */
 header.scrolled {
-    background-color: white; /* Cambiar el fondo a blanco */
+    background-color: white;
 }
 
 header.scrolled .menu a {
-    color: #011730; /* Cambiar el color del texto a un color oscuro cuando se hace scroll */
+    color: #011730;
 }
 
 header.scrolled .menu a:hover {
-    color: var(--primary-color); /* Mantener el efecto hover */
+    color: var(--primary-color);
 }
 
 header.scrolled .btn-contacto {
-    background-color: var(--primary-color); /* Cambiar el color del botón */
+    background-color: var(--primary-color);
 }
 
 header.scrolled .btn-contacto:hover {
-    background-color: var(--secondary-color); /* Mantener el color de hover */
+    background-color: var(--secondary-color);
 }
 
 .menu a {
@@ -218,7 +221,7 @@ header.scrolled .btn-contacto:hover {
     display: block;
 }
 
-/* Efecto subrayado para enlaces normales */
+/* Underline effect for normal links */
 .menu a:not(.btn-contacto)::after {
     content: '';
     position: absolute;
@@ -240,13 +243,13 @@ header.scrolled .btn-contacto:hover {
     color: var(--primary-color);
 }
 
-/* Indicador de página activa */
+/* Active page indicator */
 .menu a.active {
     color: var(--primary-color);
     font-weight: 600;
 }
 
-/* Botón de contacto */
+/* Contact button */
 .btn-contacto {
     background-color: var(--primary-color);
     color: white !important;
@@ -283,7 +286,7 @@ header.scrolled .btn-contacto:hover {
     transform: translateY(0);
 }
 
-/* Menú móvil */
+/* Mobile menu */
 .menu-toggle {
     display: none;
     font-size: 24px;
@@ -304,7 +307,7 @@ header.scrolled .btn-contacto:hover {
     transform: rotate(90deg);
 }
 
-/* Media Queries para responsividad */
+/* Media Queries for Responsiveness */
 @media (max-width: 991px) {
     .menu-toggle {
         display: block;
@@ -347,7 +350,7 @@ header.scrolled .btn-contacto:hover {
     }
 }
 
-/* Efecto de superposición cuando se abre el menú */
+/* Overlay effect when menu is opened */
 .overlay {
     position: fixed;
     top: 0;
