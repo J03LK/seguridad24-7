@@ -152,7 +152,6 @@ nav {
 
 /* Menú principal */
 .menu {
-    color: white;
     display: flex;
     list-style: none;
     margin: 0;
