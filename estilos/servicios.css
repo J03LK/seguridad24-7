@@ -3,38 +3,10 @@ body {
     margin: 0;
     font-family: 'Poppins', sans-serif; /* Usar Poppins para el diseño moderno */
     height: 200%; /* Para permitir scroll en la página */
-    background-color: #1F2937; /* Fondo oscuro para la página */
+    background-color: #011730; /* Fondo oscuro para la página */
     color: #fff; /* Color general del texto */
 }
 
-/* Navbar styling */
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: #1E40AF; /* Azul eléctrico para la navbar */
-    padding: 10px 20px;
-    z-index: 1000;
-}
-
-.navbar ul {
-    list-style-type: none;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-}
-
-.navbar ul li {
-    margin: 0 20px;
-}
-
-.navbar ul li a {
-    color: white; /* Color blanco para texto en navbar */
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: bold;
-}
 
 /* Cargar fuente de Google Fonts para un estilo moderno */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
@@ -64,7 +36,7 @@ body {
 }
 
 .protection-products h1 span {
-    color: #88FEE7; /* Nuevo celeste (#88FEE7) para resaltar la palabra */
+    color:black; /* Nuevo celeste (#88FEE7) para resaltar la palabra */
     font-weight: 700; /* Hacerlo más grueso para el efecto */
 }
 
