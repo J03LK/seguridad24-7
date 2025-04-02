@@ -4,72 +4,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Barra de Navegación</title>
-    <link rel="stylesheet" href="/seguridad24-7/estilos/Paquetes.css">
-    <link href="/website/css/uicons-solid-rounded.css"
+    <link rel="stylesheet" href="estilos/Paquetes.css">
+    <link rel="stylesheet" href="estilos/navbar.css">
+    <link href="/website/css/uicons-solid-rounded.css">
+
     <script src="https://unpkg.com/lottie-web@5.7.4/build/player/lottie.min.js"></script>
 
 </head>
 <body>
-    <header class="navbar">
-        <div class="logo">
-            <img src="assets/logo.png" alt="Logo">
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="assets/logo.png" alt="Detecta365 Logo" />
+                    </a>
+                </div>
+                <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul class="menu" id="menu">
+                    <li><a href="#inicio" class="active">Inicio</a></li>
+                    <li><a href="servicios.html">Servicios</a></li>
+                    <li><a href="Paquetes.html">Paquetes</a></li>
+                    <li><a href="#nosotros">Nosotros</a></li>
+                    <li><a href="#casos">Casos de Éxito</a></li>
+                    <li><a href="#contacto" class="btn-contacto">Contacto</a></li>
+                </ul>
+            </nav>
         </div>
-        <nav>
-            <ul>
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="#">Servicios</a></li>
-                <li><a href="#">Paquetes</a></li>
-                <li><a href="#">Nosotros</a></li>
-                <li><a href="#">Casos de Éxito</a></li>
-                <li><a href="#" class="contact-btn">Contacto</a></li>
-            </ul>
-        </nav>
+        <div class="overlay" id="overlay"></div>
     </header>
     <section class="image-section">
         <div class="image-overlay">
         </div>
-        <img src="/seguridad24-7/assets/IMAGEN-PAQUETE/IMAGENPAQUETE1.jpg" alt="Imagen de fondo">
+        <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE1.jpg" alt="Imagen de fondo">
     </section>
     <section class="technologies">
         <h2> CONTAMOS CON  VARIEDAD DE TECNOLOGÍAS PARA TU SEGURIDAD:</h2>
         <div class="tech-container">
             <!-- Imagen a la izquierda -->
             <div class="tech-image">
-                <img src="/seguridad24-7/assets/IMAGEN-PAQUETE/IMAGEN_PAQUETE2.png" alt="Tecnología de cámaras">
+                <img src="assets/IMAGEN-PAQUETE/IMAGEN_PAQUETE2.png" alt="Tecnología de cámaras">
             </div>
             
             <!-- Iconos a la derecha -->
             <div class="tech-icons">
                 <div class="icon-item">
-                    <img src="/seguridad24-7/assets/IMAGEN-PAQUETE/IMAGEN_PAQUETE9.png" alt="Icono 1">
+                    <img src="assets/IMAGEN-PAQUETE/IMAGEN_PAQUETE9.png" alt="Icono 1">
                     <p>Alta definición Full HD</p>
                 </div>
                 <div class="icon-item">
-                    <img src="/seguridad24-7/assets/IMAGEN-PAQUETE/IMAGEN_PAQUETE10.png" alt="Icono 2">
+                    <img src="assets/IMAGEN-PAQUETE/IMAGEN_PAQUETE10.png" alt="Icono 2">
                     <p>Detección de movimiento</p>
                 </div>
                 <div class="icon-item">
-                    <img src="/seguridad24-7/assets/IMAGEN-PAQUETE/IMAGEN_PAQUETE11.png" alt="Icono 3">
+                    <img src="assets/IMAGEN-PAQUETE/IMAGEN_PAQUETE11.png" alt="Icono 3">
                     <p>Detección cruce de Línea</p>
                 </div>
                 <div class="icon-item">
-                    <img src="/seguridad24-7/assets/IMAGEN-PAQUETE/IMAGEN_PAQUETE12.png" alt="Icono 5">
+                    <img src="assets/IMAGEN-PAQUETE/IMAGEN_PAQUETE12.png" alt="Icono 5">
                     <p>Reconocimiento o facial</p>
                 </div>
                 <div class="icon-item">
-                    <img src="/seguridad24-7/assets/IMAGEN-PAQUETE/IMAGEN_PAQUETE13.png" alt="Icono 6">
+                    <img src="assets/IMAGEN-PAQUETE/IMAGEN_PAQUETE13.png" alt="Icono 6">
                     <p>Perifoneo IP en dos Vías</p>
                 </div>
                 <div class="icon-item">
-                    <img src="/seguridad24-7/assets/IMAGEN-PAQUETE/IMAGEN_PAQUETE14.png" alt="Icono 7">
+                    <img src="assets/IMAGEN-PAQUETE/IMAGEN_PAQUETE14.png" alt="Icono 7">
                     <p>Reconocimiento de placas</p>
                 </div>
                 <div class="icon-item">
-                    <img src="/seguridad24-7/assets/IMAGEN-PAQUETE/IMAGEN_PAQUETE15.png" alt="Icono 8">
+                    <img src="assets/IMAGEN-PAQUETE/IMAGEN_PAQUETE15.png" alt="Icono 8">
                     <p>Botón de panico</p>
                 </div>
                 <div class="icon-item">
-                    <img src="/seguridad24-7/assets/IMAGEN-PAQUETE/IMAGEN_PAQUETE16.png" alt="Icono 8">
+                    <img src="assets/IMAGEN-PAQUETE/IMAGEN_PAQUETE16.png" alt="Icono 8">
                     <p>Seguridad 24/7</p>
                 </div>
             </div>
@@ -102,14 +112,12 @@
     </section>
     
     <section class="paquetes">
-    
-
         <h2>Elige el paquete ideal para ti</h2>
         <div class="paquete-container">
           
           <!-- Paquete Básico -->
           <div class="paquete">
-            <img src="/seguridad24-7/assets/IMAGEN-PAQUETE/IMAGENPAQUETE4.jpg" alt="Paquete Básico" />
+            <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE4.jpg" alt="Paquete Básico" />
             <div class="contenido">
               <h3>Paquete Básico</h3>
               <p class="descripcion">Protección básica ideal para hogares o negocios pequeños.</p>
@@ -126,7 +134,7 @@
       
           <!-- Paquete Premium -->
           <div class="paquete">
-            <img src="/seguridad24-7/assets/IMAGEN-PAQUETE/IMAGENPAQUETE6.jpg" alt="Paquete Premium" />
+            <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE6.jpg" alt="Paquete Premium" />
             <div class="contenido">
               <h3>Paquete Premium</h3>
               <p class="descripcion">Máxima seguridad con reconocimiento facial y monitoreo total.</p>
@@ -142,22 +150,22 @@
           </div>
       
         </div>
-      </section>
-      <section class="proyecto">
+    </section>
+    <section class="proyecto">
         <div class="background-overlay"></div>
         <div class="content">
-          <h2>Tu segurridad <br> esta alcance de un click</h2>
+          <h2>Tu seguridad <br> está al alcance de un click</h2>
           <button class="btn"><a href="Contactos.html">Contanos</a></button>
         </div>
-      </section>
-      
+    </section>
+    <script src="scripts/script.js"></script>
 
     <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-logo">
-                    <img src="" alt="24-7 Logo" />
+                    <img src="assets/logo.png" alt="24-7 Logo" />
                 </div>
                 <div class="footer-links">
                     <h4>Enlaces rápidos</h4>
@@ -192,6 +200,5 @@
             </div>
         </div>
     </footer>
-    
 </body>
 </html>
