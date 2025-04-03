@@ -9,7 +9,7 @@
 body {
     background-color: #0a1016;
     color: white;
-    overflow-x: hidden;
+    overflow-x: hidden; /* Evita el desbordamiento horizontal */
 }
 
 /* Grid Background */
@@ -65,16 +65,19 @@ body {
     gap: 40px;
     margin-bottom: 80px;
     position: relative;
+    justify-content: center; /* Centra el contenido si hay espacio */
 }
 
 .service-info {
     flex: 1;
     min-width: 300px;
+    max-width: 100%; /* Asegura que no se desborde */
 }
 
 .service-image {
     flex: 1;
     min-width: 300px;
+    max-width: 100%; /* Asegura que no se desborde */
     position: relative;
     border-radius: 20px;
     overflow: hidden;
@@ -464,16 +467,13 @@ body {
 
 /* Responsive Styles */
 @media (max-width: 992px) {
-    .section-title {
-        font-size: 2.2rem;
-    }
-
     .main-service {
         flex-direction: column;
         gap: 30px;
     }
 
-    .service-info, .service-image {
+    .service-info,
+    .service-image {
         min-width: 100%;
     }
 
@@ -501,15 +501,8 @@ body {
 }
 
 @media (max-width: 768px) {
-    .section-title {
-        font-size: 2rem;
-    }
-
-    .section-subtitle {
-        font-size: 1.1rem;
-    }
-
-    .service-info, .service-image {
+    .service-info,
+    .service-image {
         min-width: 100%;
     }
 
@@ -517,15 +510,16 @@ body {
         padding: 30px;
     }
 
+    .feature-card {
+        padding: 25px;
+    }
+
     .service-box-title {
         font-size: 1.5rem;
     }
 
-    .feature-card, .benefit-card {
-        padding: 25px;
-    }
-
-    .feature-icon, .benefit-icon {
+    .feature-icon,
+    .benefit-icon {
         width: 60px;
         height: 60px;
     }
@@ -536,44 +530,23 @@ body {
         padding: 40px 15px;
     }
 
+    .service-info,
+    .service-image {
+        min-width: 100%;
+    }
+
     .section-title {
         font-size: 1.8rem;
     }
 
-    .section-subtitle {
-        font-size: 1rem;
-        margin-bottom: 40px;
-    }
-
-    .service-info, .service-image {
-        min-width: 100%;
-    }
-
-    .service-box-title {
-        font-size: 1.4rem;
-    }
-
-    .feature-title, .benefit-title {
+    .feature-title,
+    .benefit-title {
         font-size: 1.2rem;
-    }
-
-    .feature-icon, .benefit-icon {
-        width: 50px;
-        height: 50px;
     }
 
     .cta-button {
         padding: 12px 30px;
         font-size: 1rem;
-    }
-
-    .how-it-works-grid {
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .how-it-works-step {
-        max-width: 100%;
     }
 }
 
@@ -588,11 +561,13 @@ body {
         gap: 20px;
     }
 
-    .service-info, .service-image {
+    .service-info,
+    .service-image {
         min-width: 100%;
     }
 
-    .feature-title, .benefit-title {
+    .feature-title,
+    .benefit-title {
         font-size: 1.1rem;
     }
 
@@ -606,7 +581,8 @@ body {
         font-size: 1.6rem;
     }
 
-    .feature-card, .benefit-card {
+    .feature-card,
+    .benefit-card {
         padding: 20px;
     }
 

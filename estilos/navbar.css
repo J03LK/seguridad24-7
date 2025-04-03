@@ -1,4 +1,4 @@
-/* General container settings */
+
 .container {
     width: 100%;
     max-width: 1200px;
@@ -188,8 +188,7 @@ nav {
         transform: translateX(0);
     }
 }
-
-/* Change background and text color on scroll */
+/* Cambiar color del fondo y texto cuando el header tiene la clase 'scrolled' */
 header.scrolled {
     background-color: white;
 }
@@ -286,16 +285,17 @@ header.scrolled .btn-contacto:hover {
     transform: translateY(0);
 }
 
-/* Mobile menu */
+/* Menú móvil */
 .menu-toggle {
     display: none;
-    font-size: 24px;
-    cursor: pointer;
+    position: relative;
+    width: 30px;
+    height: 24px;
     background: transparent;
     border: none;
-    color: white;
-    padding: 5px;
+    padding: 0;
     z-index: 5;
+    cursor: pointer;
     transition: transform var(--transition-speed) ease;
 }
 
@@ -307,10 +307,55 @@ header.scrolled .btn-contacto:hover {
     transform: rotate(90deg);
 }
 
-/* Media Queries for Responsiveness */
+/* Media Queries para responsividad */
 @media (max-width: 991px) {
     .menu-toggle {
         display: block;
+    }
+    
+    .menu-toggle span {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background-color: #011730;
+        border-radius: 3px;
+        transition: all 0.3s ease;
+    }
+    
+    .menu-toggle span:nth-child(1) {
+        top: 0;
+    }
+    
+    .menu-toggle span:nth-child(2) {
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    
+    .menu-toggle span:nth-child(3) {
+        bottom: 0;
+    }
+    
+    /* Color para fondo oscuro */
+    header:not(.scrolled) .menu-toggle span {
+        background-color: white;
+    }
+    
+    /* Animación al activar */
+    .menu-toggle.active span:nth-child(1) {
+        top: 10px;
+        transform: rotate(45deg);
+        background-color: #011730;
+    }
+    
+    .menu-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+    
+    .menu-toggle.active span:nth-child(3) {
+        bottom: 10px;
+        transform: rotate(-45deg);
+        background-color: #011730;
     }
     
     .menu {
@@ -341,13 +386,28 @@ header.scrolled .btn-contacto:hover {
     
     .menu a {
         font-size: 18px;
+        color: #011730 !important; /* Forzar color oscuro para textos en el menú móvil */
+    }
+    
+    .menu a:hover {
+        color: var(--primary-color) !important;
+    }
+    
+    .menu a.active {
+        color: var(--primary-color) !important;
     }
     
     .btn-contacto {
         margin-top: 15px;
         width: 100%;
         text-align: center;
+        color: white !important;
     }
+}
+
+/* Mantener colores correctos cuando el header cambia con scroll */
+header.scrolled .menu-toggle span {
+    background-color: #011730;
 }
 
 /* Overlay effect when menu is opened */
