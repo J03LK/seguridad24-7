@@ -1,3 +1,4 @@
+/* Enhanced CSS with Modern Animation Effects */
 * {
     margin: 0;
     padding: 0;
@@ -9,21 +10,81 @@ body {
     line-height: 1.6;
     color: var(--text-color);
     overflow-x: hidden;
-    background-color: #0a1016; /* Añadido el color de fondo */
+    background-color: #0a1016;
+    perspective: 1000px; /* For 3D effects */
 }
 
-/* Grid Background */
+/* Updated Variables with new color palette */
+:root {
+    --primary-color: #4a6de5;
+    --primary-light: #6384ff;
+    --primary-dark: #3a56b8;
+    --secondary-color: #3a56b8;
+    --accent-color: #00c9ff;
+    --text-color: #333;
+    --text-light: #878787;
+    --dark-color: #011730;
+    --gray-color: #f8f9fa;
+    --light-color: #f5f7ff;
+    --transition-speed: 0.3s;
+    --border-radius: 25px;
+    --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    --glow-shadow: 0 0 15px var(--primary-light);
+}
+
+/* Enhanced Grid Background with animation */
 .grid-background {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: linear-gradient(#011730 1px, transparent 1px),
-                      linear-gradient(#011730 1px, transparent 1px);
+    background-image: 
+        linear-gradient(#011730 1px, transparent 1px),
+        linear-gradient(90deg, #011730 1px, transparent 1px);
     background-size: 50px 50px;
     z-index: -1;
     pointer-events: none;
+    opacity: 0.5;
+    animation: gridPulse 15s infinite alternate;
+}
+
+@keyframes gridPulse {
+    0% { opacity: 0.3; background-size: 50px 50px; }
+    50% { opacity: 0.5; background-size: 52px 52px; }
+    100% { opacity: 0.3; background-size: 50px 50px; }
+}
+
+/* Floating particles background */
+.particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--primary-light);
+    opacity: 0.3;
+    animation: float 20s infinite linear;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 0;
+    }
+    10% { opacity: 0.3; }
+    90% { opacity: 0.3; }
+    100% {
+        transform: translateY(-1000%) translateX(100px) rotate(360deg);
+        opacity: 0;
+    }
 }
 
 .container {
@@ -31,12 +92,20 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
-    color:#011730
+    color:#011730;
 }
 
+/* Enhanced link styling with magnetic hover effect */
 a {
     text-decoration: none;
     color: inherit;
+    position: relative;
+    display: inline-block;
+    transition: transform var(--transition-speed) ease;
+}
+
+a:hover {
+    transform: scale(1.05);
 }
 
 ul {
@@ -45,13 +114,20 @@ ul {
 
 img {
     max-width: 100%;
+    transition: all 0.5s ease;
 }
 
+img:hover {
+    filter: brightness(1.1);
+}
+
+/* Section titles with clip-path animation */
 .section-title {
     color: white;
     text-align: center;
     margin-bottom: 50px;
     animation: fadeInDown 1s ease;
+    position: relative;
 }
 
 .section-title h2 {
@@ -59,6 +135,25 @@ img {
     margin-bottom: 15px;
     position: relative;
     display: inline-block;
+    overflow: hidden;
+}
+
+.section-title h2::before {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 100%;
+    color: var(--accent-color);
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typewriter 2s steps(30) forwards;
+}
+
+@keyframes typewriter {
+    from { width: 0; }
+    to { width: 100%; }
 }
 
 .section-title h2:after {
@@ -66,25 +161,29 @@ img {
     display: block;
     width: 50px;
     height: 3px;
-    background-color: var(--primary-color);
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
     margin: 15px auto 0;
     animation: expandWidth 1.5s ease;
+    box-shadow: 0 0 10px var(--accent-color);
 }
 
 @keyframes expandWidth {
-    from { width: 0; }
-    to { width: 50px; }
+    from { width: 0; opacity: 0; }
+    to { width: 50px; opacity: 1; }
 }
 
 .section-title p {
     color: var(--text-light);
     font-size: 18px;
     animation: fadeInUp 1s ease 0.3s both;
+    max-width: 700px;
+    margin: 0 auto;
 }
 
+/* Enhanced button with neon glow effect */
 .btn-primary {
     display: inline-block;
-    background-color: var(--primary-color);
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
     color: white;
     padding: 12px 30px;
     border-radius: 30px;
@@ -93,6 +192,7 @@ img {
     position: relative;
     overflow: hidden;
     z-index: 1;
+    box-shadow: 0 5px 15px rgba(74, 109, 229, 0.3);
 }
 
 .btn-primary:before {
@@ -102,7 +202,7 @@ img {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
     transition: 0.5s;
     z-index: -1;
 }
@@ -112,37 +212,27 @@ img {
 }
 
 .btn-primary:hover {
-    background-color: var(--secondary-color);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 102, 255, 0.3);
+    background: linear-gradient(45deg, var(--primary-light), var(--primary-color));
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 5px 20px rgba(74, 109, 229, 0.5), 0 0 15px var(--accent-color);
 }
 
-/* Variables */
-:root {
-    --primary-color: #4a6de5;
-    --secondary-color: #3a56b8;
-    --text-color: #333;
-    --transition-speed: 0.3s;
-    --border-radius: 25px;
-    --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-/* Header */
+/* Enhanced Header with glass morphism */
 header {
-    background-color: #011730;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+    background-color: rgba(1, 23, 48, 0.8);
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
     position: sticky;
     top: 0;
     z-index: 1000;
     animation: slideInDown 0.6s ease;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     transition: all var(--transition-speed) ease;
 }
 
 header:hover {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 @keyframes slideInDown {
@@ -165,22 +255,25 @@ nav {
     margin: 0 auto;
 }
 
-/* Logo */
+/* Logo with 3D rotation effect */
 .logo {
     position: relative;
     z-index: 5;
+    perspective: 1000px;
 }
 
 .logo img {
     height: 50px;
-    transition: transform 0.5s ease;
+    transition: all 0.5s ease;
+    transform-style: preserve-3d;
 }
 
 .logo:hover img {
-    transform: scale(1.05);
+    transform: scale(1.05) rotateY(10deg);
+    filter: drop-shadow(0 0 10px var(--accent-color));
 }
 
-/* Menú principal */
+/* Enhanced menu with staggered animation */
 .menu {
     color: white;
     display: flex;
@@ -214,39 +307,41 @@ nav {
         transform: translateX(0);
     }
 }
-/* Cambiar color del fondo y texto cuando el header tiene la clase 'scrolled' */
+
+/* Scroll effect for header */
 header.scrolled {
-    background-color: white; /* Cambiar el fondo a blanco */
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 header.scrolled .menu a {
-    color: #011730; /* Cambiar el color del texto a un color oscuro cuando se hace scroll */
+    color: #011730;
 }
 
 header.scrolled .menu a:hover {
-    color: var(--primary-color); /* Mantener el efecto hover */
+    color: var(--primary-color);
 }
 
 header.scrolled .btn-contacto {
-    background-color: var(--primary-color); /* Cambiar el color del botón */
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
 }
 
 header.scrolled .btn-contacto:hover {
-    background-color: var(--secondary-color); /* Mantener el color de hover */
+    background: linear-gradient(45deg, var(--primary-light), var(--primary-color));
 }
 
 .menu a {
     font-weight: 500;
     color: white;
     text-decoration: none;
-    transition: color var(--transition-speed) ease;
+    transition: all var(--transition-speed) ease;
     position: relative;
     padding: 8px 0;
     font-size: 16px;
     display: block;
 }
 
-/* Efecto subrayado para enlaces normales */
+/* Enhanced underline effect for menu links */
 .menu a:not(.btn-contacto)::after {
     content: '';
     position: absolute;
@@ -254,9 +349,10 @@ header.scrolled .btn-contacto:hover {
     left: 0;
     width: 0;
     height: 2px;
-    background-color: var(--primary-color);
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
     transition: width var(--transition-speed) ease;
     border-radius: 1px;
+    box-shadow: 0 0 5px var(--accent-color);
 }
 
 .menu a:not(.btn-contacto):hover::after,
@@ -265,18 +361,20 @@ header.scrolled .btn-contacto:hover {
 }
 
 .menu a:hover {
-    color: var(--primary-color);
+    color: var(--accent-color);
+    transform: translateY(-2px);
 }
 
-/* Indicador de página activa */
+/* Enhanced active page indicator */
 .menu a.active {
-    color: var(--primary-color);
+    color: var(--accent-color);
     font-weight: 600;
+    text-shadow: 0 0 5px rgba(74, 109, 229, 0.5);
 }
 
-/* Botón de contacto */
+/* Enhanced contact button */
 .btn-contacto {
-    background-color: var(--primary-color);
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
     color: white !important;
     padding: 10px 24px;
     border-radius: var(--border-radius);
@@ -293,7 +391,7 @@ header.scrolled .btn-contacto:hover {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
     transition: 0.6s;
 }
 
@@ -302,16 +400,16 @@ header.scrolled .btn-contacto:hover {
 }
 
 .btn-contacto:hover {
-    background-color: var(--secondary-color);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(74, 109, 229, 0.3);
+    background: linear-gradient(45deg, var(--primary-light), var(--primary-color));
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(74, 109, 229, 0.4), 0 0 10px var(--accent-color);
 }
 
 .btn-contacto:active {
     transform: translateY(0);
 }
 
-/* Menú móvil */
+/* Mobile menu toggle with animation */
 .menu-toggle {
     display: none;
     font-size: 24px;
@@ -321,80 +419,19 @@ header.scrolled .btn-contacto:hover {
     color: white;
     padding: 5px;
     z-index: 5;
-    transition: transform var(--transition-speed) ease;
+    transition: all var(--transition-speed) ease;
 }
 
 .menu-toggle:hover {
     color: var(--primary-color);
+    transform: scale(1.1);
 }
 
 .menu-toggle.active {
     transform: rotate(90deg);
 }
 
-/* Media Queries para responsividad */
-@media (max-width: 991px) {
-    .menu-toggle {
-        display: block;
-    }
-    
-    .menu {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 280px;
-        height: 100vh;
-        background-color: white;
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: center;
-        padding: 80px 30px;
-        transition: right var(--transition-speed) ease;
-        box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
-    }
-    
-    .menu.active {
-        right: 0;
-    }
-    
-    .menu li {
-        margin: 15px 0;
-        width: 100%;
-        opacity: 1;
-        animation: none;
-    }
-    
-    .menu a {
-        font-size: 18px;
-    }
-    
-    .btn-contacto {
-        margin-top: 15px;
-        width: 100%;
-        text-align: center;
-    }
-}
-
-/* Efecto de superposición cuando se abre el menú */
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity var(--transition-speed) ease, visibility var(--transition-speed) ease;
-    z-index: 4;
-}
-
-.overlay.active {
-    visibility: visible;
-    opacity: 1;
-}
-
-/* Hero Section */
+/* Enhanced Hero Section with video and particle overlay */
 .hero {
     position: relative;
     height: 80vh;
@@ -406,7 +443,7 @@ header.scrolled .btn-contacto:hover {
     overflow: hidden;
 }
 
-/* Video de fondo */
+/* Hero video background */
 .hero-video {
     position: absolute;
     top: 0;
@@ -420,10 +457,17 @@ header.scrolled .btn-contacto:hover {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    pointer-events: none; /* Evita que el usuario interactúe con el video */
+    pointer-events: none;
+    animation: zoomInOut 30s infinite alternate;
 }
 
-/* Efecto de superposición para mejorar la legibilidad */
+@keyframes zoomInOut {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Enhanced overlay effect */
 .hero:before {
     content: '';
     position: absolute;
@@ -431,11 +475,11 @@ header.scrolled .btn-contacto:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Oscurece un poco el video */
+    background: linear-gradient(135deg, rgba(1, 23, 48, 0.8), rgba(0, 0, 0, 0.7));
     z-index: 1;
 }
 
-/* Contenido en la parte superior del video */
+/* Enhanced hero content with text animations */
 .hero-content {
     color: white;
     position: relative;
@@ -444,11 +488,60 @@ header.scrolled .btn-contacto:hover {
     margin: 0 auto;
 }
 
+.hero-content h1 {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    animation: heroTextIn 1s ease;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
 
-/* Servicios */
+@keyframes heroTextIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-content p {
+    font-size: 20px;
+    margin-bottom: 30px;
+    animation: heroTextIn 1s ease 0.3s both;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-content .btn-primary {
+    animation: heroTextIn 1s ease 0.6s both;
+}
+
+/* Enhanced Services Section */
 .servicios {
-    padding: 80px 0;
-    background-color: var(--light-color);
+    padding: 100px 0;
+    background-color: rgba(10, 16, 22, 0.95);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Add decorative elements */
+.servicios:before {
+    color: white;
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+    opacity: 0.05;
+    animation: float 15s infinite alternate;
 }
 
 .servicios-grid {
@@ -457,15 +550,21 @@ header.scrolled .btn-contacto:hover {
     gap: 30px;
 }
 
+/* Enhanced service cards with hover effects */
 .servicio-card {
-    background-color: white;
-    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
     padding: 30px;
     text-align: center;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     opacity: 0;
     transform: translateY(30px);
+    position: relative;
+    overflow: hidden;
 }
 
 .servicios-grid .servicio-card:nth-child(1) { animation: fadeInUp 0.6s ease 0.1s forwards; }
@@ -474,49 +573,104 @@ header.scrolled .btn-contacto:hover {
 .servicios-grid .servicio-card:nth-child(4) { animation: fadeInUp 0.6s ease 0.7s forwards; }
 
 .servicio-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 102, 255, 0.1);
+    transform: translateY(-15px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(0, 102, 255, 0.15);
+    border-color: rgba(74, 109, 229, 0.3);
+}
+
+/* Add a subtle gradient on hover */
+.servicio-card:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(74, 109, 229, 0.1), transparent);
+    opacity: 0;
+    transition: all 0.5s ease;
+}
+
+.servicio-card:hover:after {
+    opacity: 1;
 }
 
 .servicio-icon {
-    width: 70px;
-    height: 70px;
-    background-color: var(--primary-color);
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
     color: white;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 30px;
-    margin: 0 auto 20px;
-    transition: all 0.3s ease;
+    margin: 0 auto 25px;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
     overflow: hidden;
+    box-shadow: 0 5px 15px rgba(74, 109, 229, 0.3);
+}
+
+.servicio-icon:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
+    opacity: 0;
+    transition: all 0.5s ease;
 }
 
 .servicio-card:hover .servicio-icon {
-    transform: rotateY(180deg);
-    background-color: var(--secondary-color);
+    transform: rotateY(180deg) scale(1.1);
+    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+    box-shadow: 0 8px 25px rgba(74, 109, 229, 0.4), 0 0 15px var(--accent-color);
+}
+
+.servicio-card:hover .servicio-icon:after {
+    opacity: 0.3;
 }
 
 .servicio-card h3 {
     margin-bottom: 15px;
     font-size: 22px;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+    color: white;
 }
 
 .servicio-card:hover h3 {
-    color: var(--primary-color);
+    color: var(--accent-color);
+    transform: translateY(-5px);
 }
 
 .servicio-card p {
-    color: black;
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.3s ease;
 }
 
-/* Nosotros */
+.servicio-card:hover p {
+    color: white;
+}
+
+/* Enhanced About Us Section */
 .nosotros {
-    padding: 80px 0;
+    padding: 100px 0;
     overflow: hidden;
+    position: relative;
+}
+
+.nosotros:after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    left: -100px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+    opacity: 0.05;
+    z-index: -1;
 }
 
 .nosotros-content {
@@ -531,6 +685,9 @@ header.scrolled .btn-contacto:hover {
     transform: translateX(-100px);
     opacity: 0;
     animation: slideInLeft 1s ease forwards;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes slideInLeft {
@@ -540,15 +697,31 @@ header.scrolled .btn-contacto:hover {
     }
 }
 
-.nosotros-img img {
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+.nosotros-img:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(74, 109, 229, 0.3), transparent);
+    z-index: 1;
+    opacity: 0;
     transition: all 0.5s ease;
 }
 
+.nosotros-img:hover:before {
+    opacity: 1;
+}
+
+.nosotros-img img {
+    border-radius: 10px;
+    transition: all 0.7s ease;
+    transform: scale(1.01);
+}
+
 .nosotros-img:hover img {
-    transform: scale(1.03);
-    box-shadow: 0 15px 40px rgba(0, 102, 255, 0.2);
+    transform: scale(1.05);
 }
 
 .nosotros-text {
@@ -570,6 +743,18 @@ header.scrolled .btn-contacto:hover {
     position: relative;
     padding-bottom: 15px;
     color: white;
+    animation: textFocus 1s ease;
+}
+
+@keyframes textFocus {
+    from {
+        filter: blur(5px);
+        opacity: 0;
+    }
+    to {
+        filter: blur(0);
+        opacity: 1;
+    }
 }
 
 .nosotros-text h2:after {
@@ -577,50 +762,108 @@ header.scrolled .btn-contacto:hover {
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 50px;
+    width: 0;
     height: 3px;
-    background-color: var(--primary-color);
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
     animation: expandWidth 1.5s ease 0.5s forwards;
+    box-shadow: 0 0 10px var(--accent-color);
 }
 
 .nosotros-text p {
     margin-bottom: 20px;
-    color:white;
+    color: rgba(255, 255, 255, 0.85);
+    animation: fadeInUp 0.5s ease 0.3s both;
 }
 
+/* Enhanced values display */
 .valores {
+    color: white;
     display: flex;
     justify-content: space-between;
-    margin-top: 30px;
-    color: white;
+    margin-top: 40px;
+    gap: 20px;
 }
 
 .valor {
     text-align: center;
     opacity: 0;
     transform: translateY(20px);
+    padding: 20px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
 }
 
 .valores .valor:nth-child(1) { animation: fadeInUp 0.5s ease 0.7s forwards; }
 .valores .valor:nth-child(2) { animation: fadeInUp 0.5s ease 0.9s forwards; }
 .valores .valor:nth-child(3) { animation: fadeInUp 0.5s ease 1.1s forwards; }
 
+.valor:hover {
+    transform: translateY(-10px);
+    background: rgba(74, 109, 229, 0.08);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
 .valor i {
-    font-size: 36px;
-    color: var(--primary-color);
-    margin-bottom: 10px;
-    transition: all 0.3s ease;
+    font-size: 40px;
+    color: var(--accent-color);
+    margin-bottom: 15px;
+    transition: all 0.5s ease;
+    display: inline-block;
 }
 
 .valor:hover i {
-    transform: rotateY(360deg);
-    color: var(--secondary-color);
+    transform: rotateY(360deg) scale(1.1);
+    color: var(--primary-color);
+    text-shadow: 0 0 15px var(--primary-light);
 }
 
-/* Casos de Éxito */
+.valor h4 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.valor:hover h4 {
+    color: var(--accent-color);
+}
+
+.valor p {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Enhanced Success Cases */
 .casos {
-    padding: 80px 0;
-    background-color: var(--gray-color);
+    padding: 100px 0;
+    background-color: rgba(1, 23, 48, 0.9);
+    position: relative;
+    overflow: hidden;
+}
+
+.casos:before,
+.casos:after {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    opacity: 0.03;
+}
+
+.casos:before {
+    background: radial-gradient(circle, var(--primary-color), transparent 70%);
+    top: -150px;
+    right: -150px;
+}
+
+.casos:after {
+    background: radial-gradient(circle, var(--accent-color), transparent 70%);
+    bottom: -150px;
+    left: -150px;
 }
 
 .casos-grid {
@@ -629,14 +872,18 @@ header.scrolled .btn-contacto:hover {
     gap: 30px;
 }
 
+/* Enhanced case cards */
 .caso-card {
-    background-color: white;
-    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     opacity: 0;
     transform: scale(0.9);
+    position: relative;
 }
 
 .casos-grid .caso-card:nth-child(1) { animation: zoomIn 0.6s ease 0.2s forwards; }
@@ -651,39 +898,92 @@ header.scrolled .btn-contacto:hover {
 }
 
 .caso-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    transform: translateY(-15px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border-color: rgba(74, 109, 229, 0.3);
 }
 
 .caso-img {
+    position: relative;
     overflow: hidden;
+    height: 200px;
 }
 
-.caso-img img {
+.caso-img:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    z-index: 1;
+    opacity: 0;
     transition: all 0.5s ease;
 }
 
+.caso-card:hover .caso-img:before {
+    opacity: 1;
+}
+
+.caso-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.7s ease;
+}
+
 .caso-card:hover .caso-img img {
-    transform: scale(1.1);
+    transform: scale(1.1) rotate(2deg);
 }
 
 .caso-content {
-    padding: 20px;
+    padding: 25px;
+    position: relative;
+}
+
+.caso-content:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
 }
 
 .caso-content h3 {
-    margin-bottom: 10px;
-    font-size: 20px;
-    transition: color 0.3s ease;
+    margin-bottom: 15px;
+    font-size: 22px;
+    transition: all 0.3s ease;
+    color: white;
 }
 
 .caso-card:hover .caso-content h3 {
-    color: var(--primary-color);
+    color: var(--accent-color);
+    transform: translateY(-3px);
 }
 
 .caso-content p {
-    color: var(--text-light);
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 20px;
 }
+
+.caso-content .btn-ver-mas {
+    color: var(--primary-light);
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.caso-card:hover .caso-content .btn-ver-mas {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 
 /* Contacto */
 .contacto {
