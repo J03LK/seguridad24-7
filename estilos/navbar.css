@@ -1,3 +1,18 @@
+/* Improved Navbar - Base Styles */
+:root {
+    --primary-color: #4a6de5;
+    --secondary-color: #3a56b8;
+    --dark-bg: #011730;
+    --text-color: #333;
+    --text-light: #757575;
+    --white: #ffffff;
+    --transition-speed: 0.3s;
+    --border-radius: 8px;
+    --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    --header-height: 74px;
+}
+
+/* Reset and Base Styles */
 .container {
     width: 100%;
     max-width: 1200px;
@@ -12,118 +27,30 @@ a {
 
 ul {
     list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 img {
     max-width: 100%;
-}
-
-.section-title {
-    text-align: center;
-    margin-bottom: 50px;
-    animation: fadeInDown 1s ease;
-}
-
-.section-title h2 {
-    font-size: 36px;
-    margin-bottom: 15px;
-    position: relative;
-    display: inline-block;
-}
-
-.section-title h2:after {
-    content: '';
-    display: block;
-    width: 50px;
-    height: 3px;
-    background-color: var(--primary-color);
-    margin: 15px auto 0;
-    animation: expandWidth 1.5s ease;
-}
-
-@keyframes expandWidth {
-    from { width: 0; }
-    to { width: 50px; }
-}
-
-.section-title p {
-    color: var(--text-light);
-    font-size: 18px;
-    animation: fadeInUp 1s ease 0.3s both;
-}
-
-.btn-primary {
-    display: inline-block;
-    background-color: var(--primary-color);
-    color: white;
-    padding: 12px 30px;
-    border-radius: 30px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-}
-
-.btn-primary:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: 0.5s;
-    z-index: -1;
-}
-
-.btn-primary:hover:before {
-    left: 100%;
-}
-
-.btn-primary:hover {
-    background-color: var(--secondary-color);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 102, 255, 0.3);
-}
-
-/* Variables */
-:root {
-    --primary-color: #4a6de5;
-    --secondary-color: #3a56b8;
-    --text-color: #333;
-    --transition-speed: 0.3s;
-    --border-radius: 25px;
-    --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    height: auto;
 }
 
 /* Header */
 header {
-    background-color: #011730;
+    background-color: var(--dark-bg);
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
     position: sticky;
     top: 0;
     z-index: 1000;
-    animation: slideInDown 0.6s ease;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    transition: all var(--transition-speed) ease;
+    transition: background-color var(--transition-speed) ease,
+        box-shadow var(--transition-speed) ease;
+    will-change: transform;
 }
 
-header:hover {
+header.scrolled {
+    background-color: var(--white);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-}
-
-@keyframes slideInDown {
-    from {
-        transform: translateY(-100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
 }
 
 nav {
@@ -133,90 +60,90 @@ nav {
     padding: 12px 0;
     max-width: 1200px;
     margin: 0 auto;
+    height: var(--header-height);
 }
 
 /* Logo */
 .logo {
     position: relative;
     z-index: 5;
+    display: flex;
+    align-items: center;
 }
 
 .logo img {
     height: 50px;
-    transition: transform 0.5s ease;
+    transition: transform 0.3s ease;
+    will-change: transform;
 }
 
 .logo:hover img {
     transform: scale(1.05);
 }
 
-/* Menú principal */
+.logo:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
+/* Menu */
 .menu {
     display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
     align-items: center;
 }
 
 .menu li {
-    color: white;
+    color: var(--white);
     margin-left: 35px;
+    position: relative;
     opacity: 0;
     animation: fadeInRight 0.5s ease forwards;
-    position: relative;
 }
 
-.menu li:nth-child(1) { animation-delay: 0.1s; }
-.menu li:nth-child(2) { animation-delay: 0.2s; }
-.menu li:nth-child(3) { animation-delay: 0.3s; }
-.menu li:nth-child(4) { animation-delay: 0.4s; }
-.menu li:nth-child(5) { animation-delay: 0.5s; }
+.menu li:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.menu li:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.menu li:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.menu li:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.menu li:nth-child(5) {
+    animation-delay: 0.5s;
+}
 
 @keyframes fadeInRight {
     from {
         opacity: 0;
         transform: translateX(25px);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
     }
 }
 
-/* Cambiar color del fondo y texto cuando el header tiene la clase 'scrolled' */
-header.scrolled {
-    background-color: white; /* Cambiar el fondo a blanco */
-}
-
-header.scrolled .menu a {
-    color: #011730; /* Cambiar el color del texto a un color oscuro cuando se hace scroll */
-}
-
-header.scrolled .menu a:hover {
-    color: var(--primary-color); /* Mantener el efecto hover */
-}
-
-header.scrolled .btn-contacto {
-    background-color: var(--primary-color); /* Cambiar el color del botón */
-}
-
-header.scrolled .btn-contacto:hover {
-    background-color: var(--secondary-color); /* Mantener el color de hover */
-}
-
 .menu a {
     font-weight: 500;
-    color: white;
-    text-decoration: none;
-    transition: color var(--transition-speed) ease;
+    color: var(--white);
     position: relative;
     padding: 8px 0;
     font-size: 16px;
     display: block;
+    transition: color var(--transition-speed) ease;
 }
 
-/* Efecto subrayado para enlaces normales */
+/* Underline effect for regular links */
 .menu a:not(.btn-contacto)::after {
     content: '';
     position: absolute;
@@ -225,8 +152,9 @@ header.scrolled .btn-contacto:hover {
     width: 0;
     height: 2px;
     background-color: var(--primary-color);
-    transition: width var(--transition-speed) ease;
+    transition: width var(--transition-speed) cubic-bezier(0.25, 0.46, 0.45, 0.94);
     border-radius: 1px;
+    transform-origin: left;
 }
 
 .menu a:not(.btn-contacto):hover::after,
@@ -238,16 +166,21 @@ header.scrolled .btn-contacto:hover {
     color: var(--primary-color);
 }
 
-/* Indicador de página activa */
+.menu a:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
 .menu a.active {
     color: var(--primary-color);
     font-weight: 600;
 }
 
-/* Botón de contacto */
+/* Contact Button */
 .btn-contacto {
     background-color: var(--primary-color);
-    color: white !important;
+    color: var(--white) !important;
     padding: 10px 24px;
     border-radius: var(--border-radius);
     position: relative;
@@ -281,7 +214,20 @@ header.scrolled .btn-contacto:hover {
     transform: translateY(0);
 }
 
-/* Menú móvil - VERSIÓN ACTUALIZADA */
+/* Colors When Scrolled */
+header.scrolled .menu a {
+    color: var(--text-color);
+}
+
+header.scrolled .menu a:hover {
+    color: var(--primary-color);
+}
+
+header.scrolled .menu a.active {
+    color: var(--primary-color);
+}
+
+/* Mobile Menu */
 .menu-toggle {
     display: none;
     position: relative;
@@ -295,109 +241,104 @@ header.scrolled .btn-contacto:hover {
     transition: transform var(--transition-speed) ease;
 }
 
+/* Mobile Menu Styles */
 @media (max-width: 991px) {
     .menu-toggle {
         display: block;
     }
-    
+
     .menu-toggle span {
         position: absolute;
         left: 0;
         width: 100%;
         height: 3px;
-        background-color: #011730;
+        background-color: var(--text-color);
         border-radius: 3px;
         transition: all 0.3s ease;
     }
-    
+
     .menu-toggle span:nth-child(1) {
         top: 0;
     }
-    
+
     .menu-toggle span:nth-child(2) {
         top: 50%;
         transform: translateY(-50%);
     }
-    
+
     .menu-toggle span:nth-child(3) {
         bottom: 0;
     }
-    
-    /* Color para fondo oscuro */
+
+    /* Light icon for dark background */
     header:not(.scrolled) .menu-toggle span {
-        background-color: white;
+        background-color: var(--white);
     }
-    
-    /* Animación al activar */
+
+    /* Animation when active */
     .menu-toggle.active span:nth-child(1) {
         top: 10px;
         transform: rotate(45deg);
-        background-color: #011730;
+        background-color: var(--text-color);
     }
-    
+
     .menu-toggle.active span:nth-child(2) {
         opacity: 0;
     }
-    
+
     .menu-toggle.active span:nth-child(3) {
         bottom: 10px;
         transform: rotate(-45deg);
-        background-color: #011730;
+        background-color: var(--text-color);
     }
-    
+
     .menu {
         position: fixed;
         top: 0;
         right: -100%;
         width: 280px;
         height: 100vh;
-        background-color: white;
+        background-color: var(--white);
         flex-direction: column;
         align-items: flex-start;
         justify-content: center;
         padding: 80px 30px;
-        transition: right var(--transition-speed) ease;
+        transition: right var(--transition-speed) cubic-bezier(0.25, 0.46, 0.45, 0.94);
         box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
+        overflow-y: auto;
     }
-    
+
     .menu.active {
         right: 0;
     }
-    
+
     .menu li {
         margin: 15px 0;
         width: 100%;
         opacity: 1;
         animation: none;
     }
-    
+
     .menu a {
         font-size: 18px;
-        color: #011730 !important; /* Forzar color oscuro para textos en el menú móvil */
+        color: var(--text-color) !important;
+        padding: 12px 0;
     }
-    
-    .menu a:hover {
-        color: var(--primary-color) !important;
-    }
-    
+
+    .menu a:hover,
     .menu a.active {
         color: var(--primary-color) !important;
     }
-    
+
     .btn-contacto {
         margin-top: 15px;
         width: 100%;
         text-align: center;
-        color: white !important;
+        color: var(--white) !important;
     }
 }
 
-/* Mantener colores correctos cuando el header cambia con scroll */
-header.scrolled .menu-toggle span {
-    background-color: #011730;
-}
-
-/* Efecto de superposición cuando se abre el menú */
+/* Overlay for mobile menu */
 .overlay {
     position: fixed;
     top: 0;
@@ -409,9 +350,19 @@ header.scrolled .menu-toggle span {
     opacity: 0;
     transition: opacity var(--transition-speed) ease, visibility var(--transition-speed) ease;
     z-index: 4;
+    backdrop-filter: blur(3px);
 }
 
 .overlay.active {
     visibility: visible;
     opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }
