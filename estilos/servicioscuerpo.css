@@ -1,43 +1,56 @@
-* {
+/* Use modern CSS reset */
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Define CSS variables for better maintainability and performance */
+:root {
+    --primary-color: #0094FF;
+    --accent-color: #00FFC2;
+    --bg-color: #011730;
+    --text-color: #ffffff;
+    --text-secondary: #a0a8b3;
+    --transition-speed: 0.3s;
+    --blur-amount: 5px;
+}
+
+/* Optimize body styles */
 body {
-    background-color:#011730;
-    color: white;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.5;
     overflow-x: hidden;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* Logo de fondo simplificado */
+/* Optimize background container */
 .background-container {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     z-index: -10;
     overflow: hidden;
-    pointer-events: none; /* Para que no interfiera con los clics */
+    pointer-events: none;
 }
 
+/* Optimize floating logo with will-change */
 .floating-logo {
     position: absolute;
     width: 1000px;
     height: 1000px;
-    opacity: 0.03; /* Logo muy sutil en el fondo */
-    background-image: url('../assets/logo.png');
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
+    opacity: 0.03;
+    background: url('../assets/logo.png') center/contain no-repeat;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    will-change: transform;
     animation: gentleFloat 40s ease-in-out infinite;
 }
 
+/* Optimize animations with transform instead of multiple properties */
 @keyframes gentleFloat {
     0%, 100% {
         transform: translate(-50%, -50%) scale(1);
@@ -47,25 +60,20 @@ body {
     }
 }
 
-/* Efecto de "parallax" para que el logo parezca moverse a diferente velocidad */
-.parallax-scroll {
-    position: relative;
-    z-index: 1;
-}
-
-/* Glow effects para añadir profundidad */
+/* Optimize glow effects */
 .bg-glow {
     position: absolute;
     border-radius: 50%;
     filter: blur(80px);
     z-index: -5;
     opacity: 0.15;
+    will-change: transform;
 }
 
 .bg-glow-1 {
     width: 800px;
     height: 800px;
-    background: linear-gradient(135deg, #0094FF, transparent);
+    background: linear-gradient(135deg, var(--primary-color), transparent);
     top: 10%;
     left: -200px;
     animation: floatGlow 20s ease-in-out infinite;
@@ -74,7 +82,7 @@ body {
 .bg-glow-2 {
     width: 600px;
     height: 600px;
-    background: linear-gradient(135deg, #00FFC2, transparent);
+    background: linear-gradient(135deg, var(--accent-color), transparent);
     bottom: 10%;
     right: -100px;
     animation: floatGlow 25s ease-in-out infinite reverse;
@@ -89,27 +97,21 @@ body {
     }
 }
 
-/* Container general */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 50px 20px;
-}
-
-/* Section Headers */
+/* Optimize section headers */
 .section-header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-block: 2rem;
 }
 
 .section-title {
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 5vw, 2.5rem);
     font-weight: 800;
-    margin-bottom: 20px;
+    margin-bottom: 1rem;
     position: relative;
     display: inline-block;
 }
 
+/* Use pseudo-element for decorative elements */
 .section-title::after {
     content: '';
     position: absolute;
@@ -117,10 +119,77 @@ body {
     left: 0;
     width: 100px;
     height: 4px;
-    background: linear-gradient(90deg, #0094FF, #00FFC2);
-    animation: expandWidth 2s ease-in-out forwards;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: expandWidth 0.6s ease-out forwards;
 }
 
+@keyframes expandWidth {
+    to {
+        transform: scaleX(1);
+    }
+}
+
+/* Use modern CSS Grid with auto-fit for responsive layouts */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+/* Optimize feature cards */
+.feature-card {
+    background: linear-gradient(135deg, rgba(12, 36, 53, 0.7), rgba(9, 47, 62, 0.7));
+    border: 1px solid rgba(0, 148, 255, 0.2);
+    border-radius: 15px;
+    padding: 1.5rem;
+    transition: transform var(--transition-speed) ease,
+                box-shadow var(--transition-speed) ease;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(var(--blur-amount));
+    -webkit-backdrop-filter: blur(var(--blur-amount));
+}
+
+/* Use GPU-accelerated properties for animations */
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 255, 194, 0.15);
+    border-color: rgba(0, 255, 194, 0.4);
+}
+
+/* Optimize images */
+.feature-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-top: 1rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: transform var(--transition-speed) ease;
+    will-change: transform;
+}
+
+/* Media queries for responsive design */
+@media (max-width: 768px) {
+    .floating-logo {
+        width: 100%;
+        height: 100%;
+    }
+    
+    .bg-glow {
+        display: none; /* Hide glows on mobile for better performance */
+    }
+    
+    .feature-card {
+        backdrop-filter: none; /* Disable backdrop-filter on mobile */
+        background: rgba(12, 36, 53, 0.9);
+    }
+}
+
+/* Section Headers */
 .section-subtitle {
     font-size: 1.2rem;
     color: #a0a8b3;
@@ -244,44 +313,6 @@ body {
 /* Features Section */
 .features-section {
     margin-top: 60px;
-}
-
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
-    margin-top: 40px;
-}
-
-.feature-card {
-    background: linear-gradient(135deg, rgba(12, 36, 53, 0.7) 0%, rgba(9, 47, 62, 0.7) 100%);
-    border: 1px solid rgba(0, 148, 255, 0.2);
-    border-radius: 15px;
-    padding: 30px;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(5px);
-}
-
-.feature-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 255, 194, 0.15);
-    border-color: rgba(0, 255, 194, 0.4);
-}
-
-.feature-image {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-top: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease;
-}
-
-.feature-card:hover .feature-image {
-    transform: scale(1.05);
 }
 
 .feature-card::before {
@@ -678,15 +709,6 @@ body {
     50% {
         transform: scale(1.05);
         opacity: 0.8;
-    }
-}
-
-@keyframes expandWidth {
-    0% {
-        width: 0;
-    }
-    100% {
-        width: 100px;
     }
 }
 

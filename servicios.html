@@ -4,16 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Soluciones de seguridad virtual con guardia virtual, reconocimiento facial y sistemas de monitoreo remoto en Ecuador">
+    <meta name="theme-color" content="#011730">
     <title>Protection Products - Seguridad 24/7 Ecuador</title>
+    
+    <!-- Preload critical assets -->
+    <link rel="preload" href="assets/logo.png" as="image">
+    <link rel="preload" href="estilos/servicios.css" as="style">
+    <link rel="preload" href="estilos/navbar.css" as="style">
+    
+    <!-- Critical CSS -->
     <link rel="stylesheet" href="estilos/servicios.css">
     <link rel="stylesheet" href="estilos/navbar.css">
     <link rel="stylesheet" href="estilos/servicioscuerpo.css">
     <link rel="stylesheet" href="estilos/logo.css">
     <link rel="stylesheet" href="estilos/footer.css">
-    <!-- Font Awesome para iconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- AOS para animaciones al hacer scroll -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    
+    <!-- Defer non-critical CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    </noscript>
 </head>
 <body>
     <!-- Contenedor del fondo con un solo logo grande flotante -->
@@ -87,7 +99,7 @@
             <!-- How It Works Section -->
             <div class="how-it-works-section" data-aos="fade-up">
                 <h2 class="section-title">¿Cómo Funciona?</h2>
-                <p class="section-subtitle">Sistema de protección en tres simples pasos</p>
+                
 
                 <div class="how-it-works-grid">
                     <div class="how-it-works-step" data-aos="fade-right" data-aos-delay="100">
@@ -111,7 +123,7 @@
             <!-- Features Section -->
             <div class="features-section" data-aos="fade-up">
                 <h2 class="section-title">Características Principales</h2>
-                <p class="section-subtitle">Tecnologías integradas para una seguridad completa</p>
+                
                 
                 <div class="features-grid">
                     <div class="feature-card" data-aos="zoom-in" data-aos-delay="100">
@@ -162,7 +174,7 @@
             <!-- Benefits Section with Video -->
             <div class="benefits-section" data-aos="fade-up">
                 <h2 class="section-title">Beneficios</h2>
-                <p class="section-subtitle">Ventajas sobre soluciones tradicionales</p>
+               
                 
                 <div class="benefits-video-container" data-aos="zoom-in">
                     <video controls poster="imagenes/benefits-poster.jpg" class="benefits-video">
@@ -200,7 +212,7 @@
             <!-- Additional Services -->
             <div class="additional-services" data-aos="fade-up">
                 <h2 class="section-title">Servicios Complementarios</h2>
-                <p class="section-subtitle">Componentes adicionales para mejorar su seguridad</p>
+
                 
                 <div class="complementary-services-grid">
                     <div class="service-box" data-aos="fade-right">
@@ -262,58 +274,11 @@
                 <a href="#contacto" class="cta-button pulse-animation">Solicitar Demostración</a>
                 
                 <!-- Galería de imágenes pequeñas de clientes satisfechos -->
-                <div class="client-gallery">
-                    <img src="imagenes/client1.jpg" alt="Cliente satisfecho" class="client-image">
-                    <img src="imagenes/client2.jpg" alt="Cliente satisfecho" class="client-image">
-                    <img src="imagenes/client3.jpg" alt="Cliente satisfecho" class="client-image">
-                    <img src="imagenes/client4.jpg" alt="Cliente satisfecho" class="client-image">
-                </div>
-            </div>
+                
         </section>
 
         <!-- Testimonios con video (sección nueva) -->
-        <section class="testimonials-section">
-            <div class="container">
-                <h2 class="section-title" data-aos="fade-up">Lo que dicen nuestros clientes</h2>
-                <p class="section-subtitle" data-aos="fade-up">Experiencias reales con nuestros sistemas de seguridad</p>
-                
-                <div class="testimonial-video-container" data-aos="zoom-in">
-                    <video controls poster="imagenes/testimonial-poster.jpg" class="testimonial-video">
-                        <source src="videos/client-testimonial.mp4" type="video/mp4">
-                    </video>
-                </div>
-                
-                <div class="testimonials-grid">
-                    <div class="testimonial-card" data-aos="fade-right">
-                        <div class="testimonial-quote">
-                            <i class="fas fa-quote-left"></i>
-                        </div>
-                        <p>El sistema de Guardia Virtual nos ha dado una tranquilidad que no teníamos antes. La respuesta inmediata ante alertas es impresionante.</p>
-                        <div class="testimonial-author">
-                            <img src="imagenes/testimonial1.jpg" alt="Cliente" class="testimonial-image">
-                            <div>
-                                <h4>Carlos Mendoza</h4>
-                                <p>Gerente de Seguridad - Condominio Las Palmas</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="testimonial-card" data-aos="fade-left">
-                        <div class="testimonial-quote">
-                            <i class="fas fa-quote-left"></i>
-                        </div>
-                        <p>Hemos reducido los incidentes de seguridad en un 85% desde que implementamos el sistema de reconocimiento facial y perifoneo.</p>
-                        <div class="testimonial-author">
-                            <img src="imagenes/testimonial2.jpg" alt="Cliente" class="testimonial-image">
-                            <div>
-                                <h4>María Sánchez</h4>
-                                <p>Administradora - Centro Comercial El Portal</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+      
 
         <footer>
             <div class="container">
@@ -356,18 +321,33 @@
         </footer>
     </div>
 
-    <!-- Scripts -->
-    <script src="scripts/scriptservicios.js"></script>
-    <script src="scripts/script.js"></script>
-    <script src="scripts/logo.js"></script>
-    <!-- AOS Animation Script -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <!-- Optimized Scripts Loading -->
+    <script src="scripts/scriptservicios.js" defer></script>
+    <script src="scripts/script.js" defer></script>
+    <script src="scripts/logo.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" defer></script>
     <script>
-        // Inicializar AOS
-        AOS.init({
-            duration: 800,
-            easing: 'ease-in-out',
-            once: true
+        // Initialize AOS with optimized settings
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true,
+                disable: 'mobile' // Disable on mobile for better performance
+            });
+            
+            // Lazy load images
+            const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+            if ('loading' in HTMLImageElement.prototype) {
+                lazyImages.forEach(img => {
+                    img.src = img.dataset.src;
+                });
+            } else {
+                // Fallback for browsers that don't support lazy loading
+                const lazyLoadScript = document.createElement('script');
+                lazyLoadScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js';
+                document.body.appendChild(lazyLoadScript);
+            }
         });
     </script>
 </body>
