@@ -415,3 +415,139 @@ document.addEventListener('DOMContentLoaded', function() {
         menu.setAttribute('aria-hidden', 'true');
     }
 });
+// Script para manejar efectos adicionales de los botones de login y registro
+document.addEventListener('DOMContentLoaded', function() {
+    // Referencias a los botones
+    const btnLogin = document.querySelector('.btn-login');
+    const btnRegistro = document.querySelector('.btn-registro');
+    
+    // Efecto de onda para el botón de registro
+    btnRegistro.addEventListener('click', function(e) {
+        // Crear elemento de onda
+        const ripple = document.createElement('span');
+        ripple.classList.add('btn-ripple');
+        
+        // Posicionar la onda en el punto de clic
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+        
+        // Añadir la onda al botón
+        this.appendChild(ripple);
+        
+        // Eliminar la onda después de la animación
+        setTimeout(() => {
+            ripple.remove();
+        }, 600);
+    });
+    
+    // Efecto de brillo para el botón de login
+    btnLogin.addEventListener('mouseenter', function() {
+        // Crear elemento de brillo
+        const shine = document.createElement('span');
+        shine.classList.add('btn-shine');
+        this.appendChild(shine);
+        
+        // Eliminar el brillo después de la animación
+        setTimeout(() => {
+            shine.remove();
+        }, 1000);
+    });
+    
+    // Añadir animación a los iconos en hover
+    btnLogin.addEventListener('mouseenter', function() {
+        const icon = this.querySelector('i');
+        icon.classList.add('icon-animated');
+    });
+    
+    btnLogin.addEventListener('mouseleave', function() {
+        const icon = this.querySelector('i');
+        icon.classList.remove('icon-animated');
+    });
+    
+    btnRegistro.addEventListener('mouseenter', function() {
+        const icon = this.querySelector('i');
+        icon.classList.add('icon-arrow-animated');
+    });
+    
+    btnRegistro.addEventListener('mouseleave', function() {
+        const icon = this.querySelector('i');
+        icon.classList.remove('icon-arrow-animated');
+    });
+    
+    // Añadir estilos adicionales necesarios
+    const style = document.createElement('style');
+    style.textContent = `
+        .btn-ripple {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+        
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        .btn-shine {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg, 
+                rgba(255, 255, 255, 0) 0%, 
+                rgba(255, 255, 255, 0.2) 50%, 
+                rgba(255, 255, 255, 0) 100%
+            );
+            animation: shine 1s ease-in-out;
+            pointer-events: none;
+        }
+        
+        @keyframes shine {
+            from {
+                transform: translateX(-100%);
+            }
+            to {
+                transform: translateX(100%);
+            }
+        }
+        
+        .icon-animated {
+            animation: bounce 0.6s ease;
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        .icon-arrow-animated {
+            animation: slide 0.6s ease;
+        }
+        
+        @keyframes slide {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(5px);
+            }
+        }
+    `;
+    
+    document.head.appendChild(style);
+});
