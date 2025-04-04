@@ -3,290 +3,354 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Protection Products</title>
+    <meta name="description" content="Soluciones de seguridad virtual con guardia virtual, reconocimiento facial y sistemas de monitoreo remoto en Ecuador">
+    <meta name="theme-color" content="#011730">
+    <title>Protection Products - Seguridad 24/7 Ecuador</title>
+    
+    <!-- Preload critical assets -->
+    <link rel="preload" href="assets/logo.png" as="image">
+    <link rel="preload" href="estilos/servicios.css" as="style">
+    <link rel="preload" href="estilos/navbar.css" as="style">
+    
+    <!-- Critical CSS -->
     <link rel="stylesheet" href="estilos/servicios.css">
     <link rel="stylesheet" href="estilos/navbar.css">
     <link rel="stylesheet" href="estilos/servicioscuerpo.css">
+    <link rel="stylesheet" href="estilos/logo.css">
     <link rel="stylesheet" href="estilos/footer.css">
+    
+    <!-- Defer non-critical CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    </noscript>
 </head>
 <body>
-    <!-- Encabezado -->
-    <header>
-        <div class="container">
-            <nav>
-                <div class="logo">
-                    <a href="index.html">
-                        <img src="assets/logo.png" alt="Detecta365 Logo" />
-                    </a>
-                </div>
-                <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <ul class="menu" id="menu">
-                    <li><a href="index.html" class="active">Inicio</a></li>
-                    <li><a href="#servicios">Servicios</a></li>
-                    <li><a href="Paquetes.html">Paquetes</a></li>
-                    <li><a href="#nosotros">Nosotros</a></li>
-                    <li><a href="#casos">Casos de Éxito</a></li>
-                    <li><a href="#contacto" class="btn-contacto">Contacto</a></li>
-                </ul>
-            </nav>
-        </div>
-        <div class="overlay" id="overlay"></div>
-    </header>
-
-    <!-- Sección de Servicios -->
-    <section class="protection-products">
-        <div class="content">
-            <h1>Nuestros <span>servicios</span></h1>
-            <p>En seguridad 24/7 del Ecuador, ofrecemos soluciones de seguridad virtual avanzadas para proteger lo más importante, utilizando tecnología de última generación para brindarte tranquilidad.</p>
-        </div>
-    </section>
-
-    <!-- Sección de guardia-->
-    <div class="grid-background"></div>
-    <div class="glow-element glow-1"></div>
-    <div class="glow-element glow-2"></div>
+    <!-- Contenedor del fondo con un solo logo grande flotante -->
+    <div class="background-container">
+        <div class="floating-logo"></div>
+        <div class="bg-glow bg-glow-1"></div>
+        <div class="bg-glow bg-glow-2"></div>
+    </div>
     
-    <div class="container">
-        <!-- Main Service Section -->
-        <h1 class="section-title">Guardia Virtual</h1>
-        <p class="section-subtitle">Sistema de monitoreo remoto mediante cámaras inteligentes, reconocimiento facial y de vehículos, perifoneo, control de accesos y respuesta inmediata a incidentes.</p>
+    <!-- Todo el contenido principal dentro del contenedor parallax -->
+    <div class="parallax-scroll">
+        <!-- Encabezado-->
+        <header>
+            <div class="container">
+                <nav>
+                    <div class="logo">
+                        <a href="index.html">
+                            <img src="assets/logo.png" alt="Detecta365 Logo" />
+                        </a>
+                    </div>
+                    <button id="menu-toggle" class="menu-toggle" aria-label="Menú" aria-expanded="false">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <ul class="menu" id="menu">
+                        <li><a href="index.html" class="active">Inicio</a></li>
+                        <li><a href="servicios.html">Servicios</a></li>
+                        <li><a href="Paquetes.html">Paquetes</a></li>
+                        <li><a href="#nosotros">Nosotros</a></li>
+                        <li><a href="#casos">Casos de Éxito</a></li>
+                        <li><a href="#contacto" class="btn-contacto">Contacto</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="overlay" id="overlay"></div>
+        </header>
         
-        <div class="main-service">
-            <div class="service-info">
-                <p>Nuestro sistema de <span class="highlight">Guardia Virtual</span> representa la evolución de la seguridad tradicional, combinando tecnología de punta con protocolos de respuesta eficientes. Mediante una red de cámaras inteligentes y sistemas automatizados, proporcionamos vigilancia las 24 horas sin las limitaciones de la seguridad física convencional.</p>
-                <br>
-                <p>Cada componente está diseñado para trabajar en conjunto, creando una red de seguridad impenetrable que detecta amenazas potenciales antes de que se conviertan en problemas reales. Con nuestro centro de monitoreo siempre activo, cualquier alerta es atendida de inmediato por personal especializado.</p>
+        <!-- Hero con video de fondo -->
+        <section class="protection-products">
+            <div class="content">
+                <h1>Nuestros <span>servicios</span></h1>
+                <p>En seguridad 24/7 del Ecuador, ofrecemos soluciones de seguridad virtual avanzadas para proteger lo más importante, utilizando tecnología de última generación para brindarte tranquilidad.</p>
             </div>
-            
-            <div class="service-image">
-                <img src="imagenes/portrait-male-security-guard-with-radio-station-camera-screens.jpg" alt="Centro de monitoreo con personal de seguridad">
-                <div class="service-badge">Monitoreo 24/7</div>
-            </div>
-        </div>
-
-        <!-- How It Works Section -->
-        <div class="how-it-works-section">
-            <h2 class="section-title">¿Cómo Funciona?</h2>
-            <p class="section-subtitle">Te explicamos paso a paso cómo interactúa nuestro sistema de Guardia Virtual para proteger tu propiedad.</p>
-
-            <div class="how-it-works-grid">
-                <div class="how-it-works-step">
-                    <img src="/img/step1.png" alt="Instalación de cámaras" class="sticker-img">
-                    <h3>Paso 1: Instalación</h3>
-                    <p>Colocamos cámaras inteligentes con reconocimiento facial y perifoneo en puntos estratégicos.</p>
-                </div>
-                <div class="how-it-works-step">
-                    <img src="/img/step2.png" alt="Monitoreo activo" class="sticker-img">
-                    <h3>Paso 2: Monitoreo</h3>
-                    <p>El sistema vigila 24/7, detectando cualquier anomalía en tiempo real.</p>
-                </div>
-                <div class="how-it-works-step">
-                    <img src="/img/step3.png" alt="Respuesta inmediata" class="sticker-img">
-                    <h3>Paso 3: Respuesta</h3>
-                    <p>Se activa el protocolo de seguridad, como perifoneo o aviso a las autoridades.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Features Section -->
-        <div class="features-section">
-            <h2 class="section-title">Características Principales</h2>
-            <p class="section-subtitle">Nuestro sistema de Guardia Virtual integra múltiples tecnologías para ofrecer una solución completa de seguridad.</p>
-            
-            <div class="features-grid">
-                <div class="feature-card">
-                    <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="10" r="3"/>
-                        <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z"/>
-                    </svg>
-                    <h3 class="feature-title">Reconocimiento Facial</h3>
-                    <p class="feature-description">Nuestras cámaras inteligentes identifican y verifican automáticamente a visitantes y residentes, almacenando registros de cada acceso para futura referencia.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="6" width="20" height="12" rx="2"/>
-                        <path d="M7 12h10"/>
-                        <path d="M7 9h2"/>
-                        <path d="M7 15h2"/>
-                    </svg>
-                    <h3 class="feature-title">Reconocimiento de Placas</h3>
-                    <p class="feature-description">El sistema captura y verifica automáticamente las placas de vehículos para permitir o denegar acceso, manteniendo un registro detallado de entradas y salidas.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
-                    </svg>
-                    <h3 class="feature-title">Sistema de Perifoneo</h3>
-                    <p class="feature-description">Comunicación bidireccional que permite a nuestros operadores emitir mensajes disuasorios o instrucciones en tiempo real ante cualquier situación sospechosa.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"/>
-                        <line x1="12" y1="8" x2="12" y2="12"/>
-                        <line x1="12" y1="16" x2="12" y2="16"/>
-                    </svg>
-                    <h3 class="feature-title">Botón de Pánico</h3>
-                    <p class="feature-description">Alerta inmediata que activa protocolos de emergencia, enviando notificaciones al centro de monitoreo, personal motorizado y autoridades según sea necesario.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="benefits-section">
-            <h2 class="section-title">Beneficios</h2>
-            <p class="section-subtitle">Razones para elegir nuestro sistema de Guardia Virtual sobre soluciones de seguridad tradicionales.</p>
-            
-            <div class="benefits-container">
-                <div class="benefit-card">
-                    <svg class="benefit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#00FFC2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    </svg>
-                    <h3 class="benefit-title">Reducción de Riesgos</h3>
-                    <p class="benefit-description">Eliminamos el factor humano en la vigilancia primaria, dependiendo de sistemas programados que no se distraen ni fatigan, logrando una vigilancia constante y fiable.</p>
-                </div>
-                
-                <div class="benefit-card">
-                    <svg class="benefit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#00FFC2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                    </svg>
-                    <h3 class="benefit-title">Menor Costo</h3>
-                    <p class="benefit-description">Nuestra solución de Guardia Virtual representa un ahorro significativo frente a la contratación de personal de seguridad física tradicional, con resultados superiores.</p>
-                </div>
-                
-                <div class="benefit-card">
-                    <svg class="benefit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#00FFC2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-                    </svg>
-                    <h3 class="benefit-title">Respuesta Rápida</h3>
-                    <p class="benefit-description">Detección temprana de anomalías que permite una intervención inmediata, reduciendo significativamente el tiempo de respuesta ante incidentes.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Additional Services -->
-        <div class="additional-services">
-            <h2 class="section-title">Servicios Complementarios</h2>
-            <p class="section-subtitle">Componentes adicionales que mejoran y complementan nuestro sistema de Guardia Virtual.</p>
-            
-            <div class="service-box">
-                <h3 class="service-box-title">
-                    <svg class="service-box-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                    </svg>
-                    Automatización de Accesos
-                </h3>
-                
-                <p>Implementación de sistemas de control para puertas peatonales y vehiculares, operados remotamente desde nuestra central de monitoreo para garantizar que solo personas autorizadas puedan ingresar.</p>
-                
-                <div class="service-features">
-                    <div class="service-feature-item">
-                        <p class="service-feature-text">Instalación de <strong>citófonos</strong> con capacidad de video para registro completo de visitantes, permitiendo verificación visual y comunicación directa.</p>
-                    </div>
-                    
-                    <div class="service-feature-item">
-                        <p class="service-feature-text"><strong>Monitoreo remoto</strong> de cada entrada y salida, con registro en tiempo real de todos los movimientos para una trazabilidad completa.</p>
-                    </div>
-                    
-                    <div class="service-feature-item">
-                        <p class="service-feature-text">Sistemas para garantizar <strong>control total</strong> sobre quién entra y sale de sus instalaciones en todo momento.</p>
-                    </div>
-                    
-                    <div class="service-feature-item">
-                        <p class="service-feature-text">Mayor <strong>comodidad y seguridad</strong> al no requerir personal físico dedicado a la gestión de accesos.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="service-box">
-                <h3 class="service-box-title">
-                    <svg class="service-box-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0"/>
-                        <path d="M5 10a7 7 0 1 1 14 0 7 7 0 0 1-14 0"/>
-                        <path d="M8 8a4 4 0 1 1 8 0 4 4 0 0 1-8 0"/>
-                        <path d="M11 1L9 3l2 2"/>
-                        <path d="M13 1l2 2-2 2"/>
-                    </svg>
-                    Cámaras con Audio Incorporado
-                </h3>
-                
-                <p>Nuestras cámaras inteligentes van más allá de la captura de imágenes, integrando audio bidireccional para una interacción completa con cualquier persona en el área vigilada.</p>
-                
-                <div class="service-features">
-                    <div class="service-feature-item">
-                        <p class="service-feature-text">Capacidad de <strong>escuchar</strong> a visitantes o posibles intrusos y darles instrucciones directamente a través del sistema.</p>
-                    </div>
-                    
-                    <div class="service-feature-item">
-                        <p class="service-feature-text"><strong>Intervención remota</strong> inmediata ante situaciones de emergencia, permitiendo la comunicación directa entre operadores y personas en el sitio.</p>
-                    </div>
-                    
-                    <div class="service-feature-item">
-                        <p class="service-feature-text">Advertencias verbales que funcionan como potente elemento <strong>disuasorio</strong> contra posibles intrusos.</p>
-                    </div>
-                    
-                    <div class="service-feature-item">
-                        <p class="service-feature-text">Grabación sincronizada de <strong>audio y video</strong> para documentación completa de incidentes, útil para investigaciones posteriores.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </section>
         
-        <!-- Call to Action -->
-        <div class="cta-section">
-            <h2 class="section-title">Proteja su propiedad con la tecnología más avanzada</h2>
-            <p class="section-subtitle">Contáctenos hoy mismo para una demostración personalizada de nuestro sistema de Guardia Virtual y descubra cómo podemos adaptar nuestras soluciones a sus necesidades específicas.</p>
+        <!-- Sección de Servicios --> 
+        <section id="guardia-virtual" class="container">
+            <!-- Main Service Section -->
+            <div class="section-header" data-aos="fade-up">
+                <h1 class="section-title">Guardia Virtual</h1>
+                <p class="section-subtitle">Sistema de monitoreo remoto mediante cámaras inteligentes con reconocimiento facial y respuesta inmediata.</p>
+            </div>
             
-            <a href="#" class="cta-button">Solicitar Demostración</a>
-        </div>
+            <div class="main-service" data-aos="fade-up">
+                <div class="service-info">
+                    <p>Nuestro sistema de <span class="highlight">Guardia Virtual</span> combina tecnología de punta con protocolos de respuesta eficientes, proporcionando vigilancia las 24 horas con detección avanzada de amenazas.</p>
+                    
+                    <!-- Video pequeño sobre el sistema de seguridad -->
+                    <div class="service-video-small">
+                        <video controls poster="imagenes/video-poster.jpg">
+                            <source src="videos/security-demo.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                
+                <div class="service-image">
+                    <img src="imagenes/portrait-male-security-guard-with-radio-station-camera-screens.jpg" alt="Centro de monitoreo con personal de seguridad">
+                    <div class="service-badge">Monitoreo 24/7</div>
+                </div>
+            </div>
+
+            <!-- How It Works Section -->
+            <div class="how-it-works-section" data-aos="fade-up">
+                <h2 class="section-title">¿Cómo Funciona?</h2>
+                
+
+                <div class="how-it-works-grid">
+                    <div class="how-it-works-step" data-aos="fade-right" data-aos-delay="100">
+                        <img src="imagenes/instalacion.jpg" alt="Instalación de cámaras" class="sticker-img">
+                        <h3>Instalación</h3>
+                        <p>Cámaras inteligentes en puntos estratégicos con reconocimiento facial.</p>
+                    </div>
+                    <div class="how-it-works-step" data-aos="fade-up" data-aos-delay="200">
+                        <img src="imagenes/monitoreo.jpg" alt="Monitoreo activo" class="sticker-img">
+                        <h3>Monitoreo</h3>
+                        <p>Vigilancia 24/7 con detección en tiempo real.</p>
+                    </div>
+                    <div class="how-it-works-step" data-aos="fade-left" data-aos-delay="300">
+                        <img src="imagenes/respuesta.jpg" alt="Respuesta inmediata" class="sticker-img">
+                        <h3>Respuesta</h3>
+                        <p>Activación inmediata de protocolos de seguridad.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <div class="features-section" data-aos="fade-up">
+                <h2 class="section-title">Características Principales</h2>
+                
+                
+                <div class="features-grid">
+                    <div class="feature-card" data-aos="zoom-in" data-aos-delay="100">
+                        <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="10" r="3"/>
+                            <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z"/>
+                        </svg>
+                        <h3 class="feature-title">Reconocimiento Facial</h3>
+                        <p class="feature-description">Identificación automática de visitantes con registro de cada acceso.</p>
+                        <img src="imagenes/facial-recognition.jpg" alt="Reconocimiento facial" class="feature-image">
+                    </div>
+                    
+                    <div class="feature-card" data-aos="zoom-in" data-aos-delay="200">
+                        <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="6" width="20" height="12" rx="2"/>
+                            <path d="M7 12h10"/>
+                            <path d="M7 9h2"/>
+                            <path d="M7 15h2"/>
+                        </svg>
+                        <h3 class="feature-title">Reconocimiento de Placas</h3>
+                        <p class="feature-description">Verificación automática de vehículos con registro de entradas y salidas.</p>
+                        <img src="imagenes/license-plate.jpg" alt="Reconocimiento de placas" class="feature-image">
+                    </div>
+                    
+                    <div class="feature-card" data-aos="zoom-in" data-aos-delay="300">
+                        <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                        </svg>
+                        <h3 class="feature-title">Sistema de Perifoneo</h3>
+                        <p class="feature-description">Comunicación bidireccional para emisión de mensajes disuasorios o instrucciones.</p>
+                        <img src="imagenes/speaker-system.jpg" alt="Sistema de perifoneo" class="feature-image">
+                    </div>
+                    
+                    <div class="feature-card" data-aos="zoom-in" data-aos-delay="400">
+                        <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12" y2="16"/>
+                        </svg>
+                        <h3 class="feature-title">Botón de Pánico</h3>
+                        <p class="feature-description">Alerta inmediata que activa protocolos de emergencia en segundos.</p>
+                        <img src="imagenes/panic-button.jpg" alt="Botón de pánico" class="feature-image">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Benefits Section with Video -->
+            <div class="benefits-section" data-aos="fade-up">
+                <h2 class="section-title">Beneficios</h2>
+               
+                
+                <div class="benefits-video-container" data-aos="zoom-in">
+                    <video controls poster="imagenes/benefits-poster.jpg" class="benefits-video">
+                        <source src="videos/benefits-explainer.mp4" type="video/mp4">
+                    </video>
+                </div>
+                
+                <div class="benefits-container">
+                    <div class="benefit-card" data-aos="fade-right" data-aos-delay="100">
+                        <svg class="benefit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#00FFC2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                        <h3 class="benefit-title">Reducción de Riesgos</h3>
+                        <p class="benefit-description">Vigilancia constante sin factor humano, eliminando distracciones y fatiga.</p>
+                    </div>
+                    
+                    <div class="benefit-card" data-aos="fade-up" data-aos-delay="200">
+                        <svg class="benefit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#00FFC2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                        <h3 class="benefit-title">Menor Costo</h3>
+                        <p class="benefit-description">Ahorro significativo frente a seguridad física tradicional con resultados superiores.</p>
+                    </div>
+                    
+                    <div class="benefit-card" data-aos="fade-left" data-aos-delay="300">
+                        <svg class="benefit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#00FFC2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
+                        <h3 class="benefit-title">Respuesta Rápida</h3>
+                        <p class="benefit-description">Detección temprana de anomalías permitiendo intervención inmediata.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Services -->
+            <div class="additional-services" data-aos="fade-up">
+                <h2 class="section-title">Servicios Complementarios</h2>
+
+                
+                <div class="complementary-services-grid">
+                    <div class="service-box" data-aos="fade-right">
+                        <div class="service-box-content">
+                            <h3 class="service-box-title">
+                                <svg class="service-box-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                                Automatización de Accesos
+                            </h3>
+                            
+                            <p>Control remoto de puertas peatonales y vehiculares desde nuestra central de monitoreo, garantizando acceso solo a personas autorizadas.</p>
+                            
+                            <ul class="service-features-list">
+                                <li>Citófonos con video para registro completo</li>
+                                <li>Monitoreo remoto en tiempo real</li>
+                                <li>Control total de entradas y salidas</li>
+                                <li>Mayor comodidad y seguridad</li>
+                            </ul>
+                        </div>
+                        <div class="service-box-image">
+                            <img src="imagenes/access-control.jpg" alt="Sistema de control de acceso">
+                        </div>
+                    </div>
+                    
+                    <div class="service-box reverse" data-aos="fade-left">
+                        <div class="service-box-content">
+                            <h3 class="service-box-title">
+                                <svg class="service-box-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0"/>
+                                    <path d="M5 10a7 7 0 1 1 14 0 7 7 0 0 1-14 0"/>
+                                    <path d="M8 8a4 4 0 1 1 8 0 4 4 0 0 1-8 0"/>
+                                </svg>
+                                Cámaras con Audio Incorporado
+                            </h3>
+                            
+                            <p>Cámaras inteligentes con audio bidireccional para interacción completa con visitantes y disuasión de posibles intrusos.</p>
+                            
+                            <ul class="service-features-list">
+                                <li>Comunicación directa con visitantes</li>
+                                <li>Intervención remota inmediata</li>
+                                <li>Advertencias verbales disuasorias</li>
+                                <li>Grabación sincronizada de audio y video</li>
+                            </ul>
+                        </div>
+                        <div class="service-box-image">
+                            <img src="imagenes/audio-camera.jpg" alt="Cámara con audio incorporado">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CTA Section -->
+            <div class="cta-section" data-aos="zoom-in">
+                <h2 class="section-title">Proteja su propiedad con la tecnología más avanzada</h2>
+                <p class="section-subtitle">Contáctenos hoy para una demostración personalizada</p>
+                
+                <a href="#contacto" class="cta-button pulse-animation">Solicitar Demostración</a>
+                
+                <!-- Galería de imágenes pequeñas de clientes satisfechos -->
+                
+        </section>
+
+        <!-- Testimonios con video (sección nueva) -->
+      
+
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-logo">
+                        <img src="assets/logo.png" alt="24-7 Logo" />
+                    </div>
+                    <div class="footer-links">
+                        <h4>Enlaces rápidos</h4>
+                        <ul>
+                            <li><a href="#inicio">Inicio</a></li>
+                            <li><a href="#servicios">Servicios</a></li>
+                            <li><a href="#nosotros">Nosotros</a></li>
+                            <li><a href="#casos">Casos de Éxito</a></li>
+                            <li><a href="#contacto">Contacto</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-servicios">
+                        <h4>Servicios</h4>
+                        <ul>
+                            <li><a href="#servicios">Guardia Virtual</a></li>
+                            <li><a href="#servicios">Reconocimiento Facial</a></li>
+                            <li><a href="#servicios">Monitoreo 24/7</a></li>
+                            <li><a href="#servicios">Control de Accesos</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-newsletter">
+                        <h4>Suscríbete</h4>
+                        <p>Recibe nuestras novedades y ofertas</p>
+                        <form id="newsletter-form">
+                            <input type="email" placeholder="Tu correo electrónico" required />
+                            <button type="submit">Suscribirse</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="copyright">
+                    <p>&copy; 2025 24-7 SEGURIDAD DEL ECUADOR. Todos los derechos reservados.</p>
+                </div>
+            </div>
+        </footer>
     </div>
 
+    <!-- Optimized Scripts Loading -->
+    <script src="scripts/scriptservicios.js" defer></script>
+    <script src="scripts/script.js" defer></script>
+    <script src="scripts/logo.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" defer></script>
+    <script>
+        // Initialize AOS with optimized settings
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true,
+                disable: 'mobile' // Disable on mobile for better performance
+            });
+            
+            // Lazy load images
+            const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+            if ('loading' in HTMLImageElement.prototype) {
+                lazyImages.forEach(img => {
+                    img.src = img.dataset.src;
+                });
+            } else {
+                // Fallback for browsers that don't support lazy loading
+                const lazyLoadScript = document.createElement('script');
+                lazyLoadScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js';
+                document.body.appendChild(lazyLoadScript);
+            }
+        });
+    </script>
 </body>
-<footer>
-    <div class="container">
-        <div class="footer-content">
-            <div class="footer-logo">
-                <img src="assets/logo.png" alt="24-7 Logo" />
-            </div>
-            <div class="footer-links">
-                <h4>Enlaces rápidos</h4>
-                <ul>
-                    <li><a href="#inicio">Inicio</a></li>
-                    <li><a href="#servicios">Servicios</a></li>
-                    <li><a href="#nosotros">Nosotros</a></li>
-                    <li><a href="#casos">Casos de Éxito</a></li>
-                    <li><a href="#contacto">Contacto</a></li>
-                </ul>
-            </div>
-            <div class="footer-servicios">
-                <h4>Servicios</h4>
-                <ul>
-                    <li><a href="#servicios">Detección de Personas</a></li>
-                    <li><a href="#servicios">Detección de Objetos</a></li>
-                    <li><a href="#servicios">Análisis Estadístico</a></li>
-                    <li><a href="#servicios">Seguridad Avanzada</a></li>
-                </ul>
-            </div>
-            <div class="footer-newsletter">
-                <h4>Suscríbete</h4>
-                <p>Recibe nuestras novedades y ofertas</p>
-                <form id="newsletter-form">
-                    <input type="email" placeholder="Tu correo electrónico" required />
-                    <button type="submit">Suscribirse</button>
-                </form>
-            </div>
-        </div>
-        <div class="copyright">
-            <p>&copy; 2025 24-7 SEGURIDAD DEL ECUADOR. Todos los derechos reservados.</p>
-        </div>
-    </div>
-</footer>
-
-<script src="scripts/scriptservicios.js"></script>
-<script src="scripts/script.js"></script>
 </html>
