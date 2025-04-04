@@ -1,64 +1,7 @@
-/* General body styles */
-body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif; /* Usar Poppins para el diseño moderno */
-    height: 200%; /* Para permitir scroll en la página */
-    background-color: #011730; /* Fondo oscuro para la página */
-    color: #fff; /* Color general del texto */
-}
+/* Importar fuente de Google Fonts de manera más eficiente */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap');
 
-
-/* Cargar fuente de Google Fonts para un estilo moderno */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
-
-/* Section with background and text */
-.protection-products {
-    background: url('../imagenes/security-guard-workspace.jpg') no-repeat center center fixed;
-    background-size: cover;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 60px 20px;
-    transition: background 0.3s, filter 0.5s ease-in-out;
-}
-
-/* Estilo del título con fondo oscuro y texto blanco con highlight en color celeste */
-.protection-products h1 {
-    font-family: 'Poppins', sans-serif; /* Fuente Poppins */
-    font-size: 4rem;
-    font-weight: 700;
-    margin-bottom: 20px;
-    letter-spacing: 2px; /* Espaciado para dar más elegancia */
-    color: #fff; /* Blanco por defecto */
-    transition: opacity 0.3s ease-in-out;
-}
-
-.protection-products h1 span {
-    color:black; /* Nuevo celeste (#88FEE7) para resaltar la palabra */
-    font-weight: 700; /* Hacerlo más grueso para el efecto */
-}
-
-/* Estilo del párrafo con color plomo */
-.protection-products p {
-    font-size: 1.25rem;
-    opacity: 1;
-    color: #6B7280; /* Plomo para el texto del párrafo */
-    transition: opacity 0.3s ease-in-out;
-}
-
-/* Styles for when the background is blurred */
-.protection-products.blur-background {
-    filter: blur(5px); /* Desenfoque del fondo */
-}
-
-/* Styles for hidden title when scrolling down */
-.protection-products.hide-title h1 {
-    opacity: 0;
-}
-
-/* Estilos base */
+/* General body styles - optimizado */
 * {
     margin: 0;
     padding: 0;
@@ -66,16 +9,94 @@ body {
 }
 
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #0A0A0A;
+    font-family: 'Poppins', sans-serif;
+    background-color: #011730;
     color: #fff;
+    margin: 0;
+    height: 100%; /* Cambiado de 200% para evitar scroll innecesario */
 }
 
+/* Section with background and text - optimizado */
+.protection-products {
+    /* Usar background-attachment: scroll en lugar de fixed para mejor rendimiento */
+    background: url('../imagenes/security-guard-workspace.jpg') no-repeat center center;
+    background-size: cover;
+    background-attachment: scroll; /* Mejor rendimiento que fixed */
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 20px;
+    transition: background 0.3s ease-in-out;
+    position: relative; /* Para posicionar el overlay */
+}
+
+/* Añadir un overlay en vez de usar blur para mejor rendimiento */
+.protection-products::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(1, 23, 48, 0.5); /* Overlay semi-transparente */
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    z-index: 1;
+}
+
+.protection-products.blur-background::before {
+    opacity: 1;
+}
+
+.protection-products .content {
+    position: relative;
+    z-index: 2; /* Por encima del overlay */
+}
+
+/* Estilo del título optimizado */
+.protection-products h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+    color: #fff;
+    transition: opacity 0.3s ease-in-out;
+    will-change: opacity; /* Mejora el rendimiento para animaciones */
+}
+
+.protection-products h1 span {
+    color: black;
+    font-weight: 700;
+}
+
+/* Estilo del párrafo optimizado */
+.protection-products p {
+    font-size: 1.25rem;
+    color: #6B7280;
+    transition: opacity 0.3s ease-in-out;
+    will-change: opacity;
+    max-width: 800px; /* Limitar ancho para mejor legibilidad */
+    margin: 0 auto; /* Centrar */
+}
+
+/* Styles for hidden title when scrolling down - optimizado */
+.protection-products.hide-title h1,
+.protection-products.hide-title p {
+    opacity: 0;
+}
+
+/* Contenedor - optimizado */
 .container {
-    width: 80%;
+    width: 90%; /* Cambiado de 80% para mejor responsividad */
+    max-width: 1200px; /* Añade un max-width para pantallas grandes */
     margin: 0 auto;
+    padding: 0 15px; /* Añadir padding para evitar contenido pegado a los bordes */
 }
 
+/* Guardia virtual section - optimizado */
 .guardia-virtual {
     padding: 60px 0;
     text-align: center;
@@ -84,19 +105,42 @@ body {
 .section-title {
     font-size: 32px;
     font-weight: bold;
-    color: #00bcd4; /* Celeste */
+    color: #00bcd4;
     margin-bottom: 10px;
+    position: relative;
+    display: inline-block;
+}
+
+/* Añadir línea debajo del título en lugar de usar after con animación */
+.section-title::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 3px;
+    background: #00bcd4;
+    margin: 8px auto 0;
+    transition: width 0.3s ease-in-out;
+}
+
+.section-title.visible::after {
+    width: 80px;
 }
 
 .section-description {
     font-size: 18px;
     margin-bottom: 40px;
     color: #aaa;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
+/* Video container - optimizado */
 .video-container {
     position: relative;
     margin-bottom: 40px;
+    overflow: hidden; /* Prevenir cualquier desbordamiento */
+    border-radius: 10px; /* Aplicar border-radius al contenedor */
 }
 
 .video-frame iframe {
@@ -104,9 +148,17 @@ body {
     height: 400px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    animation: scale-up 0.5s ease;
+    /* Simplificar animación */
+    transform: scale(0.98);
+    transition: transform 0.3s ease-out;
+    will-change: transform;
 }
 
+.video-frame.visible iframe {
+    transform: scale(1);
+}
+
+/* Icons section - optimizado */
 .icons {
     display: flex;
     justify-content: center;
@@ -124,24 +176,21 @@ body {
     flex-direction: column;
     align-items: center;
     opacity: 0;
-    animation: fade-in 1s forwards;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-.icon:nth-child(1) {
-    animation-delay: 0.2s;
+/* Usar clases para activar animaciones en lugar de delays */
+.icon.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
-.icon:nth-child(2) {
-    animation-delay: 0.4s;
-}
-
-.icon:nth-child(3) {
-    animation-delay: 0.6s;
-}
-
-.icon:nth-child(4) {
-    animation-delay: 0.8s;
-}
+/* Añadir delays mediante clases y CSS en lugar de repetir reglas */
+.icon:nth-child(1).visible { transition-delay: 0.1s; }
+.icon:nth-child(2).visible { transition-delay: 0.2s; }
+.icon:nth-child(3).visible { transition-delay: 0.3s; }
+.icon:nth-child(4).visible { transition-delay: 0.4s; }
 
 .icon img {
     width: 60px;
@@ -154,17 +203,7 @@ body {
     color: #aaa;
 }
 
-/* Animaciones */
-@keyframes fade-in {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-}
-
-@keyframes scale-up {
-    0% { transform: scale(0.95); }
-    100% { transform: scale(1); }
-}
-
+/* Botón de demo - optimizado */
 .demo-button-container {
     text-align: center;
 }
@@ -177,21 +216,54 @@ body {
     font-size: 18px;
     font-weight: bold;
     border-radius: 5px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    display: inline-block; /* Para permitir transformaciones */
+    will-change: transform, background-color;
 }
 
 .demo-button:hover {
     background-color: #0097a7;
+    transform: translateY(-2px);
 }
 
-/* Responsive */
+/* Responsive - mantenido y mejorado */
 @media screen and (max-width: 768px) {
+    .protection-products h1 {
+        font-size: 2.5rem; /* Tamaño más pequeño para móviles */
+    }
+
+    .protection-products p {
+        font-size: 1rem;
+    }
+
     .icons {
-        flex-direction: column;
-        gap: 20px;
+        flex-wrap: wrap; /* Cambiar a wrap en lugar de column para mejor organización */
+        gap: 15px;
+    }
+
+    .icon {
+        flex-basis: 40%; /* Dos por fila en tablets */
     }
 
     .video-frame iframe {
         height: 300px;
+    }
+    
+    .section-title {
+        font-size: 28px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .icon {
+        flex-basis: 100%; /* Uno por fila en teléfonos */
+    }
+    
+    .video-frame iframe {
+        height: 240px;
+    }
+    
+    .protection-products h1 {
+        font-size: 2rem;
     }
 }
