@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="24-7 SEGURIDAD DEL ECUADOR - Conozca más sobre nuestra empresa y nuestro compromiso con la seguridad" />
+    <title>Nosotros - 24-7 SEGURIDAD DEL ECUADOR</title>
+    <link rel="stylesheet" href="estilos/home.css" />
+    <link rel="stylesheet" href="estilos/navbar.css" />
+    <link rel="stylesheet" href="estilos/nosotros.css" />
+    <!-- Precargar recursos críticos -->
+    <link rel="preload" href="assets/logo.png" as="image" />
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" as="script" />
+    <!-- Cargar Font Awesome de manera optimizada -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+
+<body>
+    <!-- Encabezado -->
+    <header>
+        <div class="container">
+            <nav aria-label="Navegación principal">
+                <div class="logo">
+                    <a href="index.html" aria-label="Ir al inicio">
+                        <img src="assets/logo.png" alt="24-7 SEGURIDAD DEL ECUADOR Logo" width="150" height="50" loading="eager" />
+                    </a>
+                </div>
+                <button id="menu-toggle" class="menu-toggle" aria-label="Menú" aria-expanded="false" aria-controls="menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="menu" id="menu">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="servicios.html">Servicios</a></li>
+                    <li><a href="Paquetes.html">Paquetes</a></li>
+                    <li><a href="nosotros.html" class="active" aria-current="page">Nosotros</a></li>
+                    <li><a href="index.html#casos">Casos de Éxito</a></li>
+                    <li><a href="index.html#contacto" class="btn-contacto">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="overlay" id="overlay" aria-hidden="true"></div>
+    </header>
+
+    <!-- Sección Sobre Nosotros -->
+    <section class="nosotros" id="nosotros">
+        <div class="container">
+            <div class="section-title">
+                <h2>SOBRE 24-7 SEGURIDAD DEL ECUADOR</h2>
+                <p>Conozca más sobre nuestra empresa y nuestro compromiso con la seguridad</p>
+            </div>
+            <div class="nosotros-content">
+                <div class="nosotros-img">
+                    <img src="https://www.unir.net/wp-content/uploads/2022/02/global-corporation-online-videoconference-in-meeting-room-with-in-picture-id1325899588.jpg" 
+                         alt="Equipo 24-7 SEGURIDAD DEL ECUADOR" 
+                         loading="lazy"
+                         width="600"
+                         height="400" />
+                </div>
+                <div class="nosotros-text">
+                    <h2>SOBRE 24-7 SEGURIDAD DEL ECUADOR</h2>
+                    <p>Somos una empresa líder en soluciones de detección inteligente mediante visión artificial e inteligencia artificial. Nuestro equipo está formado por expertos en tecnología con más de 10 años de experiencia en el sector.</p>
+                    <p>Nuestra misión es proporcionar herramientas tecnológicas accesibles y eficientes que ayuden a las empresas a optimizar sus procesos, mejorar la seguridad y tomar decisiones basadas en datos precisos.</p>
+                    <div class="valores">
+                        <div class="valor">
+                            <i class="fas fa-rocket" aria-hidden="true"></i>
+                            <h4>Innovación</h4>
+                            <p>Buscamos constantemente nuevas tecnologías y soluciones para mejorar la seguridad.</p>
+                        </div>
+                        <div class="valor">
+                            <i class="fas fa-users" aria-hidden="true"></i>
+                            <h4>Colaboración</h4>
+                            <p>Trabajamos en equipo para ofrecer las mejores soluciones a nuestros clientes.</p>
+                        </div>
+                        <div class="valor">
+                            <i class="fas fa-check-circle" aria-hidden="true"></i>
+                            <h4>Excelencia</h4>
+                            <p>Nos comprometemos a mantener los más altos estándares de calidad en todos nuestros servicios.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Equipo -->
+    <section class="equipo">
+        <div class="container">
+            <div class="section-title">
+                <h2>Nuestro Equipo</h2>
+                <p>Profesionales dedicados a su seguridad</p>
+            </div>
+            <div class="equipo-grid">
+                <article class="equipo-card">
+                    <div class="equipo-img">
+                        <img src="assets/team1.jpg" alt="Director Ejecutivo" loading="lazy" width="300" height="300" />
+                    </div>
+                    <div class="equipo-info">
+                        <h3>Juan Pérez</h3>
+                        <p class="cargo">Director Ejecutivo</p>
+                        <p class="descripcion">Más de 15 años de experiencia en seguridad y tecnología.</p>
+                    </div>
+                </article>
+                <article class="equipo-card">
+                    <div class="equipo-img">
+                        <img src="assets/team2.jpg" alt="Director Técnico" loading="lazy" width="300" height="300" />
+                    </div>
+                    <div class="equipo-info">
+                        <h3>María González</h3>
+                        <p class="cargo">Directora Técnica</p>
+                        <p class="descripcion">Especialista en sistemas de seguridad avanzados.</p>
+                    </div>
+                </article>
+                <article class="equipo-card">
+                    <div class="equipo-img">
+                        <img src="assets/team3.jpg" alt="Gerente de Operaciones" loading="lazy" width="300" height="300" />
+                    </div>
+                    <div class="equipo-info">
+                        <h3>Carlos Rodríguez</h3>
+                        <p class="cargo">Gerente de Operaciones</p>
+                        <p class="descripcion">Experto en implementación de soluciones de seguridad.</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Misión y Visión -->
+    <section class="mision-vision">
+        <div class="container">
+            <div class="section-title">
+                <h2>Misión y Visión</h2>
+                <p>Nuestro compromiso con la excelencia</p>
+            </div>
+            <div class="mision-vision-content">
+                <article class="mision-card">
+                    <div class="icon">
+                        <i class="fas fa-bullseye" aria-hidden="true"></i>
+                    </div>
+                    <h3>Misión</h3>
+                    <p>Proporcionar soluciones de seguridad innovadoras y eficientes que protejan y optimicen las operaciones de nuestros clientes, utilizando tecnología de vanguardia y un equipo altamente capacitado.</p>
+                </article>
+                <article class="vision-card">
+                    <div class="icon">
+                        <i class="fas fa-eye" aria-hidden="true"></i>
+                    </div>
+                    <h3>Visión</h3>
+                    <p>Ser la empresa líder en soluciones de seguridad inteligente en Ecuador, reconocida por nuestra innovación, calidad y compromiso con la excelencia en el servicio al cliente.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="assets/logo.png" alt="24-7 SEGURIDAD DEL ECUADOR Logo" width="150" height="50" loading="lazy" />
+                </div>
+                <div class="footer-links">
+                    <h4>Enlaces rápidos</h4>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="servicios.html">Servicios</a></li>
+                        <li><a href="nosotros.html">Nosotros</a></li>
+                        <li><a href="index.html#casos">Casos de Éxito</a></li>
+                        <li><a href="index.html#contacto">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-servicios">
+                    <h4>Servicios</h4>
+                    <ul>
+                        <li><a href="servicios.html">Detección de Personas</a></li>
+                        <li><a href="servicios.html">Detección de Objetos</a></li>
+                        <li><a href="servicios.html">Análisis Estadístico</a></li>
+                        <li><a href="servicios.html">Seguridad Avanzada</a></li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h4>Suscríbete</h4>
+                    <p>Recibe nuestras novedades y ofertas</p>
+                    <form id="newsletter-form" novalidate>
+                        <label for="newsletter-email" class="visually-hidden">Correo electrónico para newsletter</label>
+                        <input type="email" id="newsletter-email" placeholder="Tu correo electrónico" required />
+                        <button type="submit">Suscribirse</button>
+                    </form>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 24-7 SEGURIDAD DEL ECUADOR. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cargar scripts de manera optimizada -->
+    <script src="scripts/script.js" defer></script>
+</body>
+
+</html>

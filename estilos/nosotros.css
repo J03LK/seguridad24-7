@@ -1,0 +1,767 @@
+/* Estilos específicos para la página Nosotros */
+
+/* Variables específicas */
+:root {
+    --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    --shadow-soft: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-strong: 0 8px 16px rgba(0, 0, 0, 0.2);
+    --transition-smooth: all 0.3s ease-in-out;
+    --text-white: #ffffff;
+    --text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Sección Sobre Nosotros */
+.nosotros {
+    padding: 6rem 0;
+    background: linear-gradient(135deg, #000428 0%, #001b36 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.nosotros::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,10 90,90 10,90" fill="rgba(255,255,255,0.03)"/></svg>') repeat;
+    opacity: 0.1;
+    animation: floatBackground 20s linear infinite;
+    background-size: 30px 30px;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+    z-index: 1;
+}
+
+.section-title h2 {
+    color: var(--text-white);
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-shadow: var(--text-shadow);
+    animation: fadeInDown 1s ease-out;
+}
+
+.section-title p {
+    color: var(--text-white);
+    font-size: 1.2rem;
+    opacity: 0.9;
+    text-shadow: var(--text-shadow);
+    animation: fadeIn 1s ease-out 0.3s both;
+}
+
+.nosotros-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.nosotros-img {
+    position: relative;
+    overflow: hidden;
+    border-radius: 2rem;
+    box-shadow: var(--shadow-strong);
+    transition: var(--transition-smooth);
+    transform: perspective(1000px) rotateY(-5deg);
+}
+
+.nosotros-img::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(0,0,0,0.2), transparent);
+    z-index: 1;
+}
+
+.nosotros-img:hover {
+    transform: perspective(1000px) rotateY(0deg) translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.nosotros-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-smooth);
+    filter: brightness(0.9);
+}
+
+.nosotros-img:hover img {
+    transform: scale(1.05);
+    filter: brightness(1);
+}
+
+.nosotros-text {
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: var(--transition-smooth);
+}
+
+.nosotros-text:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+}
+
+.nosotros-text h2 {
+    color: var(--text-white);
+    margin-bottom: 1.5rem;
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-shadow: var(--text-shadow);
+    animation: slideInRight 1s ease-out;
+    position: relative;
+    display: inline-block;
+}
+
+.nosotros-text h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 80px;
+    height: 4px;
+    background: var(--text-white);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.nosotros-text:hover h2::after {
+    width: 100%;
+}
+
+.nosotros-text p {
+    color: var(--text-white);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    text-shadow: var(--text-shadow);
+    font-size: 1.1rem;
+    animation: fadeIn 1s ease-out 0.3s both;
+}
+
+/* Valores */
+.valores {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.valor {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 2rem;
+    border-radius: 1.5rem;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition-smooth);
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+    animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.valor::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.valor:hover::before {
+    opacity: 1;
+}
+
+.valor:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.valor i {
+    font-size: 2.5rem;
+    color: var(--text-white);
+    margin-bottom: 1rem;
+    text-shadow: 0 0 20px rgba(255,255,255,0.5);
+    transition: all 0.3s ease;
+    animation: pulse 2s infinite;
+}
+
+.valor:hover i {
+    transform: scale(1.2) rotate(360deg);
+    text-shadow: 0 0 30px rgba(255,255,255,0.8);
+}
+
+.valor h4 {
+    color: var(--text-white);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    text-shadow: var(--text-shadow);
+    position: relative;
+    display: inline-block;
+}
+
+.valor h4::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 3px;
+    background: var(--text-white);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.valor:hover h4::after {
+    width: 80px;
+}
+
+.valor p {
+    color: var(--text-white);
+    line-height: 1.6;
+    text-shadow: var(--text-shadow);
+    font-size: 1rem;
+}
+
+/* Animaciones */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes floatBackground {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: 100% 100%;
+    }
+}
+
+/* Media Queries */
+@media (max-width: 1200px) {
+    .nosotros-content {
+        gap: 3rem;
+    }
+    
+    .valores {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+
+    .valor {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .nosotros-text h2 {
+        font-size: 2.2rem;
+    }
+    
+    .valores {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .nosotros {
+        padding: 4rem 0;
+    }
+
+    .section-title h2 {
+        font-size: 2rem;
+    }
+
+    .nosotros-content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .nosotros-img {
+        transform: none;
+        max-height: 400px;
+    }
+
+    .nosotros-text {
+        padding: 1.5rem;
+    }
+
+    .valores {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .nosotros {
+        padding: 3rem 0;
+    }
+
+    .section-title h2 {
+        font-size: 1.8rem;
+    }
+
+    .section-title p {
+        font-size: 1rem;
+    }
+
+    .nosotros-text h2 {
+        font-size: 2rem;
+    }
+
+    .nosotros-text p,
+    .valor p {
+        font-size: 1rem;
+    }
+
+    .valor i {
+        font-size: 2rem;
+    }
+
+    .valor h4 {
+        font-size: 1.3rem;
+    }
+}
+
+/* Sección de Equipo */
+.equipo {
+    padding: 4rem 0;
+    background: linear-gradient(135deg, #000428 0%, #001b36 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.equipo::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.03)"/></svg>') repeat;
+    opacity: 0.1;
+    animation: floatBackground 25s linear infinite reverse;
+    background-size: 40px 40px;
+}
+
+.equipo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.equipo-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition-smooth);
+    animation: flipInY 1s ease-out;
+}
+
+.equipo-card:hover {
+    transform: translateY(-5px) rotateX(5deg);
+    box-shadow: var(--shadow-strong);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.equipo-img {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1;
+}
+
+.equipo-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-smooth);
+}
+
+.equipo-card:hover .equipo-img img {
+    transform: scale(1.1);
+}
+
+.equipo-info {
+    padding: 2rem;
+    text-align: center;
+}
+
+.equipo-info h3 {
+    color: var(--text-white);
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    text-shadow: var(--text-shadow);
+}
+
+.equipo-info .cargo {
+    color: var(--text-white);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-shadow: var(--text-shadow);
+}
+
+.equipo-info .descripcion {
+    color: var(--text-white);
+    line-height: 1.6;
+    text-shadow: var(--text-shadow);
+}
+
+/* Sección Misión y Visión */
+.mision-vision {
+    padding: 4rem 0;
+    background: linear-gradient(135deg, #000428 0%, #001b36 100%);
+    color: var(--text-white);
+    position: relative;
+    overflow: hidden;
+}
+
+.mision-vision::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.03)"/></svg>') repeat;
+    opacity: 0.1;
+    animation: rotateBackground 30s linear infinite;
+    background-size: 50px 50px;
+}
+
+.mision-vision-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+    position: relative;
+    z-index: 1;
+}
+
+.mision-card,
+.vision-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 2.5rem;
+    border-radius: 1.5rem;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    animation: zoomIn 0.8s ease-out;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.mision-card::before,
+.vision-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+}
+
+.mision-card:hover::before,
+.vision-card:hover::before {
+    transform: translateX(100%);
+}
+
+.mision-card:hover,
+.vision-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.mision-card .icon,
+.vision-card .icon {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-white);
+    animation: rotateIn 1s ease-out;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+.mision-card:hover .icon,
+.vision-card:hover .icon {
+    transform: scale(1.2) rotate(360deg);
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+}
+
+.mision-card h3,
+.vision-card h3 {
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-white);
+    text-shadow: var(--text-shadow);
+    position: relative;
+    display: inline-block;
+}
+
+.mision-card h3::after,
+.vision-card h3::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background: var(--text-white);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.mision-card:hover h3::after,
+.vision-card:hover h3::after {
+    width: 100px;
+}
+
+.mision-card p,
+.vision-card p {
+    line-height: 1.8;
+    color: var(--text-white);
+    text-shadow: var(--text-shadow);
+    font-size: 1.1rem;
+    opacity: 0.9;
+    transition: all 0.3s ease;
+}
+
+.mision-card:hover p,
+.vision-card:hover p {
+    opacity: 1;
+    transform: translateY(-5px);
+}
+
+@keyframes rotateBackground {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes floatAnimation {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.mision-card {
+    animation: floatAnimation 6s ease-in-out infinite;
+}
+
+.vision-card {
+    animation: floatAnimation 6s ease-in-out infinite reverse;
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.1);
+    }
+    70% {
+        opacity: 0.9;
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes flipInY {
+    from {
+        opacity: 0;
+        transform: perspective(400px) rotateY(90deg);
+    }
+    to {
+        opacity: 1;
+        transform: perspective(400px) rotateY(0deg);
+    }
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes rotateIn {
+    from {
+        opacity: 0;
+        transform: rotate(-180deg) scale(0);
+    }
+    to {
+        opacity: 1;
+        transform: rotate(0) scale(1);
+    }
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .nosotros-content {
+        grid-template-columns: 1fr;
+    }
+
+    .nosotros-text {
+        padding: 1rem;
+    }
+
+    .nosotros-text h2 {
+        font-size: 2rem;
+    }
+
+    .valores {
+        grid-template-columns: 1fr;
+    }
+
+    .equipo-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .mision-vision {
+        padding: 3rem 0;
+    }
+
+    .mision-card,
+    .vision-card {
+        padding: 2rem;
+    }
+
+    .mision-card h3,
+    .vision-card h3 {
+        font-size: 1.8rem;
+    }
+
+    .mision-card p,
+    .vision-card p {
+        font-size: 1rem;
+    }
+}
+
+/* Optimizaciones de rendimiento */
+.nosotros-img,
+.equipo-img {
+    will-change: transform;
+}
+
+/* Soporte para modo oscuro */
+@media (prefers-color-scheme: dark) {
+    .valor,
+    .equipo-card {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .nosotros-text p,
+    .valor p,
+    .equipo-info .descripcion {
+        color: var(--text-white);
+    }
+}
+
+/* Soporte para preferencias de reducción de movimiento */
+@media (prefers-reduced-motion: reduce) {
+    .nosotros-img,
+    .equipo-img,
+    .valor,
+    .equipo-card,
+    .mision-card,
+    .vision-card {
+        transition: none;
+        animation: none;
+    }
+}
