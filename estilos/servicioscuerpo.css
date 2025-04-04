@@ -1,4 +1,3 @@
-/* Estilos optimizados */
 * {
     margin: 0;
     padding: 0;
@@ -7,28 +6,102 @@
 }
 
 body {
-    background-color: #011730;
+    background-color:#011730;
     color: white;
     overflow-x: hidden;
 }
 
-/* Grid Background - Optimizado */
-.grid-background {
+/* Logo de fondo simplificado */
+.background-container {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;    
+    width: 100%;
     height: 100%;
-    background-image: 
-        linear-gradient(#011730 1px, transparent 1px),
-        linear-gradient(90deg, #011730 1px, transparent 1px);
-    background-size: 50px 50px;
-    z-index: -1;
-    pointer-events: none;
-    will-change: transform; /* Ayuda al rendimiento */
+    z-index: -10;
+    overflow: hidden;
+    pointer-events: none; /* Para que no interfiera con los clics */
 }
 
-/* Section Headers - Optimizado */
+.floating-logo {
+    position: absolute;
+    width: 1000px;
+    height: 1000px;
+    opacity: 0.03; /* Logo muy sutil en el fondo */
+    background-image: url('../assets/logo.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: gentleFloat 40s ease-in-out infinite;
+}
+
+@keyframes gentleFloat {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.05);
+    }
+}
+
+/* Efecto de "parallax" para que el logo parezca moverse a diferente velocidad */
+.parallax-scroll {
+    position: relative;
+    z-index: 1;
+}
+
+/* Glow effects para añadir profundidad */
+.bg-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: -5;
+    opacity: 0.15;
+}
+
+.bg-glow-1 {
+    width: 800px;
+    height: 800px;
+    background: linear-gradient(135deg, #0094FF, transparent);
+    top: 10%;
+    left: -200px;
+    animation: floatGlow 20s ease-in-out infinite;
+}
+
+.bg-glow-2 {
+    width: 600px;
+    height: 600px;
+    background: linear-gradient(135deg, #00FFC2, transparent);
+    bottom: 10%;
+    right: -100px;
+    animation: floatGlow 25s ease-in-out infinite reverse;
+}
+
+@keyframes floatGlow {
+    0%, 100% {
+        transform: translate(0, 0);
+    }
+    50% {
+        transform: translate(50px, -30px);
+    }
+}
+
+/* Container general */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 50px 20px;
+}
+
+/* Section Headers */
+.section-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
 .section-title {
     font-size: 2.5rem;
     font-weight: 800;
@@ -45,13 +118,7 @@ body {
     width: 100px;
     height: 4px;
     background: linear-gradient(90deg, #0094FF, #00FFC2);
-    /* Animación reducida para mejor rendimiento */
-    transition: width 0.5s ease-in-out;
-    width: 0;
-}
-
-.section-title.visible::after {
-    width: 100px;
+    animation: expandWidth 2s ease-in-out forwards;
 }
 
 .section-subtitle {
@@ -59,6 +126,8 @@ body {
     color: #a0a8b3;
     margin-bottom: 60px;
     max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .highlight {
@@ -66,7 +135,51 @@ body {
     font-weight: 600;
 }
 
-/* Main Service Section - Optimizado */
+/* Hero con video */
+.hero-video {
+    position: relative;
+    height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+}
+
+.background-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.3) blur(2px);
+    z-index: -1;
+}
+
+.hero-content {
+    max-width: 800px;
+    padding: 20px;
+    z-index: 1;
+}
+
+.hero-content h1 {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 15px rgba(0,0,0,0.5);
+}
+
+.hero-content h1 span {
+    color: #00FFC2;
+}
+
+.hero-content p {
+    font-size: 1.5rem;
+    margin-bottom: 40px;
+    color: #a0a8b3;
+}
+
+/* Main Service Section */
 .main-service {
     display: flex;
     flex-wrap: wrap;
@@ -80,22 +193,34 @@ body {
     min-width: 300px;
 }
 
+.service-video-small {
+    margin-top: 30px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.service-video-small video {
+    width: 100%;
+    display: block;
+    border-radius: 15px;
+}
+
 .service-image {
     flex: 1;
     min-width: 300px;
     position: relative;
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 20px 50px rgba(1, 23, 48, 0.5);
-    will-change: transform; /* Mejora rendimiento en transformaciones */
+    box-shadow: 0 20px 50px #011730
 }
 
 .service-image img {
     width: 100%;
     height: auto;
     display: block;
-    transition: transform 0.3s ease;
-    will-change: transform;
+    transform: scale(1);
+    transition: transform 0.5s ease;
 }
 
 .service-image:hover img {
@@ -113,16 +238,10 @@ body {
     font-weight: 600;
     font-size: 0.9rem;
     box-shadow: 0 5px 15px rgba(0, 148, 255, 0.3);
-    /* Animación simplificada */
-    transform: translateY(0);
-    transition: transform 0.3s ease-in-out;
+    animation: float 3s ease-in-out infinite;
 }
 
-.service-badge:hover {
-    transform: translateY(-5px);
-}
-
-/* Features Section - Optimizado */
+/* Features Section */
 .features-section {
     margin-top: 60px;
 }
@@ -139,17 +258,30 @@ body {
     border: 1px solid rgba(0, 148, 255, 0.2);
     border-radius: 15px;
     padding: 30px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
     backdrop-filter: blur(5px);
-    will-change: transform;
 }
 
 .feature-card:hover {
     transform: translateY(-10px);
     box-shadow: 0 15px 30px rgba(0, 255, 194, 0.15);
     border-color: rgba(0, 255, 194, 0.4);
+}
+
+.feature-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-top: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover .feature-image {
+    transform: scale(1.05);
 }
 
 .feature-card::before {
@@ -160,7 +292,7 @@ body {
     width: 5px;
     height: 0;
     background: linear-gradient(to bottom, #0094FF, #00FFC2);
-    transition: height 0.3s ease;
+    transition: height 0.5s ease;
 }
 
 .feature-card:hover::before {
@@ -172,12 +304,7 @@ body {
     height: 60px;
     margin-bottom: 20px;
     color: #00FFC2;
-    /* Animación simplificada */
-    transition: transform 0.3s ease;
-}
-
-.feature-card:hover .feature-icon {
-    transform: scale(1.05);
+    animation: pulse 2s infinite;
 }
 
 .feature-title {
@@ -192,9 +319,22 @@ body {
     line-height: 1.6;
 }
 
-/* Benefits Section - Optimizado */
+/* Benefits Section with Video */
 .benefits-section {
     margin-top: 80px;
+}
+
+.benefits-video-container {
+    margin-bottom: 40px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.benefits-video {
+    width: 100%;
+    display: block;
 }
 
 .benefits-container {
@@ -213,9 +353,8 @@ body {
     text-align: center;
     position: relative;
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    transition: all 0.3s ease;
     border: 1px solid rgba(0, 148, 255, 0.2);
-    will-change: transform;
 }
 
 .benefit-card:hover {
@@ -228,12 +367,8 @@ body {
     width: 70px;
     height: 70px;
     margin: 0 auto 20px;
-    transition: transform 0.3s ease;
+    animation: float 3s ease-in-out infinite;
     filter: drop-shadow(0 5px 15px rgba(0, 255, 194, 0.3));
-}
-
-.benefit-card:hover .benefit-icon {
-    transform: translateY(-5px);
 }
 
 .benefit-title {
@@ -248,25 +383,106 @@ body {
     line-height: 1.6;
 }
 
-/* Additional Services - Optimizado */
+/* How It Works Section */
+.how-it-works-section {
+    margin-top: 60px;
+}
+
+.how-it-works-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.how-it-works-step {
+    text-align: center;
+    flex: 1;
+    max-width: 280px;
+    background: linear-gradient(135deg, rgba(12, 36, 53, 0.7) 0%, rgba(9, 47, 62, 0.7) 100%);
+    padding: 20px;
+    border-radius: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.how-it-works-step:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 255, 194, 0.15);
+}
+
+.how-it-works-step img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.how-it-works-step:hover img {
+    transform: scale(1.05);
+}
+
+.how-it-works-step h3 {
+    margin-top: 15px;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.how-it-works-step p {
+    color: #a0a8b3;
+    margin-top: 10px;
+}
+
+/* Additional Services Section with Images */
 .additional-services {
     margin-top: 80px;
+}
+
+.complementary-services-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
 }
 
 .service-box {
     background: linear-gradient(135deg, rgba(12, 36, 53, 0.7) 0%, rgba(9, 47, 62, 0.7) 100%);
     border-radius: 20px;
-    padding: 40px;
-    margin-top: 40px;
+    padding: 0;
     position: relative;
     overflow: hidden;
     border: 1px solid rgba(0, 148, 255, 0.2);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-wrap: wrap;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .service-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 255, 194, 0.15);
     border-color: rgba(0, 255, 194, 0.4);
-    box-shadow: 0 15px 30px rgba(0, 255, 194, 0.1);
+}
+
+.service-box-content {
+    flex: 1;
+    min-width: 300px;
+    padding: 40px;
+}
+
+.service-box-image {
+    flex: 1;
+    min-width: 300px;
+    position: relative;
+}
+
+.service-box-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.service-box.reverse {
+    flex-direction: row-reverse;
 }
 
 .service-box-title {
@@ -284,19 +500,19 @@ body {
     color: #00FFC2;
 }
 
-.service-features {
-    margin-top: 30px;
+.service-features-list {
+    list-style: none;
+    margin-top: 20px;
 }
 
-.service-feature-item {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 20px;
-    padding-left: 10px;
+.service-features-list li {
     position: relative;
+    padding-left: 20px;
+    margin-bottom: 10px;
+    color: #a0a8b3;
 }
 
-.service-feature-item::before {
+.service-features-list li:before {
     content: '';
     position: absolute;
     left: 0;
@@ -307,20 +523,11 @@ body {
     background: #00FFC2;
 }
 
-.service-feature-text {
-    color: #a0a8b3;
-    line-height: 1.6;
-}
-
-.service-feature-text strong {
-    color: white;
-    font-weight: 600;
-}
-
-/* Call to Action - Optimizado */
+/* CTA Section */
 .cta-section {
     margin-top: 80px;
     text-align: center;
+    padding: 50px 0;
 }
 
 .cta-button {
@@ -332,12 +539,13 @@ body {
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s ease;
     margin: 40px auto;
     display: inline-block;
     letter-spacing: 1px;
     text-decoration: none;
-    will-change: transform;
+    position: relative;
+    overflow: hidden;
 }
 
 .cta-button:hover {
@@ -345,55 +553,155 @@ body {
     box-shadow: 0 10px 20px rgba(0, 255, 194, 0.3);
 }
 
-/* Glow effects - Optimizado y con mejor rendimiento */
-.glow-element {
-    position: absolute;
+.pulse-animation {
+    animation: pulse 2s infinite;
+}
+
+/* Client Gallery */
+.client-gallery {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.client-image {
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
-    filter: blur(50px);
-    z-index: -1;
-    opacity: 0.3; /* Reducido para mejor rendimiento */
-    will-change: transform;
-}
-
-.glow-1 {
-    width: 300px;
-    height: 300px;
-    background-color: rgba(0, 148, 255, 0.2);
-    top: 100px;
-    left: -100px;
-    /* Animación simplificada */
-    transform: translateY(0);
-    transition: transform 5s ease-in-out;
-}
-
-.glow-2 {
-    width: 400px;
-    height: 400px;
-    background-color: rgba(0, 255, 194, 0.15);
-    bottom: 100px;
-    right: -150px;
-    /* Animación simplificada */
-    transform: translateY(0);
-    transition: transform 5s ease-in-out;
-}
-
-/* Service Video - Optimizado */
-.service-video {
-    position: relative;
-    width: 80%;
-    margin: 0 auto;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.service-video video {
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
     object-fit: cover;
+    border: 3px solid #00FFC2;
+    transition: transform 0.3s ease;
 }
 
-/* Responsive Styles - Mantenidos */
+.client-image:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(0, 255, 194, 0.5);
+}
+
+/* Testimonials Section */
+.testimonials-section {
+    background: linear-gradient(135deg, rgba(0, 30, 60, 0.9) 0%, rgba(1, 23, 48, 0.9) 100%);
+    padding: 80px 0;
+    margin-top: 80px;
+}
+
+.testimonial-video-container {
+    margin: 0 auto 60px;
+    max-width: 800px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+.testimonial-video {
+    width: 100%;
+    display: block;
+}
+
+.testimonials-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+}
+
+.testimonial-card {
+    flex: 1;
+    min-width: 300px;
+    max-width: 500px;
+    background: linear-gradient(135deg, rgba(12, 36, 53, 0.7) 0%, rgba(9, 47, 62, 0.7) 100%);
+    border-radius: 15px;
+    padding: 30px;
+    position: relative;
+    border: 1px solid rgba(0, 148, 255, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 255, 194, 0.15);
+    border-color: #00FFC2;
+}
+
+.testimonial-quote {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    color: rgba(0, 255, 194, 0.2);
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    gap: 15px;
+}
+
+.testimonial-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #00FFC2;
+}
+
+.testimonial-author h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: white;
+}
+
+.testimonial-author p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #a0a8b3;
+}
+
+/* Animations */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+}
+
+@keyframes expandWidth {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 100px;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Styles */
 @media (max-width: 992px) {
     .section-title {
         font-size: 2.2rem;
@@ -402,6 +710,19 @@ body {
     .service-badge {
         font-size: 0.8rem;
         padding: 8px 16px;
+    }
+    
+    .floating-logo {
+        width: 800px;
+        height: 800px;
+    }
+    
+    .hero-content h1 {
+        font-size: 3rem;
+    }
+    
+    .hero-content p {
+        font-size: 1.2rem;
     }
 }
 
@@ -418,7 +739,7 @@ body {
         padding: 25px;
     }
     
-    .service-box {
+    .service-box-content {
         padding: 30px;
     }
     
@@ -429,6 +750,29 @@ body {
     .benefit-icon {
         width: 60px;
         height: 60px;
+    }
+    
+    .how-it-works-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .how-it-works-step {
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+    
+    .floating-logo {
+        width: 600px;
+        height: 600px;
+    }
+    
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .hero-video {
+        height: 70vh;
     }
 }
 
@@ -467,5 +811,25 @@ body {
         padding: 12px 30px;
         font-size: 1rem;
     }
+    
+    .floating-logo {
+        width: 400px;
+        height: 400px;
+    }
+    
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-content p {
+        font-size: 1rem;
+    }
+    
+    .service-box {
+        flex-direction: column;
+    }
+    
+    .service-box.reverse {
+        flex-direction: column;
+    }
 }
-
