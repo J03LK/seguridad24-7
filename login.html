@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Registro con Navbar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="estilos/login.css">
+</head>
+<body>
+    <!-- HEADER CON NAVBAR -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="assets/logo.png" alt="Detecta365 Logo" />
+                    </a>
+                </div>
+                <button id="menu-toggle" class="menu-toggle" aria-label="Menú" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="menu" id="menu">
+                    <li><a href="index.html" class="active">Inicio</a></li>
+                    <li><a href="servicios.html">Servicios</a></li>
+                    <li><a href="Paquetes.html">Paquetes</a></li>
+                    <li><a href="nosotros.html">Nosotros</a></li>
+                    <li><a href="#casos">Casos de Éxito</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                    <li class="auth-buttons">
+                        <a href="#login" class="btn-login">
+                            <i class="fas fa-user"></i>
+                            <span>Ingresar</span>
+                        </a>
+                        <a href="#registro" class="btn-registro">
+                            <span>Registrarse</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="overlay" id="overlay"></div>
+    </header>
+
+    <!-- WRAPPER PARA CONTENIDO PRINCIPAL -->
+    <div class="main-wrapper">
+        <div class="login-container" id="container">
+            <!-- Nueva capa para la burbuja ondulante -->
+            <div class="wave-container">
+                <div class="wave-bubble"></div>
+            </div>
+            
+            <!-- Elementos flotantes decorativos -->
+            <div class="floating-elements">
+                <div class="floating-circle"></div>
+                <div class="floating-circle"></div>
+            </div>
+            
+            <div class="forms-container">
+                <div class="signin-signup">
+                    <!-- Formulario de Inicio de Sesión -->
+                    <form action="#" class="sign-in-form" id="loginForm">
+                        <h2 class="title">Iniciar Sesión</h2>
+                        <div class="input-field">
+                            <i class="fas fa-user"></i>
+                            <input type="text" placeholder="Usuario o Correo Electrónico" id="email-login" name="email"/>
+                            <span class="password-toggle" id="toggle-login-username"><i class="fas fa-times-circle"></i></span>
+                        </div>
+                        <div class="error-message" id="email-login-error"></div>
+                        
+                        <div class="input-field">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" placeholder="Contraseña" id="password-login" name="password"/>
+                            <span class="password-toggle" id="toggle-login-password"><i class="fas fa-eye"></i></span>
+                        </div>
+                        <div class="error-message" id="password-login-error"></div>
+                        
+                        <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                        <button type="submit" class="btn solid" id="login-button">
+                            Iniciar Sesión
+                            <span class="loader"></span>
+                        </button>
+                    </form>
+
+                    <!-- Formulario de Registro -->
+                    <form action="#" class="sign-up-form" id="registroForm">
+                        <h2 class="title">Registrarse</h2>
+                        <div class="input-field">
+                            <i class="fas fa-user"></i>
+                            <input type="text" placeholder="Nombre" id="nombre" name="nombre" required />
+                            <span class="password-toggle" id="toggle-nombre"><i class="fas fa-times-circle"></i></span>
+                        </div>
+                        <div class="error-message" id="nombre-error"></div>
+                        
+                        <div class="input-field">
+                            <i class="fas fa-user"></i>
+                            <input type="text" placeholder="Apellido" id="apellido" name="apellido" required />
+                            <span class="password-toggle" id="toggle-apellido"><i class="fas fa-times-circle"></i></span>
+                        </div>
+                        <div class="error-message" id="apellido-error"></div>
+                        
+                        <div class="input-field">
+                            <i class="fas fa-user"></i>
+                            <input type="text" placeholder="Nombre de Usuario" id="username" name="username" required />
+                            <span class="password-toggle" id="toggle-username"><i class="fas fa-times-circle"></i></span>
+                        </div>
+                        <div class="error-message" id="username-error"></div>
+                        
+                        <div class="input-field">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" placeholder="Correo Electrónico" id="email-registro" name="email" required />
+                            <span class="password-toggle" id="toggle-email"><i class="fas fa-times-circle"></i></span>
+                        </div>
+                        <div class="error-message" id="email-error"></div>
+                        
+                        <div class="input-field">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" placeholder="Contraseña" id="password-registro" name="password" required />
+                            <span class="password-toggle" id="toggle-password"><i class="fas fa-eye"></i></span>
+                        </div>
+                        <div class="error-message" id="password-error"></div>
+                        
+                        <button type="submit" class="btn" id="registro-button">
+                            Registrarse
+                            <span class="loader"></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Paneles para información -->
+            <div class="panels-container">
+                <div class="panel left-panel">
+                    <div class="content">
+                        <h3>¿Eres nuevo?</h3>
+                        <p>
+                            Regístrate para gestionar tus pagos de seguridad y acceder a nuestros servicios 24/7.
+                        </p>
+                        <button class="btn transparent" id="sign-up-btn">
+                            Registrarse
+                        </button>
+                    </div>
+                    <img src="imagenes/352856067_11423805.svg" class="image" alt="Gif de registro" />
+                </div>
+                <div class="panel right-panel">
+                    <div class="content">
+                        <h3>¿Ya tienes cuenta?</h3>
+                        <p>
+                            Inicia sesión para realizar tus pagos y administrar tu suscripción a nuestros servicios de seguridad.
+                        </p>
+                        <button class="btn transparent" id="sign-in-btn">
+                            Iniciar Sesión
+                        </button>
+                    </div>
+                    <img src="imagenes/registro.svg" class="image" alt="Gif de inicio de sesión" />
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <script src="scripts/login.js"></script>
+    <script src="scripts/navbar.js"></script>
+</body>
+</html>

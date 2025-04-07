@@ -95,12 +95,9 @@ img {
     --primary-color: #4a6de5;
     --secondary-color: #3a56b8;
     --text-color: #333;
-    --white: #ffffff;
-    --dark-bg: transparent;
     --transition-speed: 0.3s;
     --border-radius: 25px;
     --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    --accent-color: #00FFC2;
 }
 
 /* Header styles */
@@ -155,6 +152,7 @@ nav {
 }
 
 .menu li {
+    color: var(--white);
     margin-left: 35px;
     position: relative;
     opacity: 0;
@@ -193,7 +191,28 @@ nav {
     }
 }
 
-.menu li a {
+/* Cambiar color del fondo y texto cuando el header tiene la clase 'scrolled' */
+header.scrolled {
+    background-color: white; /* Cambiar el fondo a blanco */
+}
+
+header.scrolled .menu a {
+    color: #011730; /* Cambiar el color del texto a un color oscuro cuando se hace scroll */
+}
+
+header.scrolled .menu a:hover {
+    color: var(--primary-color); /* Mantener el efecto hover */
+}
+
+header.scrolled .btn-contacto {
+    background-color: var(--primary-color); /* Cambiar el color del botón */
+}
+
+header.scrolled .btn-contacto:hover {
+    background-color: var(--secondary-color); /* Mantener el color de hover */
+}
+
+.menu a {
     font-weight: 500;
     color: var(--white);
     position: relative;
@@ -201,26 +220,6 @@ nav {
     font-size: 16px;
     display: block;
     transition: color var(--transition-speed) ease;
-}
-
-/* Cambiar color del texto solo cuando se hace scroll */
-header.scrolled .menu li a {
-    color: #011730;
-}
-
-/* Mantener el color blanco en móvil cuando no hay scroll */
-@media (max-width: 991px) {
-    .menu li a {
-        color: var(--white) !important;
-    }
-    
-    header.scrolled .menu li a {
-        color: #011730 !important;
-    }
-    
-    .menu.active li a {
-        color: #011730 !important;
-    }
 }
 
 /* Efecto subrayado para enlaces normales */
