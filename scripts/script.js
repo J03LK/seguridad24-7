@@ -9,9 +9,57 @@ document.addEventListener('DOMContentLoaded', function() {
     const contactForm = document.getElementById('formulario-contacto');
     const newsletterForm = document.getElementById('newsletter-form');
     
+    // Aplicar índices para la animación de los elementos del menú
+    menuLinks.forEach((link, index) => {
+        link.parentElement.style.setProperty('--item-index', index + 1);
+    });
+    
     // Aplicar clase scrolled al header en dispositivos móviles por defecto
     if (window.innerWidth <= 991) {
         header.classList.add('scrolled');
+    }
+    
+    // Función para actualizar el enlace activo basado en la sección visible
+    function updateActiveLink() {
+        const sections = document.querySelectorAll('section[id]');
+        const scrollPosition = window.scrollY + header.offsetHeight + 50;
+
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.offsetHeight;
+            const sectionId = section.getAttribute('id');
+            const menuLink = document.querySelector(`.menu a[href="#${sectionId}"]`);
+
+            if (menuLink && scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                menuLinks.forEach(link => link.classList.remove('active'));
+                menuLink.classList.add('active');
+            }
+        });
+    }
+
+    // Función para manejar el scroll
+    function handleScroll() {
+        requestAnimationFrame(() => {
+            if (window.scrollY > 0) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    }
+
+    // Evento scroll con requestAnimationFrame para mejor rendimiento
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Verificar scroll inicial
+    handleScroll();
+    
+    // Asegurarse de que el menú esté cerrado al inicio
+    if (menu) {
+        menu.classList.remove('active');
+    }
+    if (overlay) {
+        overlay.classList.remove('active');
     }
     
     // Función para manejar el menú móvil
@@ -20,18 +68,32 @@ document.addEventListener('DOMContentLoaded', function() {
         menuToggle.classList.toggle('active', isOpen);
         overlay.classList.toggle('active', isOpen);
         menuToggle.setAttribute('aria-expanded', isOpen);
+        
+        // Bloquear/desbloquear scroll del body
         document.body.style.overflow = isOpen ? 'hidden' : '';
         
         // Mejorar accesibilidad del menú
         menu.setAttribute('aria-hidden', !isOpen);
         
-        // Añadir clase al body para otros estilos posibles
+        // Añadir/quitar clase al body
         document.body.classList.toggle('menu-open', isOpen);
+        
+        // Animar elementos del menú
+        const menuItems = menu.querySelectorAll('li');
+        menuItems.forEach((item, index) => {
+            if (isOpen) {
+                item.style.transitionDelay = `${index * 0.1}s`;
+            } else {
+                item.style.transitionDelay = '0s';
+            }
+        });
     }
     
-    // Abrir/cerrar menú móvil
+    // Evento para el botón del menú
     if (menuToggle) {
-        menuToggle.addEventListener('click', function() {
+        menuToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
             const isMenuOpen = !menu.classList.contains('active');
             toggleMenu(isMenuOpen);
         });
@@ -39,10 +101,37 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Cerrar menú al hacer clic en overlay
     if (overlay) {
-        overlay.addEventListener('click', function() {
+        overlay.addEventListener('click', function(e) {
+            e.preventDefault();
             toggleMenu(false);
         });
     }
+    
+    // Cerrar menú al hacer clic en un enlace
+    menuLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            if (window.innerWidth <= 991) {
+                const href = this.getAttribute('href');
+                if (href.startsWith('#')) {
+                    e.preventDefault();
+                    toggleMenu(false);
+                    
+                    // Scroll suave a la sección después de cerrar el menú
+                    setTimeout(() => {
+                        const targetSection = document.querySelector(href);
+                        if (targetSection) {
+                            const headerHeight = header.offsetHeight;
+                            const targetPosition = targetSection.offsetTop - headerHeight;
+                            window.scrollTo({
+                                top: targetPosition,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }, 300);
+                }
+            }
+        });
+    });
     
     // Cerrar menú con tecla Escape
     document.addEventListener('keydown', function(e) {
@@ -51,105 +140,24 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Manejar enlaces del menú
-    menuLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            // Prevenir comportamiento por defecto para manejar el scroll suave
-            if (this.getAttribute('href') && this.getAttribute('href').startsWith('#')) {
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                const targetSection = document.querySelector(targetId);
-                
-                if (targetSection) {
-                    // Obtener la altura del header para el offset
-                    const headerHeight = header.offsetHeight;
-                    
-                    // Scroll suave a la sección con compensación del header
-                    window.scrollTo({
-                        top: targetSection.offsetTop - headerHeight,
-                        behavior: 'smooth'
-                    });
-                    
-                    // Actualizar URL sin recargar la página
-                    history.pushState(null, null, targetId);
-                }
-                
-                // Actualizar enlace activo
-                menuLinks.forEach(item => item.classList.remove('active'));
-                this.classList.add('active');
-                
-                // Cerrar menú móvil si está abierto
-                if (window.innerWidth <= 991) {
-                    toggleMenu(false);
-                }
+    // Manejar cambios de tamaño de ventana
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            // Si el menú está abierto y la pantalla es mayor a 991px, cerrar el menú
+            if (window.innerWidth > 991 && menu.classList.contains('active')) {
+                toggleMenu(false);
             }
-        });
+            
+            // Actualizar clase scrolled en el header
+            if (window.innerWidth <= 991) {
+                header.classList.add('scrolled');
+            } else if (window.scrollY <= 50) {
+                header.classList.remove('scrolled');
+            }
+        }, 250);
     });
-    
-    // Mejorar manejo del scroll con throttling
-    let scrollTimeout;
-    let lastScrollTop = 0;
-    const scrollThreshold = 5; // Umbral para detectar cambios significativos en el scroll
-    
-    window.addEventListener('scroll', function() {
-        // Solo procesar si no hay un timeout pendiente
-        if (!scrollTimeout) {
-            scrollTimeout = setTimeout(function() {
-                const scrollPosition = window.scrollY;
-                const scrollDifference = Math.abs(scrollPosition - lastScrollTop);
-                
-                // Solo procesar si el cambio es significativo
-                if (scrollDifference > scrollThreshold) {
-                    // Actualizar último valor de scroll
-                    lastScrollTop = scrollPosition;
-                    
-                    // Agregar o quitar la clase 'scrolled' en el header
-                    if (scrollPosition > 50) {
-                        header.classList.add('scrolled');
-                    } else {
-                        // Solo quitar scrolled en móvil si se ha regresado al inicio
-                        if (window.innerWidth > 991) {
-                            header.classList.remove('scrolled');
-                        }
-                    }
-                
-                    // Actualizar los enlaces activos según la posición del scroll
-                    document.querySelectorAll('section[id]').forEach(section => {
-                        const sectionTop = section.offsetTop - 100;
-                        const sectionHeight = section.offsetHeight;
-                        const sectionId = section.getAttribute('id');
-                        
-                        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-                            menuLinks.forEach(link => {
-                                link.classList.remove('active');
-                                if (link.getAttribute('href') === `#${sectionId}`) {
-                                    link.classList.add('active');
-                                }
-                            });
-                        }
-                    });
-                }
-                
-                scrollTimeout = null;
-            }, 50); // Throttle de 50ms
-        }
-    });
-    
-    // Header con efecto de scroll
-    function handleHeaderScroll() {
-        if (window.scrollY > 50 || window.innerWidth <= 991) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-    }
-    
-    window.addEventListener('scroll', handleHeaderScroll);
-    window.addEventListener('resize', handleHeaderScroll);
-    
-    // Inicializar el estado del header
-    handleHeaderScroll();
     
     // Mejora en las animaciones al hacer scroll - Usar Intersection Observer
     const revealElements = document.querySelectorAll('.servicio-card, .caso-card, .nosotros-content, .contacto-content');
@@ -414,7 +422,44 @@ document.addEventListener('DOMContentLoaded', function() {
         menu.setAttribute('aria-label', 'Menú principal');
         menu.setAttribute('aria-hidden', 'true');
     }
+    
+    // Añadir estilos para las nuevas animaciones
+    const style = document.createElement('style');
+    style.textContent = `
+        .menu-toggle-bounce {
+            animation: menuToggleBounce 0.3s ease;
+        }
+        
+        @keyframes menuToggleBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .link-clicked {
+            transform: scale(0.95);
+            opacity: 0.8;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+        
+        .menu.active .menu-item {
+            animation: slideInRight 0.5s ease forwards;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    `;
+    
+    document.head.appendChild(style);
 });
+
 // Script para manejar efectos adicionales de los botones de login y registro
 document.addEventListener('DOMContentLoaded', function() {
     // Referencias a los botones

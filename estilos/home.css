@@ -1,27 +1,25 @@
 /* Variables globales */
 :root {
-    /* Colores principales */
+    /* Colores */
     --primary-color: #4a6de5;
     --primary-light: #6384ff;
     --primary-dark: #3a56b8;
     --secondary-color: #3a56b8;
     --accent-color: #00c9ff;
-    
-    /* Colores de texto */
     --text-color: #333;
     --text-light: #878787;
-    
-    /* Colores de fondo */
     --dark-color: #011730;
     --gray-color: #f8f9fa;
     --light-color: #f5f7ff;
-    
-    /* Efectos y transiciones */
+    --body-bg: #0a1016;
+
+    /* Efectos */
     --transition-speed: 0.3s;
     --border-radius: 25px;
     --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     --glow-shadow: 0 0 15px var(--primary-light);
-    
+    --header-height: 80px;
+
     /* Breakpoints */
     --mobile: 576px;
     --tablet: 768px;
@@ -40,18 +38,18 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     color: var(--text-color);
+    background-color: var(--body-bg);
     overflow-x: hidden;
-    background-color: #0a1016;
     perspective: 1000px;
+    padding-top: var(--header-height);
 }
 
 /* Utilidades */
 .container {
     width: 100%;
-    max-width: 1200px;
+    max-width: var(--large);
     margin: 0 auto;
     padding: 0 20px;
-    color: var(--dark-color);
 }
 
 .visually-hidden {
@@ -77,29 +75,15 @@ body {
         linear-gradient(90deg, var(--dark-color) 1px, transparent 1px);
     background-size: 50px 50px;
     z-index: -1;
+    opacity: 0.3;
     pointer-events: none;
-    opacity: 0.5;
-    animation: gridPulse 15s infinite alternate;
     will-change: opacity, background-size;
-}
-
-@keyframes gridPulse {
-    0%, 100% {
-        opacity: 0.3;
-        background-size: 50px 50px;
-    }
-    50% {
-        opacity: 0.5;
-        background-size: 52px 52px;
-    }
 }
 
 /* Enlaces y elementos interactivos */
 a {
     text-decoration: none;
     color: inherit;
-    position: relative;
-    display: inline-block;
     transition: transform var(--transition-speed) ease;
 }
 
@@ -114,7 +98,7 @@ ul {
 img {
     max-width: 100%;
     height: auto;
-    transition: all 0.5s ease;
+    transition: filter var(--transition-speed) ease;
     will-change: transform, filter;
 }
 
@@ -130,34 +114,17 @@ img:hover {
     padding: 12px 30px;
     border-radius: 30px;
     font-weight: 600;
-    transition: all 0.3s ease;
+    transition: all var(--transition-speed) ease;
     position: relative;
     overflow: hidden;
     z-index: 1;
-    box-shadow: 0 5px 15px rgba(74, 109, 229, 0.3);
+    box-shadow: var(--shadow);
     will-change: transform, box-shadow;
 }
 
-.btn-primary:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-    transition: 0.5s;
-    z-index: -1;
-}
-
 .btn-primary:hover {
-    background: linear-gradient(45deg, var(--primary-light), var(--primary-color));
     transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 5px 20px rgba(74, 109, 229, 0.5), 0 0 15px var(--accent-color);
-}
-
-.btn-primary:hover:before {
-    left: 100%;
+    box-shadow: 0 5px 20px rgba(74, 109, 229, 0.5);
 }
 
 /* Formularios */
@@ -165,23 +132,25 @@ img:hover {
     margin-bottom: 1.5rem;
 }
 
-.form-group input,
-.form-group textarea,
-.form-group select {
+.form-control {
     width: 100%;
     padding: 12px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--border-radius);
     background: rgba(255, 255, 255, 0.05);
     color: white;
-    transition: all 0.3s ease;
+    transition: all var(--transition-speed) ease;
 }
 
-/* Estilos específicos para el select */
-.form-group select {
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(74, 109, 229, 0.3);
+}
+
+/* Select personalizado */
+select.form-control {
     appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
     background-repeat: no-repeat;
     background-position: right 12px center;
@@ -190,33 +159,14 @@ img:hover {
     cursor: pointer;
 }
 
-.form-group select option {
+select.form-control option {
     background-color: var(--dark-color);
     color: white;
     padding: 12px;
 }
 
-.form-group select:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 10px rgba(74, 109, 229, 0.3);
-}
-
-.form-group select:hover {
-    border-color: var(--primary-light);
-}
-
-/* Estilos para el placeholder del select */
-.form-group select:invalid {
+select.form-control:invalid {
     color: rgba(255, 255, 255, 0.5);
-}
-
-.form-group select option:first-child {
-    color: rgba(255, 255, 255, 0.5);
-}
-
-.form-group select option:not(:first-child) {
-    color: white;
 }
 
 /* Media Queries */
@@ -242,6 +192,41 @@ img:hover {
     .container {
         max-width: 100%;
         padding: 0 15px;
+    }
+}
+
+/* Preferencias de usuario */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text-color: #ffffff;
+        --text-light: #cccccc;
+        --body-bg: var(--dark-color);
+    }
+}
+
+/* Estilos de impresión */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    body {
+        background: white;
+        color: black;
+    }
+
+    a {
+        text-decoration: underline;
+        color: var(--primary-color);
     }
 }
 
@@ -284,16 +269,6 @@ img:hover {
 
 .fade-in-down {
     animation: fadeInDown 0.5s ease forwards;
-}
-
-/* Optimizaciones de rendimiento */
-@media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
 }
 
 /* Soporte para modo oscuro */
@@ -2121,4 +2096,37 @@ footer:before {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+/* Ajustes para la sección de inicio */
+.inicio-section {
+    min-height: calc(100vh - var(--header-height));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* Media queries para diferentes dispositivos */
+@media (max-width: 768px) {
+    :root {
+        --header-height: 70px;
+    }
+    
+    .inicio-section {
+        padding: 60px 15px;
+        min-height: calc(100vh - var(--header-height));
+    }
+}
+
+@media (max-width: 480px) {
+    :root {
+        --header-height: 60px;
+    }
+    
+    .inicio-section {
+        padding: 40px 15px;
+    }
 }

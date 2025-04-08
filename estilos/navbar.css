@@ -95,36 +95,97 @@ img {
     --primary-color: #4a6de5;
     --secondary-color: #3a56b8;
     --text-color: #333;
+    --white: #ffffff;
+    --dark-bg: rgba(1, 23, 48, 0.95);
     --transition-speed: 0.3s;
     --border-radius: 25px;
     --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    --menu-bg: linear-gradient(135deg, #000428 0%, #004e92 100%);
+    --menu-item-hover: rgba(255, 255, 255, 0.1);
+    --header-height: 80px;
 }
 
 /* Header styles */
 header {
     background-color: var(--dark-bg);
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
-    position: sticky;
+    position: fixed;
+    width: 100%;
     top: 0;
-    z-index: 1000;
-    transition: background-color var(--transition-speed) ease,
-        box-shadow var(--transition-speed) ease;
-    will-change: transform;
+    left: 0;
+    z-index: 9999;
+    height: var(--header-height);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Estado scrolled */
 header.scrolled {
-    background-color: var(--white);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    background-color: rgba(1, 23, 48, 0.98);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* Ajuste del contenedor principal para compensar el header fijo */
+body {
+    padding-top: var(--header-height);
 }
 
 nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 0;
+    height: 100%;
+    padding: 0 20px;
     max-width: 1200px;
     margin: 0 auto;
-    height: var(--header-height);
+    position: relative;
+}
+
+/* Menú principal */
+.menu {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.menu li {
+    margin-left: 35px;
+    position: relative;
+}
+
+.menu a {
+    font-weight: 500;
+    color: var(--white);
+    position: relative;
+    padding: 8px 0;
+    font-size: 16px;
+    display: block;
+    transition: color var(--transition-speed) ease;
+}
+
+/* Efecto subrayado mejorado */
+.menu li a:not(.btn-contacto, .btn-login, .btn-registro)::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: width var(--transition-speed) ease;
+    border-radius: 1px;
+}
+
+.menu li a:not(.btn-contacto, .btn-login, .btn-registro):hover::after,
+.menu li a.active:not(.btn-contacto, .btn-login, .btn-registro)::after {
+    width: 100%;
+}
+
+/* Estilos para enlace activo */
+.menu a.active {
+    color: var(--primary-color);
+    font-weight: 600;
 }
 
 /* Logo styles */
@@ -145,230 +206,111 @@ nav {
     transform: scale(1.05);
 }
 
-/* Menú principal */
-.menu {
-    display: flex;
-    align-items: center;
-}
-
-.menu li {
-    color: var(--white);
-    margin-left: 35px;
-    position: relative;
-    opacity: 0;
-    animation: fadeInRight 0.5s ease forwards;
-}
-
-.menu li:nth-child(1) {
-    animation-delay: 0.1s;
-}
-
-.menu li:nth-child(2) {
-    animation-delay: 0.2s;
-}
-
-.menu li:nth-child(3) {
-    animation-delay: 0.3s;
-}
-
-.menu li:nth-child(4) {
-    animation-delay: 0.4s;
-}
-
-.menu li:nth-child(5) {
-    animation-delay: 0.5s;
-}
-
-@keyframes fadeInRight {
-    from {
-        opacity: 0;
-        transform: translateX(25px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-/* Cambiar color del fondo y texto cuando el header tiene la clase 'scrolled' */
-header.scrolled {
-    background-color: white; /* Cambiar el fondo a blanco */
-}
-
-header.scrolled .menu a {
-    color: #011730; /* Cambiar el color del texto a un color oscuro cuando se hace scroll */
-}
-
-header.scrolled .menu a:hover {
-    color: var(--primary-color); /* Mantener el efecto hover */
-}
-
-header.scrolled .btn-contacto {
-    background-color: var(--primary-color); /* Cambiar el color del botón */
-}
-
-header.scrolled .btn-contacto:hover {
-    background-color: var(--secondary-color); /* Mantener el color de hover */
-}
-
-.menu a {
-    font-weight: 500;
-    color: var(--white);
-    position: relative;
-    padding: 8px 0;
-    font-size: 16px;
-    display: block;
-    transition: color var(--transition-speed) ease;
-}
-
-/* Efecto subrayado para enlaces normales */
-.menu li a:not(.btn-contacto, .btn-login, .btn-registro)::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background-color: var(--primary-color);
-    transition: width var(--transition-speed) cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    border-radius: 1px;
-    transform-origin: left;
-}
-
-.menu li a:not(.btn-contacto, .btn-login, .btn-registro):hover::after,
-.menu li a.active:not(.btn-contacto, .btn-login, .btn-registro)::after {
-    width: 100%;
-}
-
-.menu a:hover {
-    color: var(--primary-color);
-}
-
-/* Indicador de página activa */
-.menu a.active {
-    color: var(--primary-color);
-    font-weight: 600;
-}
-
-/* Estilos para el botón de contacto */
-.btn-contacto {
-    color: var(--white);
-    text-decoration: none;
-    transition: all 0.3s ease;
-    font-weight: 500;
-    padding: 8px 15px;
-    border-radius: var(--border-radius);
-}
-
-.btn-contacto:hover {
-    color: var(--accent-color);
-}
-
-/* Cuando el header tiene scroll */
-header.scrolled .btn-contacto {
-    color: #011730;
-}
-
-header.scrolled .btn-contacto:hover {
-    color: var(--accent-color);
-}
-
-/* Menú móvil - VERSIÓN ACTUALIZADA */
+/* Botón de hamburguesa */
 .menu-toggle {
-    display: none;
-    position: relative;
-    width: 30px;
-    height: 24px;
+    display: none; /* Por defecto oculto en desktop */
     background: transparent;
     border: none;
-    padding: 0;
-    z-index: 5;
+    padding: 10px;
     cursor: pointer;
-    transition: transform var(--transition-speed) ease;
+    z-index: 1000;
+    outline: none;
 }
 
+.menu-toggle span {
+    display: block;
+    width: 25px;
+    height: 2px;
+    margin: 5px 0;
+    background-color: var(--white);
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+/* Media query para móvil */
 @media (max-width: 991px) {
-    .menu-toggle {
-        display: block;
-    }
-
-    .menu-toggle span {
-        position: absolute;
-        left: 0;
+    header {
+        position: fixed !important;
         width: 100%;
-        height: 3px;
-        background-color: var(--text-color);
-        border-radius: 3px;
-        transition: all 0.3s ease;
-    }
-
-    .menu-toggle span:nth-child(1) {
         top: 0;
-    }
-
-    .menu-toggle span:nth-child(2) {
-        top: 50%;
-        transform: translateY(-50%);
-    }
-
-    .menu-toggle span:nth-child(3) {
-        bottom: 0;
-    }
-
-    /* Light icon for dark background */
-    header:not(.scrolled) .menu-toggle span {
-        background-color: var(--white);
-    }
-
-    /* Animation when active */
-    .menu-toggle.active span:nth-child(1) {
-        top: 10px;
-        transform: rotate(45deg);
-        background-color: var(--text-color);
-    }
-
-    .menu-toggle.active span:nth-child(2) {
-        opacity: 0;
-    }
-
-    .menu-toggle.active span:nth-child(3) {
-        bottom: 10px;
-        transform: rotate(-45deg);
-        background-color: var(--text-color);
+        left: 0;
+        z-index: 9999;
     }
 
     .menu {
         position: fixed;
-        top: 0;
-        right: -100%;
-        width: 280px;
-        height: 100vh;
-        background-color: var(--white);
+        top: var(--header-height);
+        left: 0;
+        right: 0;
+        background: var(--dark-bg);
+        padding: 20px 0;
         flex-direction: column;
-        align-items: flex-start;
-        justify-content: center;
-        padding: 80px 30px;
-        transition: right var(--transition-speed) cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
-        overflow-y: auto;
+        transform: translateY(-100%);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 9998;
     }
 
     .menu.active {
-        right: 0;
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
     }
 
+    .menu-toggle {
+        position: fixed;
+        top: calc(var(--header-height) / 2 - 15px);
+        right: 20px;
+    }
+
+    .menu-toggle span {
+        display: block;
+        width: 30px;
+        height: 3px;
+        margin: 6px 0;
+        background-color: var(--white);
+        transition: all 0.3s ease-in-out;
+    }
+
+    .menu-toggle.active span:nth-child(1) {
+        transform: rotate(45deg) translate(7px, 7px);
+    }
+
+    .menu-toggle.active span:nth-child(2) {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    .menu-toggle.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -7px);
+    }
+
+    /* Ajustes del menú en móvil */
     .menu li {
         margin: 15px 0;
         width: 100%;
-        opacity: 1;
-        animation: none;
+        text-align: center;
+        opacity: 0;
+        transform: translateX(-20px);
+        transition: all 0.3s ease;
     }
 
+    .menu.active li {
+        opacity: 1;
+        transform: translateX(0);
+        transition-delay: calc(0.1s * var(--item-index));
+    }
+
+    /* Estilos específicos para los enlaces del menú móvil */
     .menu a {
-        font-size: 18px;
-        color: var(--text-color) !important;
-        padding: 12px 0;
+        color: var(--white) !important; /* Forzar color blanco */
+        font-size: 20px;
+        padding: 15px 20px;
+        display: inline-block;
+        width: auto;
+        position: relative;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
 
     .menu a:hover,
@@ -376,11 +318,31 @@ header.scrolled .btn-contacto:hover {
         color: var(--primary-color) !important;
     }
 
-    .btn-contacto {
-        margin-top: 15px;
-        width: 100%;
-        text-align: center;
+    /* Asegurar que los enlaces permanezcan blancos incluso cuando el header tiene scroll */
+    header.scrolled .menu a {
         color: var(--white) !important;
+    }
+
+    header.scrolled .menu a:hover,
+    header.scrolled .menu a.active {
+        color: var(--primary-color) !important;
+    }
+
+    /* Ajustes de los botones de autenticación en móvil */
+    .auth-buttons {
+        margin: 20px 0;
+        padding: 0 20px;
+    }
+
+    .btn-login, .btn-registro {
+        width: 100%;
+        max-width: 280px;
+        margin: 10px auto;
+    }
+
+    /* Ajuste de color del botón cuando el header tiene scroll */
+    header.scrolled .menu-toggle span {
+        background-color: var(--text-color);
     }
 }
 
@@ -396,18 +358,19 @@ header.scrolled .menu-toggle span {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
     visibility: hidden;
     opacity: 0;
     transition: opacity var(--transition-speed) ease, visibility var(--transition-speed) ease;
     z-index: 4;
-    backdrop-filter: blur(3px);
 }
 
 .overlay.active {
     visibility: visible;
     opacity: 1;
 }
+
 /* Estilos para los botones de autenticación */
 .auth-buttons {
     display: flex;
