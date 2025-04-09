@@ -215,6 +215,7 @@ nav {
     cursor: pointer;
     z-index: 1000;
     outline: none;
+    position: relative;
 }
 
 .menu-toggle span {
@@ -229,12 +230,8 @@ nav {
 
 /* Media query para móvil */
 @media (max-width: 991px) {
-    header {
-        position: fixed !important;
-        width: 100%;
-        top: 0;
-        left: 0;
-        z-index: 9999;
+    .menu-toggle {
+        display: block; /* Mostrar en móvil */
     }
 
     .menu {
@@ -249,7 +246,8 @@ nav {
         opacity: 0;
         visibility: hidden;
         transition: all 0.3s ease;
-        z-index: 9998;
+        height: calc(100vh - var(--header-height));
+        overflow-y: auto;
     }
 
     .menu.active {
@@ -258,91 +256,16 @@ nav {
         visibility: visible;
     }
 
-    .menu-toggle {
-        position: fixed;
-        top: calc(var(--header-height) / 2 - 15px);
-        right: 20px;
-    }
-
-    .menu-toggle span {
-        display: block;
-        width: 30px;
-        height: 3px;
-        margin: 6px 0;
-        background-color: var(--white);
-        transition: all 0.3s ease-in-out;
-    }
-
-    .menu-toggle.active span:nth-child(1) {
-        transform: rotate(45deg) translate(7px, 7px);
-    }
-
-    .menu-toggle.active span:nth-child(2) {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-
-    .menu-toggle.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(7px, -7px);
-    }
-
-    /* Ajustes del menú en móvil */
     .menu li {
-        margin: 15px 0;
-        width: 100%;
-        text-align: center;
+        margin: 10px 0;
         opacity: 0;
-        transform: translateX(-20px);
+        transform: translateY(20px);
         transition: all 0.3s ease;
     }
 
     .menu.active li {
         opacity: 1;
-        transform: translateX(0);
-        transition-delay: calc(0.1s * var(--item-index));
-    }
-
-    /* Estilos específicos para los enlaces del menú móvil */
-    .menu a {
-        color: var(--white) !important; /* Forzar color blanco */
-        font-size: 20px;
-        padding: 15px 20px;
-        display: inline-block;
-        width: auto;
-        position: relative;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    }
-
-    .menu a:hover,
-    .menu a.active {
-        color: var(--primary-color) !important;
-    }
-
-    /* Asegurar que los enlaces permanezcan blancos incluso cuando el header tiene scroll */
-    header.scrolled .menu a {
-        color: var(--white) !important;
-    }
-
-    header.scrolled .menu a:hover,
-    header.scrolled .menu a.active {
-        color: var(--primary-color) !important;
-    }
-
-    /* Ajustes de los botones de autenticación en móvil */
-    .auth-buttons {
-        margin: 20px 0;
-        padding: 0 20px;
-    }
-
-    .btn-login, .btn-registro {
-        width: 100%;
-        max-width: 280px;
-        margin: 10px auto;
-    }
-
-    /* Ajuste de color del botón cuando el header tiene scroll */
-    header.scrolled .menu-toggle span {
-        background-color: var(--text-color);
+        transform: translateY(0);
     }
 }
 

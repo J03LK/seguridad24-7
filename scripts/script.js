@@ -64,27 +64,38 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Función para manejar el menú móvil
     function toggleMenu(isOpen) {
+        if (!menu || !menuToggle || !overlay) return;
+        
         menu.classList.toggle('active', isOpen);
         menuToggle.classList.toggle('active', isOpen);
         overlay.classList.toggle('active', isOpen);
-        menuToggle.setAttribute('aria-expanded', isOpen);
+        
+        // Animar las barras del menú hamburguesa
+        const spans = menuToggle.querySelectorAll('span');
+        if (isOpen) {
+            spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+            spans[1].style.opacity = '0';
+            spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+        } else {
+            spans[0].style.transform = 'none';
+            spans[1].style.opacity = '1';
+            spans[2].style.transform = 'none';
+        }
         
         // Bloquear/desbloquear scroll del body
         document.body.style.overflow = isOpen ? 'hidden' : '';
-        
-        // Mejorar accesibilidad del menú
-        menu.setAttribute('aria-hidden', !isOpen);
-        
-        // Añadir/quitar clase al body
-        document.body.classList.toggle('menu-open', isOpen);
         
         // Animar elementos del menú
         const menuItems = menu.querySelectorAll('li');
         menuItems.forEach((item, index) => {
             if (isOpen) {
                 item.style.transitionDelay = `${index * 0.1}s`;
+                item.style.opacity = '1';
+                item.style.transform = 'translateY(0)';
             } else {
                 item.style.transitionDelay = '0s';
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
             }
         });
     }

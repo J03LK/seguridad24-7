@@ -28,11 +28,12 @@ const handleScroll = () => {
     });
 };
 
-// Add debounced scroll listener
-window.addEventListener('scroll', debounce(handleScroll, 10));
+// Add scroll listener with a higher debounce time to avoid conflicts
+window.addEventListener('scroll', debounce(handleScroll, 50));
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
+    // Verificar el estado inicial
     handleScroll();
     
     // Optimize image loading
