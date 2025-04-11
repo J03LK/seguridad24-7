@@ -34,16 +34,6 @@
     box-sizing: border-box;
 }
 
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    color: var(--text-color);
-    background-color: var(--body-bg);
-    overflow-x: hidden;
-    perspective: 1000px;
-    padding-top: var(--header-height);
-}
-
 /* Utilidades */
 .container {
     width: 100%;

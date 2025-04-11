@@ -1240,3 +1240,88 @@ footer:before {
     background-repeat: no-repeat;
     background-size: cover;
 }
+
+/* ---------------------- Categorias (Estilos Mejorados) ---------------------- */
+
+/* Product Categories Section */
+.product-categories {
+    padding: 60px 20px; /* Aumentar padding vertical */
+    background-color:#011730;
+    position: relative; /* Para posible pseudo-elementos decorativos */
+    overflow: hidden;
+}
+
+.product-categories h2 {
+    font-size: 2.8em; /* Ligeramente más grande */
+    font-weight: bold;
+    margin-bottom: 50px; /* Más espacio debajo del título */
+    color:#00c9ff; /* Usar un azul más brillante como accent-color */
+    text-shadow: 0 0 10px rgba(0, 201, 255, 0.3); /* Añadir un brillo sutil */
+    line-height: 1.3;
+    text-align: center;
+}
+
+.categories-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); /* Aumentar minmax */
+    gap: 30px; /* Más espacio */
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.category-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    padding: 20px; /* Más padding interno */
+    border-radius: 12px; /* Bordes más redondeados */
+    background-color: rgba(255, 255, 255, 0.03); /* Fondo muy sutil */
+    border: 1px solid rgba(255, 255, 255, 0.05); /* Borde sutil */
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; /* Añadir transiciones */
+}
+
+.category-item:hover {
+    transform: translateY(-8px); /* Levantar más en hover */
+    background-color: rgba(255, 255, 255, 0.08); /* Fondo ligeramente más visible en hover */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Sombra más oscura y pronunciada */
+}
+
+.category-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 15px; /* Más espacio */
+    border-radius: 8px; /* Redondear imágenes */
+    background-color: rgba(255, 255, 255, 0.05); /* Fondo sutil para la imagen */
+    padding: 5px; /* Pequeño padding alrededor de la imagen */
+}
+
+.category-item span {
+    color: #e0e0e0; /* Color de texto ligeramente más suave */
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .product-categories h2 {
+        font-size: 2.2em;
+        margin-bottom: 40px;
+    }
+    .categories-container {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 20px;
+    }
+
+    .category-item img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .category-item span {
+        font-size: 12px;
+    }
+}

@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barra de Navegación</title>
-    <link rel="stylesheet" href="estilos/Paquetes.css">
+    <title>Paquetes - 24-7 Seguridad</title>
     <link rel="stylesheet" href="estilos/navbar.css">
-    <link href="/website/css/uicons-solid-rounded.css">
+    <link rel="stylesheet" href="estilos/Paquetes.css">
+    <link rel="stylesheet" href="estilos/footer.css">
+    <link href="/website/css/uicons-solid-rounded.css"> 
     <script src="https://unpkg.com/lottie-web@5.7.4/build/player/lottie.min.js"></script>
+   
 </head>
 <body>
     <header>
@@ -24,18 +26,18 @@
                     <span></span>
                 </button>
                 <ul class="menu" id="menu">
-                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="index.html">Inicio</a></li> <!-- Link a index.html -->
                     <li><a href="servicios.html">Servicios</a></li>
-                    <li><a href="Paquetes.html" class="active">Paquetes</a></li>
+                    <li><a href="Paquetes.html" class="active">Paquetes</a></li> <!-- Marcar Paquetes como activo -->
                     <li><a href="nosotros.html">Nosotros</a></li>
-                    <li><a href="casos.html">Casos de Éxito</a></li>
-                    <li><a href="contacto.html">Contacto</a></li>
+                    <li><a href="dashboardAdmin.html">dashboard</a></li>
+                    <li><a href="index.html#contacto">Contacto</a></li> <!-- Link a index.html#contacto -->
                     <li class="auth-buttons">
                         <a href="login.html" class="btn-login">
                             <i class="fas fa-user"></i>
                             <span>Ingresar</span>
                         </a>
-                        <a href="registro.html" class="btn-registro">
+                        <a href="#registro" class="btn-registro"> <!-- Asumiendo que #registro es un modal o sección en index -->
                             <span>Registrarse</span>
                             <i class="fas fa-arrow-right"></i>
                         </a>
@@ -50,8 +52,49 @@
         </div>
         <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE1.jpg" alt="Imagen de fondo">
     </section>
+
+    <section class="paquetes">
+        <h2>ELIGE EL PAQUETE IDEAL PARA TI</h2>
+        <div class="paquete-container">
+          
+          <!-- Paquete Básico -->
+          <div class="paquete">
+            <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE4.jpg" alt="Paquete Básico" />
+            <div class="contenido">
+              <h3>Paquete Básico</h3>
+              <p class="descripcion">Protección básica ideal para hogares o negocios pequeños.</p>
+              <ul>
+                <li><strong>Cámaras inteligentes:</strong> Seguridad en alta definición.</li>
+                <li><strong>Control de accesos:</strong> Gestión de entradas.</li>
+                <li><strong>Perifoneo:</strong> Comunicación por altavoces.</li>
+                <li><strong>Reconocimiento facial:</strong> No disponible.</li>
+                <li><strong>Reconocimiento de placas:</strong> No disponible.</li>
+              </ul>
+              <button>Seleccionar</button>
+            </div>
+          </div>
+      
+          <!-- Paquete Premium -->
+          <div class="paquete">
+            <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE6.jpg" alt="Paquete Premium" />
+            <div class="contenido">
+              <h3>Paquete Premium</h3>
+              <p class="descripcion">Máxima seguridad con reconocimiento facial y monitoreo total.</p>
+              <ul>
+                <li><strong>Cámaras inteligentes:</strong> Seguridad en alta definición.</li>
+                <li><strong>Control de accesos:</strong> Gestión de entradas.</li>
+                <li><strong>Perifoneo:</strong> Comunicación por altavoces.</li>
+                <li><strong>Reconocimiento facial:</strong> Acceso a áreas restringidas.</li>
+                <li><strong>Reconocimiento de placas:</strong> Monitoreo de vehículos.</li>
+              </ul>
+              <button>Seleccionar</button>
+            </div>
+          </div>
+      
+        </div>
+    </section>
     <section class="technologies">
-        <h2> CONTAMOS CON  VARIEDAD DE TECNOLOGÍAS PARA TU SEGURIDAD:</h2>
+        <h2> Contamos con variedad de tecnologías para tu seguridad</h2>
         <div class="tech-container">
             <!-- Imagen a la izquierda -->
             <div class="tech-image">
@@ -120,56 +163,39 @@
             </div>
         </div>
     </section>
-    
-    <section class="paquetes">
-        <h2>Elige el paquete ideal para ti</h2>
-        <div class="paquete-container">
-          
-          <!-- Paquete Básico -->
-          <div class="paquete">
-            <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE4.jpg" alt="Paquete Básico" />
-            <div class="contenido">
-              <h3>Paquete Básico</h3>
-              <p class="descripcion">Protección básica ideal para hogares o negocios pequeños.</p>
-              <ul>
-                <li><strong>Cámaras inteligentes:</strong> Seguridad en alta definición.</li>
-                <li><strong>Control de accesos:</strong> Gestión de entradas.</li>
-                <li><strong>Perifoneo:</strong> Comunicación por altavoces.</li>
-                <li><strong>Reconocimiento facial:</strong> No disponible.</li>
-                <li><strong>Reconocimiento de placas:</strong> No disponible.</li>
-              </ul>
-              <button>Seleccionar</button>
-            </div>
-          </div>
-      
-          <!-- Paquete Premium -->
-          <div class="paquete">
-            <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE6.jpg" alt="Paquete Premium" />
-            <div class="contenido">
-              <h3>Paquete Premium</h3>
-              <p class="descripcion">Máxima seguridad con reconocimiento facial y monitoreo total.</p>
-              <ul>
-                <li><strong>Cámaras inteligentes:</strong> Seguridad en alta definición.</li>
-                <li><strong>Control de accesos:</strong> Gestión de entradas.</li>
-                <li><strong>Perifoneo:</strong> Comunicación por altavoces.</li>
-                <li><strong>Reconocimiento facial:</strong> Acceso a áreas restringidas.</li>
-                <li><strong>Reconocimiento de placas:</strong> Monitoreo de vehículos.</li>
-              </ul>
-              <button>Seleccionar</button>
-            </div>
-          </div>
-      
-        </div>
-    </section>
-    <section class="proyecto">
-        <div class="background-overlay"></div>
-        <div class="content">
-          <h2>Tu seguridad <br> está al alcance de un click</h2>
-          <button class="btn"><a href="Contactos.html">Contanos</a></button>
-        </div>
-    </section>
-    <script src="scripts/script.js"></script>
+</section>
 
+
+<section class="product-categories">
+    <h2>Nuestros Productos</h2>
+    <div class="categories-container">
+        <a href="carrito.html" class="category-item">
+            <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUTE16.jpg" alt="Camaras">
+            <span>Camaras</span>
+        </a>
+        <a href="carrito.html" class="category-item">
+            <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE17.jpg" alt="Cercos Electricos">
+            <span>Cercos Electricos</span>
+        </a>
+        <a href="carrito.html" class="category-item">
+            <img src="assetS/IMAGEN-PAQUETE/IMAGENPAQUETE18.jpg" alt="Control de acceso">
+            <span>Control de Acceso</span>
+        </a>
+        <a href="carrito.html" class="category-item">
+            <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE19.jpg" alt="Custodia de carga ">
+            <span>Vocines</span>
+        </a>
+        <a href="carrito.html" class="category-item">
+            <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE22.webp" alt="Rastreo Satelital Vehicular">
+            <span>Sistemas de alarma</span>
+        </a>
+        <a href="carrito.html" class="category-item">
+            <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE20.jpeg" alt="Boton de panico">
+            <span>Botones de Panico</span>
+        </a> 
+</section>
+
+ <script src="scripts/script.js"></script> 
     <!-- Footer -->
     <footer>
         <div class="container">
@@ -180,20 +206,20 @@
                 <div class="footer-links">
                     <h4>Enlaces rápidos</h4>
                     <ul>
-                        <li><a href="index.html">Inicio</a></li>
-                        <li><a href="servicios.html">Servicios</a></li>
-                        <li><a href="nosotros.html">Nosotros</a></li>
-                        <li><a href="casos.html">Casos de Éxito</a></li>
-                        <li><a href="contacto.html">Contacto</a></li>
+                        <li><a href="#inicio">Inicio</a></li>
+                        <li><a href="#servicios">Servicios</a></li>
+                        <li><a href="#nosotros">Nosotros</a></li>
+                        <li><a href="#casos">Casos de Éxito</a></li>
+                        <li><a href="#contacto">Contacto</a></li>
                     </ul>
                 </div>
                 <div class="footer-servicios">
                     <h4>Servicios</h4>
                     <ul>
-                        <li><a href="servicios.html#guardia-virtual">Guardia Virtual</a></li>
-                        <li><a href="servicios.html#reconocimiento">Reconocimiento Facial</a></li>
-                        <li><a href="servicios.html#monitoreo">Monitoreo 24/7</a></li>
-                        <li><a href="servicios.html#accesos">Control de Accesos</a></li>
+                        <li><a href="#servicios">Detección de Personas</a></li>
+                        <li><a href="#servicios">Detección de Objetos</a></li>
+                        <li><a href="#servicios">Análisis Estadístico</a></li>
+                        <li><a href="#servicios">Seguridad Avanzada</a></li>
                     </ul>
                 </div>
                 <div class="footer-newsletter">

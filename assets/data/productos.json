@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1,
+    "name": "Cámara de Seguridad HD",
+    "price": 129.99,
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTM0ychp5srlteQ6ocRc3tUXCYzHK1SqkpY0Q&s",
+    "category": "cameras",
+    "description": "Cámara de seguridad de alta definición con visión nocturna, detección de movimiento y resistente a la intemperie. Perfecta para monitoreo interior y exterior."
+  },
+  {
+    "id": 2,
+    "name": "Cámara WiFi 360°",
+    "price": 89.99,
+    "image": "https://www.steren.com.ec/media/catalog/product/cache/532829604b379f478db69368d14615cd/image/21843030e/camara-de-seguridad-wi-fi-full-hd-360.jpg",
+    "category": "cameras",
+    "description": "Cámara WiFi con visión panorámica de 360 grados, audio bidireccional y alertas en tiempo real. Ideal para monitoreo remoto desde tu smartphone."
+  },
+  {
+    "id": 3,
+    "name": "Sistema de Alarma Residencial",
+    "price": 199.99,
+    "image": "https://www.novaseguridad.com.co/wp-content/uploads/2021/10/Sistema-de-alarma-para-el-hogar.jpg.webp",
+    "category": "alarms",
+    "description": "Sistema completo de alarma para hogares con sensores de puertas y ventanas, detector de movimiento y sirena. Incluye aplicación móvil para control remoto."
+  },
+  {
+    "id": 4,
+    "name": "Control de Acceso Biométrico",
+    "price": 249.99,
+    "image": "https://alertamaxima.hn/wp-content/uploads/2020/10/prod-control-acceso.jpg",
+    "category": "access",
+    "description": "Sistema de control de acceso con lector de huellas dactilares, teclado numérico y tarjetas RFID. Perfecto para oficinas y áreas restringidas."
+  },
+  {
+    "id": 5,
+    "name": "Detector de Humo Inteligente",
+    "price": 59.99,
+    "image": "https://cdn.tvc.mx/media/5416/SXI479005.jpg",
+    "category": "fire",
+    "description": "Detector de humo con conectividad WiFi que envía alertas directamente a tu teléfono. Batería de larga duración y fácil instalación."
+  },
+  {
+    "id": 6,
+    "name": "Cerco Eléctrico Perimetral",
+    "price": 349.99,
+    "image": "https://site.argseguridad.com/blog/wp-content/uploads/cercos-electricos-13.jpg",
+    "category": "fences",
+    "description": "Sistema de cerco eléctrico perimetral con energizador de pulsos, alambre galvanizado y señalización. Ideal para protección de propiedades."
+  },
+  {
+    "id": 7,
+    "name": "Sistema de Voceo y Alerta",
+    "price": 189.99,
+    "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh2xKatSUNroudT2Sky_IFH6xcfK4E0nb8CEhNTKtkFe4hIkUUgHyxUVFG3-azLxy2J4uBY5iWmGfYyzgCvHXNjO_URhtNOFp6bRMEuRmkWe3FND_XjSbtpqeAJeMT9opC_OeBPhDoTiQ/s1600/voceo1.jpg",
+    "category": "audio",
+    "description": "Sistema de voceo con altavoces de alta potencia, micrófono y sirena de emergencia. Ideal para instalaciones comerciales e industriales."
+  },
+  {
+    "id": 8,
+    "name": "Botón de Pánico Inalámbrico",
+    "price": 45.99,
+    "image": "https://gssecurity.es/wp-content/uploads/2020/07/shutterstock_133101173-scaled.jpg",
+    "category": "panic",
+    "description": "Botón de pánico inalámbrico con alcance de hasta 100 metros, resistente al agua y batería de larga duración. Perfecto para emergencias."
+  }
+] 
