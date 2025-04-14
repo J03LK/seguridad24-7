@@ -8,7 +8,7 @@
     <title>Protection Products - Seguridad 24/7 Ecuador</title>
     
     <!-- Preload critical assets -->
-    <link rel="preload" href="assets/logo.png" as="image">
+    <link rel="preload" href="assets/Logo2.png" as="image">
     <link rel="preload" href="estilos/servicios.css" as="style">
     <link rel="preload" href="estilos/navbar.css" as="style">
     
@@ -28,12 +28,15 @@
     </noscript>
 </head>
 <body>
-    <!-- Contenedor del fondo con un solo logo grande flotante -->
-    <div class="background-container">
-        <div class="floating-logo"></div>
-        <div class="bg-glow bg-glow-1"></div>
-        <div class="bg-glow bg-glow-2"></div>
-    </div>
+<!-- Elemento para la iluminación ambiental -->
+<div class="background-neon-light" id="backgroundNeonLight"></div>
+
+<!-- Contenedor para el logo y los efectos visuales -->
+<div class="neon-logo-wrap">
+    <img src="assets/Logo2.png" class="logo-neon" alt="Seguridad 24-7 Del Ecuador" id="neonLogo">
+    <!-- Las chispas se añadirán dinámicamente con JavaScript -->
+</div>
+    
     
     <!-- Todo el contenido principal dentro del contenedor parallax -->
     <div class="parallax-scroll">
@@ -43,7 +46,7 @@
                 <nav>
                     <div class="logo">
                         <a href="index.html">
-                            <img src="assets/logo.png" alt="Detecta365 Logo" />
+                            <img src="assets/Logo2.png" alt="Detecta365 Logo" />
                         </a>
                     </div>
                     <button id="menu-toggle" class="menu-toggle" aria-label="Menú" aria-expanded="false">
@@ -96,8 +99,8 @@
                     
                     <!-- Video pequeño sobre el sistema de seguridad -->
                     <div class="service-video-small">
-                        <video controls poster="imagenes/video-poster.jpg">
-                            <source src="videos/security-demo.mp4" type="video/mp4">
+                        <video autoplay muted loop playsinline>
+                            <source src="assets/Imagenes-Servicios/4933441_Security Guard_Security_3840x2160.mp4" type="video/mp4">
                         </video>
                     </div>
                 </div>
@@ -115,17 +118,17 @@
 
                 <div class="how-it-works-grid">
                     <div class="how-it-works-step" data-aos="fade-right" data-aos-delay="100">
-                        <img src="imagenes/instalacion.jpg" alt="Instalación de cámaras" class="sticker-img">
+                        <img src="assets/Imagenes-Servicios/instlacion.svg" alt="Instalación de cámaras" class="sticker-img">
                         <h3>Instalación</h3>
                         <p>Cámaras inteligentes en puntos estratégicos con reconocimiento facial.</p>
                     </div>
                     <div class="how-it-works-step" data-aos="fade-up" data-aos-delay="200">
-                        <img src="imagenes/monitoreo.jpg" alt="Monitoreo activo" class="sticker-img">
+                        <img src="assets/Imagenes-Servicios/monitoreoo.svg" alt="Monitoreo activo" class="sticker-img">
                         <h3>Monitoreo</h3>
                         <p>Vigilancia 24/7 con detección en tiempo real.</p>
                     </div>
                     <div class="how-it-works-step" data-aos="fade-left" data-aos-delay="300">
-                        <img src="imagenes/respuesta.jpg" alt="Respuesta inmediata" class="sticker-img">
+                        <img src="assets/Imagenes-Servicios/respuestaa.svg" alt="Respuesta inmediata" class="sticker-img">
                         <h3>Respuesta</h3>
                         <p>Activación inmediata de protocolos de seguridad.</p>
                     </div>
@@ -145,7 +148,7 @@
                         </svg>
                         <h3 class="feature-title">Reconocimiento Facial</h3>
                         <p class="feature-description">Identificación automática de visitantes con registro de cada acceso.</p>
-                        <img src="imagenes/facial-recognition.jpg" alt="Reconocimiento facial" class="feature-image">
+                        <img src="assets/Imagenes-Servicios/reconocimientofacial.svg" alt="Reconocimiento facial" class="feature-image">
                     </div>
                     
                     <div class="feature-card" data-aos="zoom-in" data-aos-delay="200">
@@ -157,7 +160,7 @@
                         </svg>
                         <h3 class="feature-title">Reconocimiento de Placas</h3>
                         <p class="feature-description">Verificación automática de vehículos con registro de entradas y salidas.</p>
-                        <img src="imagenes/license-plate.jpg" alt="Reconocimiento de placas" class="feature-image">
+                        <img src="assets/Imagenes-Servicios/verificaciondevehiculo.jpg" alt="Reconocimiento de placas" class="feature-image">
                     </div>
                     
                     <div class="feature-card" data-aos="zoom-in" data-aos-delay="300">
@@ -167,7 +170,7 @@
                         </svg>
                         <h3 class="feature-title">Sistema de Perifoneo</h3>
                         <p class="feature-description">Comunicación bidireccional para emisión de mensajes disuasorios o instrucciones.</p>
-                        <img src="imagenes/speaker-system.jpg" alt="Sistema de perifoneo" class="feature-image">
+                        <img src="assets/Imagenes-Servicios/sistemade perifoneo.svg" alt="Sistema de perifoneo" class="feature-image">
                     </div>
                     
                     <div class="feature-card" data-aos="zoom-in" data-aos-delay="400">
@@ -178,7 +181,7 @@
                         </svg>
                         <h3 class="feature-title">Botón de Pánico</h3>
                         <p class="feature-description">Alerta inmediata que activa protocolos de emergencia en segundos.</p>
-                        <img src="imagenes/panic-button.jpg" alt="Botón de pánico" class="feature-image">
+                        <img src="assets/Imagenes-Servicios/2947550_426462-PE3URT-361.svg" alt="Botón de pánico" class="feature-image">
                     </div>
                 </div>
             </div>
@@ -189,8 +192,8 @@
                
                 
                 <div class="benefits-video-container" data-aos="zoom-in">
-                    <video controls poster="imagenes/benefits-poster.jpg" class="benefits-video">
-                        <source src="videos/benefits-explainer.mp4" type="video/mp4">
+                    <video autoplay muted loop playsinline>
+                        <source src="assets/Imagenes-Servicios/4934098_Person_Human_3840x2160.mp4" type="video/mp4">
                     </video>
                 </div>
                 
@@ -247,7 +250,7 @@
                             </ul>
                         </div>
                         <div class="service-box-image">
-                            <img src="imagenes/access-control.jpg" alt="Sistema de control de acceso">
+                            <img src="assets/Imagenes-Servicios/automatizacion.svg" alt="Sistema de control de acceso">
                         </div>
                     </div>
                     
@@ -272,22 +275,74 @@
                             </ul>
                         </div>
                         <div class="service-box-image">
-                            <img src="imagenes/audio-camera.jpg" alt="Cámara con audio incorporado">
+                            <img src="assets/Imagenes-Servicios/camaras.svg" alt="Cámara con audio incorporado">
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- CTA Section -->
-            <div class="cta-section" data-aos="zoom-in">
-                <h2 class="section-title">Proteja su propiedad con la tecnología más avanzada</h2>
-                <p class="section-subtitle">Contáctenos hoy para una demostración personalizada</p>
-                
-                <a href="#contacto" class="cta-button pulse-animation">Solicitar Demostración</a>
-                
-                <!-- Galería de imágenes pequeñas de clientes satisfechos -->
+           
                 
         </section>
+         <!-- CTA Section -->
+      <!-- CTA Section -->
+<div class="cta-section" data-aos="zoom-in">
+    <h2 class="section-title">Proteja su propiedad sin costo inicial</h2>
+    <p class="section-subtitle">Obtenga hoy una demostración gratuita y personalizada de nuestra tecnología de vanguardia</p>
+    
+    <a href="#contacto" class="cta-button pulse-animation">Solicitar Demo Gratis</a>
+</div>
+<!-- CTA Section -->
+<div class="cta-section" data-aos="zoom-in">
+    <h2 class="section-title">Descubra sus vulnerabilidades de seguridad</h2>
+    <p class="section-subtitle">Nuestros expertos realizarán un análisis completo de su propiedad sin ningún compromiso</p>
+    
+    <!-- Stickers informativos -->
+    <div class="benefit-stickers">
+        <div class="benefit-sticker">
+            <div class="sticker-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+            </div>
+            <div class="sticker-info">
+                <h4>Detección de puntos ciegos</h4>
+                <p>Identificamos áreas vulnerables invisibles</p>
+            </div>
+        </div>
+        
+        <div class="benefit-sticker">
+            <div class="sticker-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+            </div>
+            <div class="sticker-info">
+                <h4>Mapa térmico de riesgos</h4>
+                <p>Visualice las zonas de mayor riesgo</p>
+            </div>
+        </div>
+        
+        <div class="benefit-sticker">
+            <div class="sticker-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
+                </svg>
+            </div>
+            <div class="sticker-info">
+                <h4>Reporte personalizado</h4>
+                <p>Reciba soluciones a medida para su caso</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="cta-buttons-container">
+        <a href="#contacto" class="cta-button">Solicitar Análisis Gratis</a>
+        <div class="free-badge">100% GRATIS</div>
+    </div>
+</div>
 
         <!-- Testimonios con video (sección nueva) -->
       
@@ -296,7 +351,7 @@
             <div class="container">
                 <div class="footer-content">
                     <div class="footer-logo">
-                        <img src="assets/logo.png" alt="24-7 Logo" />
+                        <img src="assets/Logo2.png" alt="24-7 Logo" />
                     </div>
                     <div class="footer-links">
                         <h4>Enlaces rápidos</h4>
@@ -336,7 +391,9 @@
     <!-- Optimized Scripts Loading -->
     <script src="scripts/script.js" defer></script>
     <script src="scripts/logo.js" defer></script>
+    <script src="scripts/navbar.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" defer></script>
+    
     <script>
         // Initialize AOS with optimized settings
         document.addEventListener('DOMContentLoaded', function() {

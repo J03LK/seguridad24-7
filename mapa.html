@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seguridad 24-7 Del Ecuador</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #000;
+            overflow: hidden;
+        }
+        
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Base para el logo */
+        .logo {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+        }
+        
+        /* Elementos del logo */
+        .map-outline {
+            position: absolute;
+            top: 50%;
+            left: 25%;
+            transform: translate(-50%, -50%);
+            width: 40%;
+            height: 40%;
+            border: 3px solid #00ffff;
+            border-radius: 50% 40% 50% 40%;
+            filter: drop-shadow(0 0 5px #00ffff) drop-shadow(0 0 10px #00ffff);
+            opacity: 0;
+        }
+        
+        .camera {
+            position: absolute;
+            top: 50%;
+            left: 25%;
+            transform: translate(-50%, -50%);
+            width: 30%;
+            height: 20%;
+            opacity: 0;
+        }
+        
+        .camera-body {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 3px solid #00ffff;
+            filter: drop-shadow(0 0 5px #00ffff) drop-shadow(0 0 10px #00ffff);
+        }
+        
+        .camera-lens {
+            position: absolute;
+            top: 50%;
+            left: 70%;
+            transform: translate(-50%, -50%);
+            width: 14px;
+            height: 14px;
+            border: 2px solid #00ffff;
+            border-radius: 50%;
+            filter: drop-shadow(0 0 5px #00ffff) drop-shadow(0 0 10px #00ffff);
+        }
+        
+        .camera-mount {
+            position: absolute;
+            bottom: -30%;
+            left: 15%;
+            width: 10%;
+            height: 30%;
+            border-left: 3px solid #00ffff;
+            border-bottom: 3px solid #00ffff;
+            border-right: 3px solid #00ffff;
+            filter: drop-shadow(0 0 5px #00ffff) drop-shadow(0 0 10px #00ffff);
+        }
+        
+        .text {
+            position: absolute;
+            right: 5%;
+            color: #00ffff;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+            text-align: left;
+            white-space: nowrap;
+            filter: drop-shadow(0 0 5px #00ffff) drop-shadow(0 0 10px #00ffff);
+            opacity: 0;
+        }
+        
+        .text-seguridad {
+            top: 25%;
+            font-size: 48px;
+        }
+        
+        .text-24-7 {
+            top: 45%;
+            font-size: 64px;
+        }
+        
+        .text-del-ecuador {
+            top: 70%;
+            font-size: 48px;
+        }
+        
+        /* Animación de encendido */
+        @keyframes turnOn {
+            0% {
+                opacity: 0;
+                filter: drop-shadow(0 0 2px rgba(0, 255, 255, 0.2));
+            }
+            20% {
+                opacity: 0.2;
+                filter: drop-shadow(0 0 4px rgba(0, 255, 255, 0.3));
+            }
+            40% {
+                opacity: 0.4;
+                filter: drop-shadow(0 0 6px rgba(0, 255, 255, 0.4));
+            }
+            60% {
+                opacity: 0.6;
+                filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.6));
+            }
+            80% {
+                opacity: 0.8;
+                filter: drop-shadow(0 0 12px rgba(0, 255, 255, 0.8)) drop-shadow(0 0 20px rgba(0, 255, 255, 0.4));
+            }
+            100% {
+                opacity: 1;
+                filter: drop-shadow(0 0 15px #00ffff) drop-shadow(0 0 25px rgba(0, 255, 255, 0.8));
+            }
+        }
+        
+        /* Animación de parpadeo */
+        @keyframes neonFlicker {
+            0%, 22%, 36%, 75% {
+                opacity: 1;
+                filter: drop-shadow(0 0 15px #00ffff) drop-shadow(0 0 25px rgba(0, 255, 255, 0.8));
+            }
+            20%, 33%, 74% {
+                opacity: 0.8;
+                filter: drop-shadow(0 0 10px #00ffff) drop-shadow(0 0 15px rgba(0, 255, 255, 0.6));
+            }
+            42% {
+                opacity: 0.9;
+                filter: drop-shadow(0 0 12px #00ffff) drop-shadow(0 0 18px rgba(0, 255, 255, 0.7));
+            }
+        }
+        
+        .flicker {
+            animation: neonFlicker 4s infinite both;
+        }
+        
+        /* Puntos brillantes aleatorios para efecto de electricidad */
+        .sparkle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background-color: #00ffff;
+            border-radius: 50%;
+            box-shadow: 0 0 5px 2px #00ffff;
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <div class="map-outline" id="map"></div>
+            <div class="camera" id="camera">
+                <div class="camera-body"></div>
+                <div class="camera-lens"></div>
+                <div class="camera-mount"></div>
+            </div>
+            <div class="text text-seguridad" id="text-seguridad">SEGURIDAD</div>
+            <div class="text text-24-7" id="text-24-7">24-7</div>
+            <div class="text text-del-ecuador" id="text-del-ecuador">DEL ECUADOR</div>
+        </div>
+        <div id="sparkles-container"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos del logo
+            const logo = document.querySelector('.logo');
+            const map = document.getElementById('map');
+            const camera = document.getElementById('camera');
+            const textSeguridad = document.getElementById('text-seguridad');
+            const text247 = document.getElementById('text-24-7');
+            const textEcuador = document.getElementById('text-del-ecuador');
+            const sparklesContainer = document.getElementById('sparkles-container');
+            
+            // Sonido de encendido de neón
+            const startupSound = new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjM1LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAAeAAAdpAAYGBgYGBgYGBgYJycnJycnJycnJzY2NjY2NjY2NjZFRUVFRUVFRUVFVFRUVFRUVFRUVGNjY2NjY2NjY2Nzc3Nzc3Nzc3NzgoKCgoKCgoKCgpGRkZGRkZGRkZGgoKCgoKCgoKCgr6+vr6+vr6+vr76+vr6+vr6+vr7MzMzMzMzMzMzM29vb29vb29vb2+rq6urq6urq6ur5+fn5+fn5+fn5//////////8AAAA5TEFNRTMuMTAwBK8AAAAAAAAAABUgJAUtQQABzAAAHaQ7QcONAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//vQRAAAAvYdzsUEwAB0w+q9zggAAAACkAAAAIAAANIAAAATEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//uQREAP8AAAGkAAAAIAAANIAAAASAAAaQAAAAgAAA0gAAABExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV');
+            
+            // Efecto de electricidad
+            function createSparkles() {
+                for (let i = 0; i < 50; i++) {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.style.left = `${Math.random() * 100}%`;
+                    sparkle.style.top = `${Math.random() * 100}%`;
+                    sparklesContainer.appendChild(sparkle);
+                }
+            }
+            
+            // Función para animar los destellos
+            function animateSparkles() {
+                const sparkles = document.querySelectorAll('.sparkle');
+                
+                setInterval(() => {
+                    // Selecciona un destello aleatorio para encender
+                    const randomSparkle = sparkles[Math.floor(Math.random() * sparkles.length)];
+                    randomSparkle.style.opacity = '1';
+                    
+                    // Apaga el destello después de un tiempo aleatorio
+                    setTimeout(() => {
+                        randomSparkle.style.opacity = '0';
+                    }, 50 + Math.random() * 150);
+                }, 200);
+            }
+            
+            // Iniciar secuencia de encendido
+            setTimeout(() => {
+                // Sonido de encendido
+                try {
+                    startupSound.play();
+                } catch (e) {
+                    console.log('Audio autoplay blocked');
+                }
+                
+                // Enciende el contorno del mapa
+                map.style.opacity = '0';
+                map.style.animation = 'turnOn 1s 0.2s forwards';
+                
+                // Después de un tiempo, enciende la cámara
+                setTimeout(() => {
+                    camera.style.opacity = '0';
+                    camera.style.animation = 'turnOn 0.8s forwards';
+                    
+                    // Sonido de clic
+                    const clickSound = new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjIwLjEwMAAAAAAAAAAAAAAA//tUwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAAGAAADQAAYGBgYJCQkJCQwMDAwMDw8PDw8SEhISEhUVFRUVGBgYGBgbGxsbGx4eHh4eISEhISEkJCQkJCcnJycnKioqKios');
+                    try {
+                        clickSound.play();
+                    } catch (e) {
+                        console.log('Audio autoplay blocked');
+                    }
+                    
+                    // Enciende el texto SEGURIDAD
+                    setTimeout(() => {
+                        textSeguridad.style.opacity = '0';
+                        textSeguridad.style.animation = 'turnOn 0.8s forwards';
+                        
+                        // Sonido de clic
+                        try {
+                            clickSound.play();
+                        } catch (e) {
+                            console.log('Audio autoplay blocked');
+                        }
+                        
+                        // Enciende el texto 24-7
+                        setTimeout(() => {
+                            text247.style.opacity = '0';
+                            text247.style.animation = 'turnOn 0.8s forwards';
+                            
+                            // Sonido de clic
+                            try {
+                                clickSound.play();
+                            } catch (e) {
+                                console.log('Audio autoplay blocked');
+                            }
+                            
+                            // Enciende el texto DEL ECUADOR
+                            setTimeout(() => {
+                                textEcuador.style.opacity = '0';
+                                textEcuador.style.animation = 'turnOn 0.8s forwards';
+                                
+                                // Sonido de clic
+                                try {
+                                    clickSound.play();
+                                } catch (e) {
+                                    console.log('Audio autoplay blocked');
+                                }
+                                
+                                // Después de encender todo, aplica el efecto de parpadeo
+                                setTimeout(() => {
+                                    map.classList.add('flicker');
+                                    camera.classList.add('flicker');
+                                    textSeguridad.classList.add('flicker');
+                                    text247.classList.add('flicker');
+                                    textEcuador.classList.add('flicker');
+                                    
+                                    // Crea y anima los destellos
+                                    createSparkles();
+                                    animateSparkles();
+                                }, 1000);
+                            }, 800);
+                        }, 500);
+                    }, 500);
+                }, 800);
+            }, 500);
+        });
+    </script>
+</body>
+</html>

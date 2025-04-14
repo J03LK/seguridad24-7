@@ -1,86 +1,314 @@
-.background-container {
-    position: fixed;
+/* 
+=================================
+Archivo: estilos/logo.css 
+Contiene los estilos para el efecto de logo neón
+=================================
+*/
+
+/* Estilos para el efecto de iluminación ambiental del logo */
+.background-neon-light {
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -10;
-    overflow: hidden;
-    pointer-events: none; /* Para que no interfiera con los clics */
+    background: radial-gradient(circle, rgba(95, 251, 241, 0) 0%, rgba(95, 251, 241, 0) 60%, rgba(95, 251, 241, 0.05) 100%); /* Reducido de 0.1 a 0.05 */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: -2;
 }
 
-.floating-logo {
-    position: absolute;
-    width: 1000px;
-    height: 1000px;
-    opacity: 0.03; /* Logo muy sutil en el fondo */
-    background-image: url('../assets/logo.png');
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
+/* Contenedor para el logo con efecto neón */
+.neon-logo-wrap {
+    position: fixed;
+    z-index: -1;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    animation: floatingLogo 8s ease-in-out infinite;
-    will-change: transform; /* Optimiza rendimiento de animaciones */
+    width: 400px;
+    max-width: 90%;
+    pointer-events: none;
 }
 
-@keyframes floatingLogo {
-    0% { 
-        transform: translate(-50%, -52%) rotate(-1deg); 
-    }
-    25% { 
-        transform: translate(-51%, -50%) rotate(0deg); 
-    }
-    50% { 
-        transform: translate(-50%, -48%) rotate(1deg); 
-    }
-    75% { 
-        transform: translate(-49%, -50%) rotate(0deg); 
-    }
-    100% { 
-        transform: translate(-50%, -52%) rotate(-1deg); 
-    }
+/* El logo neón mismo */
+.logo-neon {
+    width: 100%;
+    filter: drop-shadow(0 0 0px #5ffbf1);
+    opacity: 0.3;
+    animation: neonElectricalFailure 8s forwards;
 }
 
-/* Glow effects para añadir profundidad */
-.bg-glow {
+/* Estilos para las chispas eléctricas */
+.neon-spark {
     position: absolute;
+    width: 5px;
+    height: 5px;
+    background-color: white;
     border-radius: 50%;
-    filter: blur(80px);
-    z-index: -5;
-    opacity: 0.15;
+    opacity: 0;
+    box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.7), /* Reducido de 0.8 a 0.7 */
+                0 0 20px 10px rgba(95, 251, 241, 0.4); /* Reducido de 0.6 a 0.4 */
+    pointer-events: none;
 }
 
-.bg-glow-1 {
-    width: 800px;
-    height: 800px;
-    background: linear-gradient(135deg, #0094FF, transparent);
-    top: 10%;
-    left: -200px;
-    animation: floatGlow 20s ease-in-out infinite;
-}
-
-.bg-glow-2 {
-    width: 600px;
-    height: 600px;
-    background: linear-gradient(135deg, #00FFC2, transparent);
-    bottom: 10%;
-    right: -100px;
-    animation: floatGlow 25s ease-in-out infinite reverse;
-}
-
-@keyframes floatGlow {
-    0%, 100% {
-        transform: translate(0, 0);
+/* Animación del resplandor neón estable después del cortocircuito */
+@keyframes neonStable {
+    0% {
+        filter: drop-shadow(0 0 8px #5ffbf1) drop-shadow(0 0 16px #5ffbf1); /* Reducido de 10px/20px a 8px/16px */
     }
     50% {
-        transform: translate(50px, -30px);
+        filter: drop-shadow(0 0 12px #5ffbf1) drop-shadow(0 0 22px #5ffbf1) drop-shadow(0 0 30px #5ffbf1); /* Reducido de 15px/30px/40px a 12px/22px/30px */
+    }
+    100% {
+        filter: drop-shadow(0 0 8px #5ffbf1) drop-shadow(0 0 16px #5ffbf1); /* Reducido de 10px/20px a 8px/16px */
     }
 }
 
-/* Efecto de "parallax" para que el logo parezca moverse a diferente velocidad */
-.parallax-scroll {
-    position: relative;
-    z-index: 1;
+/* Animación que simula un cortocircuito eléctrico detallado */
+@keyframes neonElectricalFailure {
+    /* Fase inicial - parpadeo suave */
+    0% {
+        opacity: 0.3;
+        filter: drop-shadow(0 0 0px #5ffbf1);
+    }
+    2% {
+        opacity: 0.7;
+        filter: drop-shadow(0 0 5px #5ffbf1);
+    }
+    3% {
+        opacity: 0.2;
+        filter: drop-shadow(0 0 0px #5ffbf1);
+    }
+    
+    /* Primer intento mayor de encendido */
+    5% {
+        opacity: 0.8;
+        filter: drop-shadow(0 0 15px #5ffbf1) drop-shadow(0 0 20px #5ffbf1);
+    }
+    5.1% {
+        opacity: 0.9;
+        filter: drop-shadow(0 0 25px #5ffbf1) drop-shadow(0 0 35px #5ffbf1);
+    }
+    5.3% {
+        opacity: 0.3;
+        filter: drop-shadow(0 0 0px #5ffbf1);
+    }
+    
+    /* Parpadeo nervioso */
+    8% {
+        opacity: 0.7;
+        filter: drop-shadow(0 0 10px #5ffbf1);
+    }
+    8.2% {
+        opacity: 0.3;
+        filter: drop-shadow(0 0 0px #5ffbf1);
+    }
+    8.4% {
+        opacity: 0.7;
+        filter: drop-shadow(0 0 10px #5ffbf1);
+    }
+    8.6% {
+        opacity: 0.3;
+        filter: drop-shadow(0 0 0px #5ffbf1);
+    }
+    8.8% {
+        opacity: 0.7;
+        filter: drop-shadow(0 0 10px #5ffbf1);
+    }
+    9% {
+        opacity: 0.3;
+        filter: drop-shadow(0 0 0px #5ffbf1);
+    }
+    
+    /* Segundo intento más potente (con fallos) */
+    12% {
+        opacity: 0.9;
+        filter: drop-shadow(0 0 20px #5ffbf1) drop-shadow(0 0 30px #5ffbf1);
+    }
+    12.5% {
+        opacity: 0.4;
+        filter: drop-shadow(0 0 5px #5ffbf1);
+    }
+    13% {
+        opacity: 0.9;
+        filter: drop-shadow(0 0 20px #5ffbf1) drop-shadow(0 0 30px #5ffbf1);
+    }
+    13.2% {
+        opacity: 0.4;
+        filter: drop-shadow(0 0 5px #5ffbf1);
+    }
+    
+    /* Pausa */
+    15% {
+        opacity: 0.2;
+        filter: drop-shadow(0 0 0px #5ffbf1);
+    }
+    
+    /* Secuencia de cortocircuito principal */
+    20% {
+        opacity: 0.9;
+        filter: drop-shadow(0 0 25px #5ffbf1) drop-shadow(0 0 35px #5ffbf1);
+    }
+    20.1% {
+        opacity: 1;
+        filter: drop-shadow(0 0 30px #5ffbf1) drop-shadow(0 0 50px #5ffbf1) drop-shadow(0 0 70px #5ffbf1);
+    }
+    20.2% {
+        opacity: 0.3;
+        filter: drop-shadow(0 0 0px #5ffbf1);
+    }
+    20.3% {
+        opacity: 0.9;
+        filter: drop-shadow(0 0 25px #5ffbf1) drop-shadow(0 0 35px #5ffbf1);
+    }
+    20.4% {
+        opacity: 0.3;
+        filter: drop-shadow(0 0 0px #5ffbf1);
+    }
+    20.5% {
+        opacity: 1;
+        filter: drop-shadow(0 0 30px #5ffbf1) drop-shadow(0 0 50px #5ffbf1) drop-shadow(0 0 70px #5ffbf1);
+    }
+    20.7% {
+        opacity: 0.3;
+        filter: drop-shadow(0 0 0px #5ffbf1);
+    }
+    
+    /* Parpadeo irregular intenso */
+    25% {
+        opacity: 0.8;
+        filter: drop-shadow(0 0 15px #5ffbf1) drop-shadow(0 0 25px #5ffbf1);
+    }
+    25.5% {
+        opacity: 0.2;
+        filter: drop-shadow(0 0 0px #5ffbf1);
+    }
+    26% {
+        opacity: 0.9;
+        filter: drop-shadow(0 0 20px #5ffbf1) drop-shadow(0 0 30px #5ffbf1);
+    }
+    26.1% {
+        opacity: 0.3;
+        filter: drop-shadow(0 0 0px #5ffbf1);
+    }
+    26.3% {
+        opacity: 0.9;
+        filter: drop-shadow(0 0 20px #5ffbf1) drop-shadow(0 0 30px #5ffbf1);
+    }
+    26.5% {
+        opacity: 0.2;
+        filter: drop-shadow(0 0 0px #5ffbf1);
+    }
+    
+    /* Punto crítico - intento de estabilización */
+    30% {
+        opacity: 0.9;
+        filter: drop-shadow(0 0 20px #5ffbf1) drop-shadow(0 0 30px #5ffbf1);
+    }
+    31% {
+        opacity: 0.95;
+        filter: drop-shadow(0 0 25px #5ffbf1) drop-shadow(0 0 35px #5ffbf1);
+    }
+    32% {
+        opacity: 0.9;
+        filter: drop-shadow(0 0 20px #5ffbf1) drop-shadow(0 0 30px #5ffbf1);
+    }
+    
+    /* Fallo eléctrico final - parpadeo frenético */
+    40% {
+        opacity: 0.8;
+        filter: drop-shadow(0 0 15px #5ffbf1) drop-shadow(0 0 25px #5ffbf1);
+    }
+    40.1% {
+        opacity: 0.2;
+        filter: drop-shadow(0 0 0px #5ffbf1);
+    }
+    40.2% {
+        opacity: 0.8;
+        filter: drop-shadow(0 0 15px #5ffbf1) drop-shadow(0 0 25px #5ffbf1);
+    }
+    40.3% {
+        opacity: 0.2;
+        filter: drop-shadow(0 0 0px #5ffbf1);
+    }
+    40.4% {
+        opacity: 0.8;
+        filter: drop-shadow(0 0 15px #5ffbf1) drop-shadow(0 0 25px #5ffbf1);
+    }
+    40.5% {
+        opacity: 0.2;
+        filter: drop-shadow(0 0 0px #5ffbf1);
+    }
+    40.6% {
+        opacity: 0.9;
+        filter: drop-shadow(0 0 20px #5ffbf1) drop-shadow(0 0 30px #5ffbf1);
+    }
+    40.7% {
+        opacity: 0.2;
+        filter: drop-shadow(0 0 0px #5ffbf1);
+    }
+    40.8% {
+        opacity: 0.9;
+        filter: drop-shadow(0 0 20px #5ffbf1) drop-shadow(0 0 30px #5ffbf1);
+    }
+    40.9% {
+        opacity: 0.2;
+        filter: drop-shadow(0 0 0px #5ffbf1);
+    }
+    
+    /* Pausa más larga */
+    45% {
+        opacity: 0.2;
+        filter: drop-shadow(0 0 0px #5ffbf1);
+    }
+    
+    /* Destello fuerte único */
+    50% {
+        opacity: 1;
+        filter: drop-shadow(0 0 35px #5ffbf1) drop-shadow(0 0 55px #5ffbf1) drop-shadow(0 0 75px #5ffbf1);
+    }
+    51% {
+        opacity: 0.2;
+        filter: drop-shadow(0 0 0px #5ffbf1);
+    }
+    
+    /* Encendido gradual hacia estabilización */
+    60% {
+        opacity: 0.5;
+        filter: drop-shadow(0 0 8px #5ffbf1) drop-shadow(0 0 15px #5ffbf1);
+    }
+    65% {
+        opacity: 0.7;
+        filter: drop-shadow(0 0 12px #5ffbf1) drop-shadow(0 0 25px #5ffbf1);
+    }
+    70% {
+        opacity: 0.8;
+        filter: drop-shadow(0 0 15px #5ffbf1) drop-shadow(0 0 30px #5ffbf1);
+    }
+    
+    /* Último parpadeo de ajuste */
+    80% {
+        opacity: 0.9;
+        filter: drop-shadow(0 0 20px #5ffbf1) drop-shadow(0 0 35px #5ffbf1);
+    }
+    81% {
+        opacity: 0.7;
+        filter: drop-shadow(0 0 15px #5ffbf1) drop-shadow(0 0 25px #5ffbf1);
+    }
+    82% {
+        opacity: 0.9;
+        filter: drop-shadow(0 0 20px #5ffbf1) drop-shadow(0 0 35px #5ffbf1);
+    }
+    
+    /* Estabilización final con brillo reducido */
+    90% {
+        opacity: 0.8; /* Reducido de 0.95 a 0.8 */
+        filter: drop-shadow(0 0 18px #5ffbf1) drop-shadow(0 0 28px #5ffbf1) drop-shadow(0 0 40px #5ffbf1); /* Reducido de 25px/40px/60px a 18px/28px/40px */
+    }
+    100% {
+        opacity: 0.8; /* Reducido de 0.95 a 0.8 */
+        filter: drop-shadow(0 0 18px #5ffbf1) drop-shadow(0 0 28px #5ffbf1) drop-shadow(0 0 40px #5ffbf1); /* Reducido de 25px/40px/60px a 18px/28px/40px */
+        animation: neonStable 3s ease-in-out infinite;
+    }
 }

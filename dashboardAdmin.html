@@ -51,6 +51,9 @@
                         <span class="name">Admin</span>
                         <span class="role">Administrador</span>
                     </div>
+                    <button id="logout-btn" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -520,49 +523,66 @@
 
     <!-- Modales -->
     <!-- Modal para Añadir Usuario -->
-    <div id="add-user-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Añadir Nuevo Usuario</h2>
-                <span class="close">&times;</span>
-            </div>
-            <form id="add-user-form">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="user-name">Nombre Completo</label>
-                        <input type="text" id="user-name" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="user-email">Email</label>
-                        <input type="email" id="user-email" class="form-control" required>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="user-phone">Teléfono</label>
-                        <input type="tel" id="user-phone" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="user-type">Tipo</label>
-                        <select id="user-type" class="form-control" required>
-                            <option value="">Seleccionar</option>
-                            <option value="residential">Residencial</option>
-                            <option value="commercial">Comercial</option>
-                            <option value="industrial">Industrial</option>
-                        </select>
-                    </div>
+    <!-- Modal para Añadir Usuario -->
+<div id="add-user-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Añadir Nuevo Usuario</h2>
+            <span class="close">&times;</span>
+        </div>
+        <form id="add-user-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="user-name">Nombre Completo</label>
+                    <input type="text" id="user-name" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="user-address">Dirección</label>
-                    <input type="text" id="user-address" class="form-control" required>
+                    <label for="user-email">Email</label>
+                    <input type="email" id="user-email" class="form-control" required>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary modal-close">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+            <!-- Nuevo campo para contraseña -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="user-password">Contraseña</label>
+                    <input type="password" id="user-password" class="form-control" required>
                 </div>
-            </form>
-        </div>
+                <!-- Nuevo campo para seleccionar rol -->
+                <div class="form-group">
+                    <label for="user-role">Rol</label>
+                    <select id="user-role" class="form-control" required>
+                        <option value="">Seleccionar</option>
+                        <option value="admin">Administrador</option>
+                        <option value="usuario">Usuario</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="user-phone">Teléfono</label>
+                    <input type="tel" id="user-phone" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="user-type">Tipo</label>
+                    <select id="user-type" class="form-control" required>
+                        <option value="">Seleccionar</option>
+                        <option value="residential">Residencial</option>
+                        <option value="commercial">Comercial</option>
+                        <option value="industrial">Industrial</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="user-address">Dirección</label>
+                <input type="text" id="user-address" class="form-control" required>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary modal-close">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+        </form>
     </div>
+</div>
 
     <!-- Modal para Añadir Producto -->
     <div id="add-product-modal" class="modal">
@@ -715,10 +735,147 @@
         </form>
     </div>
 </div>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
-<!-- Scripts -->
+<!-- Script para inicializar Firebase y manejar usuarios -->
+<script>
+  // Inicializar Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyD_C3sJCghWpV1DHn4Qyxsa-exdcEJGst0",
+    authDomain: "seguridad-24-7.firebaseapp.com",
+    projectId: "seguridad-24-7",
+    storageBucket: "seguridad-24-7.firebasestorage.app",
+    messagingSenderId: "979899411271",
+    appId: "1:979899411271:web:4d8db498a9388054a7fa62",
+    measurementId: "G-XQG0KDMMX4"
+  };
+
+  // Inicializar Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  // Referencias
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  // Manejar formulario de usuario
+  const userForm = document.getElementById('add-user-form');
+  if (userForm) {
+    userForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Obtener datos
+      const email = document.getElementById('user-email').value;
+      const password = document.getElementById('user-password').value;
+      const name = document.getElementById('user-name').value;
+      const role = document.getElementById('user-role').value;
+      const phone = document.getElementById('user-phone').value;
+      const address = document.getElementById('user-address').value;
+      const type = document.getElementById('user-type').value;
+      
+      // Validación básica
+      if (!email || !password || !name || !role) {
+        showNotification("Por favor complete todos los campos obligatorios", "warning");
+        return;
+      }
+      
+      // Crear usuario
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(function(userCredential) {
+          // Guardar datos adicionales
+          return db.collection("users").doc(userCredential.user.uid).set({
+            email: email,
+            name: name,
+            role: role,
+            phone: phone || "",
+            address: address || "",
+            type: type || "",
+            status: "active",
+            createdAt: new Date()
+          });
+        })
+        .then(function() {
+          // Éxito
+          const modal = userForm.closest('.modal');
+          if (modal) modal.style.display = 'none';
+          userForm.reset();
+          showNotification(`Usuario ${name} creado exitosamente como ${role}`, "success");
+        })
+        .catch(function(error) {
+          // Error
+          console.error("Error:", error);
+          showNotification("Error: " + error.message, "error");
+        });
+    });
+  }
+</script>
+<script>
+    // Verificar autenticación y rol de usuario
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof firebase !== 'undefined') {
+            // Verificar el estado de autenticación
+            firebase.auth().onAuthStateChanged(function(user) {
+                if (user) {
+                    // Verificar si el usuario es admin
+                    firebase.firestore().collection('users').doc(user.uid).get()
+                        .then(function(doc) {
+                            if (doc.exists) {
+                                const userData = doc.data();
+                                
+                                if (userData.role !== 'admin') {
+                                    // No es admin, redirigir a página de usuario
+                                    window.location.href = "usuario.html";
+                                } else {
+                                    // Actualizar información del admin en la UI
+                                    const userNameElement = document.querySelector('.user-profile .name');
+                                    if (userNameElement) {
+                                        userNameElement.textContent = userData.name || 'Admin';
+                                    }
+                                }
+                            } else {
+                                // No hay datos de usuario, redirigir al login
+                                window.location.href = "login.html";
+                            }
+                        })
+                        .catch(function(error) {
+                            console.error("Error al verificar rol:", error);
+                            window.location.href = "login.html";
+                        });
+                } else {
+                    // No hay usuario autenticado, redirigir al login
+                    window.location.href = "login.html";
+                }
+            });
+            
+            // Agregar funcionalidad de cierre de sesión
+            const userProfile = document.querySelector('.user-profile');
+            if (userProfile) {
+                userProfile.addEventListener('click', function() {
+                    if (confirm('¿Desea cerrar sesión?')) {
+                        firebase.auth().signOut()
+                            .then(function() {
+                                window.location.href = "login.html";
+                            })
+                            .catch(function(error) {
+                                console.error("Error al cerrar sesión:", error);
+                            });
+                    }
+                });
+            }
+        }
+    });
+</script>
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="scripts/dashboardAdmin.js"></script>
+<script type="module" src="scripts/dashboardAdmin.js"></script>
+<script type="module" src="firebase/firebase.js"></script>
+<script type="module" src="firebase/userManagement.js"></script>
+<script type="module" src="firebase/1.js"></script>
+<script type="module" src="firebase/2.js"></script>
+
 </body>
 </html>
