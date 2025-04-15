@@ -49,7 +49,7 @@ function setupNavigation() {
 
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            e.preventDefault();
+        e.preventDefault();
             const sectionId = this.getAttribute('data-section');
             if (sectionId) {
                 activateNavLink(this);
@@ -146,21 +146,21 @@ function showNotification(message, type = 'info') {
 }
 
 function generateUniqueId(prefix = 'id') {
-    return `${prefix}-${Math.random().toString(36).substring(2, 9)}`;
+return `${prefix}-${Math.random().toString(36).substring(2, 9)}`;
 }
 
 function formatDate(date) {
-    if (!date) return '';
+if (!date) return '';
     return new Date(date).toLocaleDateString('es-ES');
 }
 
 function formatCurrency(amount) {
-    if (!amount) return '$0.00';
-    const value = typeof amount === 'string' 
-        ? parseFloat(amount.replace('$', '').replace(',', ''))
-        : amount;
-    return new Intl.NumberFormat('es-MX', {
-        style: 'currency',
-        currency: 'MXN'
-    }).format(value);
+if (!amount) return '$0.00';
+const value = typeof amount === 'string' 
+    ? parseFloat(amount.replace('$', '').replace(',', ''))
+    : amount;
+return new Intl.NumberFormat('es-MX', {
+    style: 'currency',
+    currency: 'MXN'
+}).format(value);
 }

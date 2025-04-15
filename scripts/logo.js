@@ -47,6 +47,16 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Reiniciar la animación del logo
     replayNeonEffect();
+    
+    // Configurar el intervalo de repetición
+    // AJUSTA ESTE VALOR PARA CAMBIAR EL TIEMPO DE REPETICIÓN (en milisegundos)
+    // Actualmente está configurado a 15 segundos (15000ms)
+    const REPETITION_INTERVAL = 10000; // <-- AQUÍ PUEDES AJUSTAR EL TIEMPO
+    
+    // Iniciar el intervalo de repetición
+    setInterval(() => {
+        replayNeonEffect();
+    }, REPETITION_INTERVAL);
 });
 
 // Función para repetir el efecto neón

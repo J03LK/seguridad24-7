@@ -1,7 +1,7 @@
 /* 
 =================================
 Archivo: estilos/logo.css 
-Contiene los estilos para el efecto de logo neón
+Contiene los estilos para el efecto de logo neón con brillo aumentado
 =================================
 */
 
@@ -12,17 +12,29 @@ Contiene los estilos para el efecto de logo neón
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, rgba(95, 251, 241, 0) 0%, rgba(95, 251, 241, 0) 60%, rgba(95, 251, 241, 0.05) 100%); /* Reducido de 0.1 a 0.05 */
+    background: radial-gradient(circle, rgba(95, 251, 241, 0) 0%, rgba(95, 251, 241, 0) 60%, rgba(95, 251, 241, 0.03) 100%); /* Más visible */
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
     z-index: -2;
 }
 
+/* Overlay para amortiguar el efecto del logo */
+.content-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(1, 23, 48, 0.6); /* Menos opaco para permitir más brillo */
+    z-index: -1;
+    pointer-events: none;
+}
+
 /* Contenedor para el logo con efecto neón */
 .neon-logo-wrap {
     position: fixed;
-    z-index: -1;
+    z-index: -2;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -31,11 +43,11 @@ Contiene los estilos para el efecto de logo neón
     pointer-events: none;
 }
 
-/* El logo neón mismo */
+/* El logo neón mismo - con brillo significativamente aumentado */
 .logo-neon {
     width: 100%;
     filter: drop-shadow(0 0 0px #5ffbf1);
-    opacity: 0.3;
+    opacity: 0.18; /* Aumentado significativamente de 0.11 a 0.18 */
     animation: neonElectricalFailure 8s forwards;
 }
 
@@ -47,268 +59,236 @@ Contiene los estilos para el efecto de logo neón
     background-color: white;
     border-radius: 50%;
     opacity: 0;
-    box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.7), /* Reducido de 0.8 a 0.7 */
-                0 0 20px 10px rgba(95, 251, 241, 0.4); /* Reducido de 0.6 a 0.4 */
+    box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.45), /* Aumentado */
+                0 0 20px 10px rgba(95, 251, 241, 0.25); /* Aumentado */
     pointer-events: none;
 }
 
-/* Animación del resplandor neón estable después del cortocircuito */
+/* Animación del resplandor neón estable después del cortocircuito - brillo aumentado */
 @keyframes neonStable {
     0% {
-        filter: drop-shadow(0 0 8px #5ffbf1) drop-shadow(0 0 16px #5ffbf1); /* Reducido de 10px/20px a 8px/16px */
+        filter: drop-shadow(0 0 6px rgba(160, 232, 227, 0.6)) drop-shadow(0 0 10px rgba(160, 232, 227, 0.4));
     }
     50% {
-        filter: drop-shadow(0 0 12px #5ffbf1) drop-shadow(0 0 22px #5ffbf1) drop-shadow(0 0 30px #5ffbf1); /* Reducido de 15px/30px/40px a 12px/22px/30px */
+        filter: drop-shadow(0 0 10px rgba(160, 232, 227, 0.7)) drop-shadow(0 0 15px rgba(160, 232, 227, 0.5)) drop-shadow(0 0 25px rgba(160, 232, 227, 0.3));
     }
     100% {
-        filter: drop-shadow(0 0 8px #5ffbf1) drop-shadow(0 0 16px #5ffbf1); /* Reducido de 10px/20px a 8px/16px */
+        filter: drop-shadow(0 0 6px rgba(160, 232, 227, 0.6)) drop-shadow(0 0 10px rgba(160, 232, 227, 0.4));
     }
 }
 
-/* Animación que simula un cortocircuito eléctrico detallado */
+/* Animación que simula un cortocircuito eléctrico detallado - con valores significativamente aumentados */
 @keyframes neonElectricalFailure {
     /* Fase inicial - parpadeo suave */
     0% {
-        opacity: 0.3;
-        filter: drop-shadow(0 0 0px #5ffbf1);
+        opacity: 0.18;
+        filter: drop-shadow(0 0 0px rgba(160, 232, 227, 0.35));
     }
     2% {
-        opacity: 0.7;
-        filter: drop-shadow(0 0 5px #5ffbf1);
+        opacity: 0.25;
+        filter: drop-shadow(0 0 4px rgba(160, 232, 227, 0.5));
     }
     3% {
-        opacity: 0.2;
-        filter: drop-shadow(0 0 0px #5ffbf1);
+        opacity: 0.15;
+        filter: drop-shadow(0 0 0px rgba(160, 232, 227, 0.35));
     }
     
     /* Primer intento mayor de encendido */
     5% {
-        opacity: 0.8;
-        filter: drop-shadow(0 0 15px #5ffbf1) drop-shadow(0 0 20px #5ffbf1);
+        opacity: 0.3;
+        filter: drop-shadow(0 0 8px rgba(160, 232, 227, 0.5)) drop-shadow(0 0 12px rgba(160, 232, 227, 0.4));
     }
     5.1% {
-        opacity: 0.9;
-        filter: drop-shadow(0 0 25px #5ffbf1) drop-shadow(0 0 35px #5ffbf1);
+        opacity: 0.35;
+        filter: drop-shadow(0 0 12px rgba(160, 232, 227, 0.6)) drop-shadow(0 0 18px rgba(160, 232, 227, 0.5));
     }
     5.3% {
-        opacity: 0.3;
-        filter: drop-shadow(0 0 0px #5ffbf1);
+        opacity: 0.18;
+        filter: drop-shadow(0 0 0px rgba(160, 232, 227, 0.35));
     }
     
     /* Parpadeo nervioso */
     8% {
-        opacity: 0.7;
-        filter: drop-shadow(0 0 10px #5ffbf1);
+        opacity: 0.28;
+        filter: drop-shadow(0 0 6px rgba(160, 232, 227, 0.5));
     }
     8.2% {
-        opacity: 0.3;
-        filter: drop-shadow(0 0 0px #5ffbf1);
+        opacity: 0.18;
+        filter: drop-shadow(0 0 0px rgba(160, 232, 227, 0.35));
     }
     8.4% {
-        opacity: 0.7;
-        filter: drop-shadow(0 0 10px #5ffbf1);
+        opacity: 0.28;
+        filter: drop-shadow(0 0 6px rgba(160, 232, 227, 0.5));
     }
     8.6% {
-        opacity: 0.3;
-        filter: drop-shadow(0 0 0px #5ffbf1);
+        opacity: 0.18;
+        filter: drop-shadow(0 0 0px rgba(160, 232, 227, 0.35));
     }
     8.8% {
-        opacity: 0.7;
-        filter: drop-shadow(0 0 10px #5ffbf1);
+        opacity: 0.28;
+        filter: drop-shadow(0 0 6px rgba(160, 232, 227, 0.5));
     }
     9% {
-        opacity: 0.3;
-        filter: drop-shadow(0 0 0px #5ffbf1);
+        opacity: 0.18;
+        filter: drop-shadow(0 0 0px rgba(160, 232, 227, 0.35));
     }
     
     /* Segundo intento más potente (con fallos) */
     12% {
-        opacity: 0.9;
-        filter: drop-shadow(0 0 20px #5ffbf1) drop-shadow(0 0 30px #5ffbf1);
+        opacity: 0.32;
+        filter: drop-shadow(0 0 9px rgba(160, 232, 227, 0.5)) drop-shadow(0 0 15px rgba(160, 232, 227, 0.4));
     }
     12.5% {
-        opacity: 0.4;
-        filter: drop-shadow(0 0 5px #5ffbf1);
+        opacity: 0.2;
+        filter: drop-shadow(0 0 3px rgba(160, 232, 227, 0.35));
     }
     13% {
-        opacity: 0.9;
-        filter: drop-shadow(0 0 20px #5ffbf1) drop-shadow(0 0 30px #5ffbf1);
+        opacity: 0.32;
+        filter: drop-shadow(0 0 9px rgba(160, 232, 227, 0.5)) drop-shadow(0 0 15px rgba(160, 232, 227, 0.4));
     }
     13.2% {
-        opacity: 0.4;
-        filter: drop-shadow(0 0 5px #5ffbf1);
+        opacity: 0.2;
+        filter: drop-shadow(0 0 3px rgba(160, 232, 227, 0.35));
     }
     
     /* Pausa */
     15% {
-        opacity: 0.2;
-        filter: drop-shadow(0 0 0px #5ffbf1);
+        opacity: 0.15;
+        filter: drop-shadow(0 0 0px rgba(160, 232, 227, 0.35));
     }
     
     /* Secuencia de cortocircuito principal */
     20% {
-        opacity: 0.9;
-        filter: drop-shadow(0 0 25px #5ffbf1) drop-shadow(0 0 35px #5ffbf1);
+        opacity: 0.32;
+        filter: drop-shadow(0 0 10px rgba(160, 232, 227, 0.5)) drop-shadow(0 0 16px rgba(160, 232, 227, 0.4));
     }
     20.1% {
-        opacity: 1;
-        filter: drop-shadow(0 0 30px #5ffbf1) drop-shadow(0 0 50px #5ffbf1) drop-shadow(0 0 70px #5ffbf1);
+        opacity: 0.38;
+        filter: drop-shadow(0 0 14px rgba(160, 232, 227, 0.6)) drop-shadow(0 0 22px rgba(160, 232, 227, 0.5)) drop-shadow(0 0 30px rgba(160, 232, 227, 0.4));
     }
     20.2% {
-        opacity: 0.3;
-        filter: drop-shadow(0 0 0px #5ffbf1);
+        opacity: 0.18;
+        filter: drop-shadow(0 0 0px rgba(160, 232, 227, 0.35));
     }
     20.3% {
-        opacity: 0.9;
-        filter: drop-shadow(0 0 25px #5ffbf1) drop-shadow(0 0 35px #5ffbf1);
+        opacity: 0.32;
+        filter: drop-shadow(0 0 10px rgba(160, 232, 227, 0.5)) drop-shadow(0 0 16px rgba(160, 232, 227, 0.4));
     }
     20.4% {
-        opacity: 0.3;
-        filter: drop-shadow(0 0 0px #5ffbf1);
+        opacity: 0.18;
+        filter: drop-shadow(0 0 0px rgba(160, 232, 227, 0.35));
     }
     20.5% {
-        opacity: 1;
-        filter: drop-shadow(0 0 30px #5ffbf1) drop-shadow(0 0 50px #5ffbf1) drop-shadow(0 0 70px #5ffbf1);
+        opacity: 0.38;
+        filter: drop-shadow(0 0 14px rgba(160, 232, 227, 0.6)) drop-shadow(0 0 22px rgba(160, 232, 227, 0.5)) drop-shadow(0 0 30px rgba(160, 232, 227, 0.4));
     }
     20.7% {
-        opacity: 0.3;
-        filter: drop-shadow(0 0 0px #5ffbf1);
+        opacity: 0.18;
+        filter: drop-shadow(0 0 0px rgba(160, 232, 227, 0.35));
     }
     
     /* Parpadeo irregular intenso */
     25% {
-        opacity: 0.8;
-        filter: drop-shadow(0 0 15px #5ffbf1) drop-shadow(0 0 25px #5ffbf1);
+        opacity: 0.3;
+        filter: drop-shadow(0 0 8px rgba(160, 232, 227, 0.5)) drop-shadow(0 0 12px rgba(160, 232, 227, 0.4));
     }
     25.5% {
-        opacity: 0.2;
-        filter: drop-shadow(0 0 0px #5ffbf1);
+        opacity: 0.15;
+        filter: drop-shadow(0 0 0px rgba(160, 232, 227, 0.35));
     }
     26% {
-        opacity: 0.9;
-        filter: drop-shadow(0 0 20px #5ffbf1) drop-shadow(0 0 30px #5ffbf1);
+        opacity: 0.32;
+        filter: drop-shadow(0 0 9px rgba(160, 232, 227, 0.5)) drop-shadow(0 0 15px rgba(160, 232, 227, 0.4));
     }
     26.1% {
-        opacity: 0.3;
-        filter: drop-shadow(0 0 0px #5ffbf1);
+        opacity: 0.18;
+        filter: drop-shadow(0 0 0px rgba(160, 232, 227, 0.35));
     }
     26.3% {
-        opacity: 0.9;
-        filter: drop-shadow(0 0 20px #5ffbf1) drop-shadow(0 0 30px #5ffbf1);
+        opacity: 0.32;
+        filter: drop-shadow(0 0 9px rgba(160, 232, 227, 0.5)) drop-shadow(0 0 15px rgba(160, 232, 227, 0.4));
     }
     26.5% {
-        opacity: 0.2;
-        filter: drop-shadow(0 0 0px #5ffbf1);
-    }
-    
-    /* Punto crítico - intento de estabilización */
-    30% {
-        opacity: 0.9;
-        filter: drop-shadow(0 0 20px #5ffbf1) drop-shadow(0 0 30px #5ffbf1);
-    }
-    31% {
-        opacity: 0.95;
-        filter: drop-shadow(0 0 25px #5ffbf1) drop-shadow(0 0 35px #5ffbf1);
-    }
-    32% {
-        opacity: 0.9;
-        filter: drop-shadow(0 0 20px #5ffbf1) drop-shadow(0 0 30px #5ffbf1);
+        opacity: 0.15;
+        filter: drop-shadow(0 0 0px rgba(160, 232, 227, 0.35));
     }
     
     /* Fallo eléctrico final - parpadeo frenético */
     40% {
-        opacity: 0.8;
-        filter: drop-shadow(0 0 15px #5ffbf1) drop-shadow(0 0 25px #5ffbf1);
+        opacity: 0.3;
+        filter: drop-shadow(0 0 8px rgba(160, 232, 227, 0.5)) drop-shadow(0 0 12px rgba(160, 232, 227, 0.4));
     }
     40.1% {
-        opacity: 0.2;
-        filter: drop-shadow(0 0 0px #5ffbf1);
+        opacity: 0.15;
+        filter: drop-shadow(0 0 0px rgba(160, 232, 227, 0.35));
     }
     40.2% {
-        opacity: 0.8;
-        filter: drop-shadow(0 0 15px #5ffbf1) drop-shadow(0 0 25px #5ffbf1);
+        opacity: 0.3;
+        filter: drop-shadow(0 0 8px rgba(160, 232, 227, 0.5)) drop-shadow(0 0 12px rgba(160, 232, 227, 0.4));
     }
     40.3% {
-        opacity: 0.2;
-        filter: drop-shadow(0 0 0px #5ffbf1);
+        opacity: 0.15;
+        filter: drop-shadow(0 0 0px rgba(160, 232, 227, 0.35));
     }
     40.4% {
-        opacity: 0.8;
-        filter: drop-shadow(0 0 15px #5ffbf1) drop-shadow(0 0 25px #5ffbf1);
+        opacity: 0.3;
+        filter: drop-shadow(0 0 8px rgba(160, 232, 227, 0.5)) drop-shadow(0 0 12px rgba(160, 232, 227, 0.4));
     }
     40.5% {
-        opacity: 0.2;
-        filter: drop-shadow(0 0 0px #5ffbf1);
+        opacity: 0.15;
+        filter: drop-shadow(0 0 0px rgba(160, 232, 227, 0.35));
     }
     40.6% {
-        opacity: 0.9;
-        filter: drop-shadow(0 0 20px #5ffbf1) drop-shadow(0 0 30px #5ffbf1);
+        opacity: 0.32;
+        filter: drop-shadow(0 0 9px rgba(160, 232, 227, 0.5)) drop-shadow(0 0 15px rgba(160, 232, 227, 0.4));
     }
     40.7% {
-        opacity: 0.2;
-        filter: drop-shadow(0 0 0px #5ffbf1);
+        opacity: 0.15;
+        filter: drop-shadow(0 0 0px rgba(160, 232, 227, 0.35));
     }
     40.8% {
-        opacity: 0.9;
-        filter: drop-shadow(0 0 20px #5ffbf1) drop-shadow(0 0 30px #5ffbf1);
+        opacity: 0.32;
+        filter: drop-shadow(0 0 9px rgba(160, 232, 227, 0.5)) drop-shadow(0 0 15px rgba(160, 232, 227, 0.4));
     }
     40.9% {
-        opacity: 0.2;
-        filter: drop-shadow(0 0 0px #5ffbf1);
+        opacity: 0.15;
+        filter: drop-shadow(0 0 0px rgba(160, 232, 227, 0.35));
     }
     
     /* Pausa más larga */
     45% {
-        opacity: 0.2;
-        filter: drop-shadow(0 0 0px #5ffbf1);
+        opacity: 0.15;
+        filter: drop-shadow(0 0 0px rgba(160, 232, 227, 0.35));
     }
     
     /* Destello fuerte único */
     50% {
-        opacity: 1;
-        filter: drop-shadow(0 0 35px #5ffbf1) drop-shadow(0 0 55px #5ffbf1) drop-shadow(0 0 75px #5ffbf1);
+        opacity: 0.38;
+        filter: drop-shadow(0 0 15px rgba(160, 232, 227, 0.6)) drop-shadow(0 0 25px rgba(160, 232, 227, 0.5)) drop-shadow(0 0 35px rgba(160, 232, 227, 0.4));
     }
     51% {
-        opacity: 0.2;
-        filter: drop-shadow(0 0 0px #5ffbf1);
+        opacity: 0.15;
+        filter: drop-shadow(0 0 0px rgba(160, 232, 227, 0.35));
     }
     
     /* Encendido gradual hacia estabilización */
     60% {
-        opacity: 0.5;
-        filter: drop-shadow(0 0 8px #5ffbf1) drop-shadow(0 0 15px #5ffbf1);
+        opacity: 0.22;
+        filter: drop-shadow(0 0 5px rgba(160, 232, 227, 0.5)) drop-shadow(0 0 8px rgba(160, 232, 227, 0.4));
     }
     65% {
-        opacity: 0.7;
-        filter: drop-shadow(0 0 12px #5ffbf1) drop-shadow(0 0 25px #5ffbf1);
+        opacity: 0.25;
+        filter: drop-shadow(0 0 7px rgba(160, 232, 227, 0.5)) drop-shadow(0 0 12px rgba(160, 232, 227, 0.4));
     }
     70% {
-        opacity: 0.8;
-        filter: drop-shadow(0 0 15px #5ffbf1) drop-shadow(0 0 30px #5ffbf1);
+        opacity: 0.28;
+        filter: drop-shadow(0 0 8px rgba(160, 232, 227, 0.5)) drop-shadow(0 0 14px rgba(160, 232, 227, 0.4));
     }
     
-    /* Último parpadeo de ajuste */
-    80% {
-        opacity: 0.9;
-        filter: drop-shadow(0 0 20px #5ffbf1) drop-shadow(0 0 35px #5ffbf1);
-    }
-    81% {
-        opacity: 0.7;
-        filter: drop-shadow(0 0 15px #5ffbf1) drop-shadow(0 0 25px #5ffbf1);
-    }
-    82% {
-        opacity: 0.9;
-        filter: drop-shadow(0 0 20px #5ffbf1) drop-shadow(0 0 35px #5ffbf1);
-    }
-    
-    /* Estabilización final con brillo reducido */
-    90% {
-        opacity: 0.8; /* Reducido de 0.95 a 0.8 */
-        filter: drop-shadow(0 0 18px #5ffbf1) drop-shadow(0 0 28px #5ffbf1) drop-shadow(0 0 40px #5ffbf1); /* Reducido de 25px/40px/60px a 18px/28px/40px */
-    }
-    100% {
-        opacity: 0.8; /* Reducido de 0.95 a 0.8 */
-        filter: drop-shadow(0 0 18px #5ffbf1) drop-shadow(0 0 28px #5ffbf1) drop-shadow(0 0 40px #5ffbf1); /* Reducido de 25px/40px/60px a 18px/28px/40px */
+    /* Estabilización final con brillo significativamente aumentado */
+    90%, 100% {
+        opacity: 0.3; /* Brillo final considerablemente mayor */
+        filter: drop-shadow(0 0 8px rgba(160, 232, 227, 0.5)) drop-shadow(0 0 15px rgba(160, 232, 227, 0.4)) drop-shadow(0 0 22px rgba(160, 232, 227, 0.3));
         animation: neonStable 3s ease-in-out infinite;
     }
 }
