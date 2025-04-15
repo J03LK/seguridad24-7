@@ -170,44 +170,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 250);
     });
     
-    // Mejora en las animaciones al hacer scroll - Usar Intersection Observer
-    const revealElements = document.querySelectorAll('.servicio-card, .caso-card, .nosotros-content, .contacto-content');
+    // Elementos a animar
+    const elements = document.querySelectorAll('.paquete, .tech-image, .tech-icons, .step, .category-item');
     
-    // Crear un Intersection Observer para animaciones más eficientes
-    if ('IntersectionObserver' in window) {
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    // Opcional: dejar de observar después de revelar
-                    // revealObserver.unobserve(entry.target);
-                }
-            });
-        }, {
-            root: null, // viewport
-            threshold: 0.1, // el elemento se considera visible cuando el 10% está en el viewport
-            rootMargin: '-50px 0px' // trigger un poco antes de que sea visible
-        });
-        
-        revealElements.forEach(element => {
-            revealObserver.observe(element);
-        });
-    } else {
-        // Fallback para navegadores que no soportan IntersectionObserver
-        const revealOnScroll = function() {
-            revealElements.forEach(element => {
-                const elementTop = element.getBoundingClientRect().top;
-                const windowHeight = window.innerHeight;
-                
-                if (elementTop < windowHeight - 100) {
-                    element.classList.add('visible');
-                }
-            });
-        };
-        
-        window.addEventListener('scroll', revealOnScroll);
-        revealOnScroll(); // Ejecutar una vez al cargar para elementos ya visibles
+    // Función para verificar si un elemento es visible
+    function isElementInViewport(el) {
+        const rect = el.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
     }
+    
+    // Función para manejar la visibilidad
+    function handleVisibility() {
+        elements.forEach(element => {
+            if (isElementInViewport(element)) {
+                element.classList.add('visible');
+            }
+        });
+    }
+    
+    // Ejecutar al cargar y al hacer scroll
+    handleVisibility();
+    window.addEventListener('scroll', handleVisibility);
     
     // Validación del formulario de contacto con mejoras de accesibilidad
     if (contactForm) {
