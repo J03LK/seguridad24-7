@@ -8,41 +8,49 @@
     <link rel="stylesheet" href="estilos/home.css" />
     <link rel="stylesheet" href="estilos/navbar.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-</head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <body>
     <header>
-        <div class="container">
-            <nav>
-                <div class="logo">
-                    <a href="index.html">
-                        <img src="assets/logo.png" alt="Detecta365 Logo" />
+        <nav>
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/Logo.png" alt="Detecta365 Logo" />
+                </a>
+            </div>
+            <ul class="menu" id="menu">
+                <li><a href="#inicio" class="active">Inicio</a></li>
+                <li><a href="servicios.html">Servicios</a></li>
+                <li><a href="Paquetes.html">Paquetes</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="#contacto" class="btn-contacto">Contacto</a></li>
+                <li class="auth-buttons-mobile">
+                    <a href="login.html" class="btn-login">
+                        <i class="fas fa-user"></i>
+                        <span>Ingresar</span>
                     </a>
-                </div>
-                <button id="menu-toggle" class="menu-toggle" aria-label="Menú" aria-expanded="false">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-                <ul class="menu" id="menu">
-                    <li><a href="#inicio" class="active">Inicio</a></li>
-                    <li><a href="servicios.html">Servicios</a></li>
-                    <li><a href="Paquetes.html">Paquetes</a></li>
-                    <li><a href="nosotros.html">Nosotros</a></li>
-                    <li><a href="#contacto">Contacto</a></li>
-                    <li class="auth-buttons">
-                        <a href="login.html" class="btn-login">
-                            <i class="fas fa-user"></i>
-                            <span>Ingresar</span>
-                        </a>
-                        <a href="#registro" class="btn-registro">
-                            <span>Registrarse</span>
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+                    <a href="#registro" class="btn-registro">
+                        <span>Registrarse</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </li>
+            </ul>
+            <button id="menu-toggle" class="menu-toggle" aria-label="Menú" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="auth-buttons">
+                <a href="login.html" class="btn-login">
+                    <i class="fas fa-user"></i>
+                    <span>Ingresar</span>
+                </a>
+                <a href="#registro" class="btn-registro">
+                    <span>Registrarse</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </nav>
         <div class="overlay" id="overlay"></div>
     </header>
 
@@ -119,49 +127,128 @@
             </div>
         </section>
 
+        <!-- Sección de Estadísticas (después del Hero) -->
+        <section class="stats-section">
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-award"></i></div>
+                    <div class="stat-number with-plus" data-target="19">0</div>
+                    <div class="stat-label">Años experiencia</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-cogs"></i></div>
+                    <div class="stat-number with-plus" data-target="10">0</div>
+                    <div class="stat-label">Servicios</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-number" data-target="200">0</div>
+                    <div class="stat-label">Clientes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-certificate"></i></div>
+                    <div class="stat-number with-plus" data-target="7">0</div>
+                    <div class="stat-label">Certificaciones</div>
+                </div>
+            </div>
+        </section>
         
+        <!-- Sección "¿Por qué nosotros?" (puede ir antes o después de la sección de servicios) -->
+        <section class="why-us-section">
+            <div class="why-us-container">
+                <div class="why-us-images">
+                    <div class="why-us-image">
+                        <img src="/ruta/a/imagen1.jpg" alt="Centro de monitoreo de seguridad">
+                    </div>
+                    <div class="why-us-image">
+                        <img src="/ruta/a/imagen2.jpg" alt="Personal técnico">
+                    </div>
+                    <div class="why-us-image">
+                        <img src="/ruta/a/imagen3.jpg" alt="Tecnología de seguridad">
+                    </div>
+                </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <img src="assets/logo.png" alt="24-7 Logo" />
-                </div>
-                <div class="footer-links">
-                    <h4>Enlaces rápidos</h4>
-                    <ul>
-                        <li><a href="#inicio">Inicio</a></li>
-                        <li><a href="#servicios">Servicios</a></li>
-                        <li><a href="#nosotros">Nosotros</a></li>
-                        <li><a href="#casos">Casos de Éxito</a></li>
-                        <li><a href="#contacto">Contacto</a></li>
-                    </ul>
-                </div>
-                <div class="footer-servicios">
-                    <h4>Servicios</h4>
-                    <ul>
-                        <li><a href="#servicios">Detección de Personas</a></li>
-                        <li><a href="#servicios">Detección de Objetos</a></li>
-                        <li><a href="#servicios">Análisis Estadístico</a></li>
-                        <li><a href="#servicios">Seguridad Avanzada</a></li>
-                    </ul>
-                </div>
-                <div class="footer-newsletter">
-                    <h4>Suscríbete</h4>
-                    <p>Recibe nuestras novedades y ofertas</p>
-                    <form id="newsletter-form">
-                        <input type="email" placeholder="Tu correo electrónico" required />
-                        <button type="submit">Suscribirse</button>
-                    </form>
+                <div class="why-us-content">
+                    <div class="why-us-badge">¿POR QUÉ NOSOTROS?</div>
+                    <h2 class="why-us-title">Seguridad Electrónica y <span class="highlight">Domótica Confiable</span>
+                    </h2>
+                    <p class="why-us-description">
+                        Nuestra experiencia en sistemas de seguridad electrónica y domótica nos permite garantizar la
+                        protección y el confort de tu hogar. Desde alarmas y cámaras hasta la automatización completa de
+                        tu espacio, ofrecemos soluciones adaptadas a tus necesidades con las mejores marcas del mercado.
+                    </p>
+
+                    <div class="why-us-features">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="feature-text">Monitoreo 24/7 con tiempo de respuesta inmediato</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-certificate"></i>
+                            </div>
+                            <div class="feature-text">Tecnología certificada y garantía en todos nuestros equipos</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-user-shield"></i>
+                            </div>
+                            <div class="feature-text">Personal técnico altamente capacitado y certificado</div>
+                        </div>
+                    </div>
+
+                    <div class="why-us-cta">
+                        <a href="#contacto" class="btn-primary">Solicitar Asesoría</a>
+                    </div>
                 </div>
             </div>
-            <div class="copyright">
-                <p>&copy; 2025 24-7 SEGURIDAD DEL ECUADOR. Todos los derechos reservados.</p>
-            </div>
-        </div>
-    </footer>
+        </section>
 
-    <script src="scripts/script.js"></script>
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-logo">
+                        <img src="assets/logo.png" alt="24-7 Logo" />
+                    </div>
+                    <div class="footer-links">
+                        <h4>Enlaces rápidos</h4>
+                        <ul>
+                            <li><a href="#inicio">Inicio</a></li>
+                            <li><a href="#servicios">Servicios</a></li>
+                            <li><a href="#nosotros">Nosotros</a></li>
+                            <li><a href="#casos">Casos de Éxito</a></li>
+                            <li><a href="#contacto">Contacto</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-servicios">
+                        <h4>Servicios</h4>
+                        <ul>
+                            <li><a href="#servicios">Detección de Personas</a></li>
+                            <li><a href="#servicios">Detección de Objetos</a></li>
+                            <li><a href="#servicios">Análisis Estadístico</a></li>
+                            <li><a href="#servicios">Seguridad Avanzada</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-newsletter">
+                        <h4>Suscríbete</h4>
+                        <p>Recibe nuestras novedades y ofertas</p>
+                        <form id="newsletter-form">
+                            <input type="email" placeholder="Tu correo electrónico" required />
+                            <button type="submit">Suscribirse</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="copyright">
+                    <p>&copy; 2025 24-7 SEGURIDAD DEL ECUADOR. Todos los derechos reservados.</p>
+                </div>
+            </div>
+        </footer>
+
+        <script src="scripts/script.js"></script>
+
 </body>
+
 </html>
