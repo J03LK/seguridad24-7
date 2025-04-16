@@ -1,81 +1,61 @@
-// Esperar a que el DOM esté cargado
-document.addEventListener('DOMContentLoaded', function() {
-    // Elementos del DOM
-    const menuToggle = document.getElementById('menu-toggle');
-    const menu = document.getElementById('menu');
-    const overlay = document.getElementById('overlay');
-    const menuLinks = document.querySelectorAll('.menu a');
-    const header = document.querySelector('header');
-    const contactForm = document.getElementById('formulario-contacto');
-    const newsletterForm = document.getElementById('newsletter-form');
-    
-    // Aplicar índices para la animación de los elementos del menú
-    menuLinks.forEach((link, index) => {
-        link.parentElement.style.setProperty('--item-index', index + 1);
-    });
-    
-    // Aplicar clase scrolled al header en dispositivos móviles por defecto
-    if (window.innerWidth <= 991) {
-        header.classList.add('scrolled');
-    }
-    
-    // Función para actualizar el enlace activo basado en la sección visible
-    function updateActiveLink() {
-        const sections = document.querySelectorAll('section[id]');
-        const scrollPosition = window.scrollY + header.offsetHeight + 50;
+// Función para animar el contador de estadísticas
+document.addEventListener('DOMContentLoaded', function () {
+    // Opciones para el observador de intersección
+    const options = {
+        root: null, // viewport
+        rootMargin: '0px',
+        threshold: 0.1 // 10% visible
+    };
 
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.offsetHeight;
-            const sectionId = section.getAttribute('id');
-            const menuLink = document.querySelector(`.menu a[href="#${sectionId}"]`);
-
-            if (menuLink && scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-                menuLinks.forEach(link => link.classList.remove('active'));
-                menuLink.classList.add('active');
+    // Callback para cuando la sección es visible
+    const callback = function (entries, observer) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Iniciar la animación de conteo para cada número
+                const statNumbers = document.querySelectorAll('.stat-number');
+                statNumbers.forEach(statNumber => {
+                    // Obtener el valor final del atributo data-target
+                    const target = parseInt(statNumber.getAttribute('data-target'));
+                    // Iniciar el contador
+                    animateCounter(statNumber, target);
+                });
+                // Desconectar el observador después de animar
+                observer.unobserve(entry.target);
             }
         });
-    }
+    };
 
-    // Función para manejar el scroll
-    function handleScroll() {
-        requestAnimationFrame(() => {
-            if (window.scrollY > 0) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        });
-    }
+    // Crear el observador de intersección
+    const observer = new IntersectionObserver(callback, options);
 
-    // Evento scroll con requestAnimationFrame para mejor rendimiento
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    // Observar la sección de estadísticas
+    const statsSection = document.querySelector('.stats-section');
+    if (statsSection) {
+        observer.observe(statsSection);
+    }
+});
 
-    // Verificar scroll inicial
-    handleScroll();
-    
-    // Asegurarse de que el menú esté cerrado al inicio
-    if (menu) {
-        menu.classList.remove('active');
-    }
-    if (overlay) {
-        overlay.classList.remove('active');
-    }
-    
-    // Función para manejar el menú móvil
-    function toggleMenu(isOpen) {
-        if (!menu || !menuToggle || !overlay) return;
-        
-        menu.classList.toggle('active', isOpen);
-        menuToggle.classList.toggle('active', isOpen);
-        overlay.classList.toggle('active', isOpen);
-        
-        // Animar las barras del menú hamburguesa
-        const spans = menuToggle.querySelectorAll('span');
-        if (isOpen) {
-            spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-            spans[1].style.opacity = '0';
-            spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+// Función para animar un contador
+function animateCounter(element, target) {
+    // Iniciar desde 0
+    let count = 0;
+    // Calcular la duración según el tamaño del número
+    const duration = 2000; // 2 segundos
+    // Calcular el incremento por paso
+    const increment = target / (duration / 16); // 16ms es aproximadamente 60fps
+
+    // Función de actualización
+    const updateCount = () => {
+        count += increment;
+        // Redondear hacia abajo mientras contamos
+        const currentCount = Math.floor(count);
+
+        // Actualizar el texto del elemento
+        element.textContent = currentCount;
+
+        // Continuar la animación hasta alcanzar el objetivo
+        if (currentCount < target) {
+            requestAnimationFrame(updateCount);
         } else {
             spans[0].style.transform = 'none';
             spans[1].style.opacity = '1';
@@ -173,41 +153,29 @@ document.addEventListener('DOMContentLoaded', function() {
     // Elementos a animar
     const elements = document.querySelectorAll('.paquete, .tech-image, .tech-icons, .step, .category-item');
     
-    // Crear un Intersection Observer para animaciones más eficientes
-    if ('IntersectionObserver' in window) {
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    // Opcional: dejar de observar después de revelar
-                    // revealObserver.unobserve(entry.target);
-                }
-            });
-        }, {
-            root: null, // viewport
-            threshold: 0.1, // el elemento se considera visible cuando el 10% está en el viewport
-            rootMargin: '-50px 0px' // trigger un poco antes de que sea visible
-        });
-        
-        revealElements.forEach(element => {
-            revealObserver.observe(element);
-        });
-    } else {
-        // Fallback para navegadores que no soportan IntersectionObserver
-        const revealOnScroll = function() {
-            revealElements.forEach(element => {
-                const elementTop = element.getBoundingClientRect().top;
-                const windowHeight = window.innerHeight;
-                
-                if (elementTop < windowHeight - 100) {
-                    element.classList.add('visible');
-                }
-            });
-        };
-        
-        window.addEventListener('scroll', revealOnScroll);
-        revealOnScroll(); // Ejecutar una vez al cargar para elementos ya visibles
+    // Función para verificar si un elemento es visible
+    function isElementInViewport(el) {
+        const rect = el.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
     }
+    
+    // Función para manejar la visibilidad
+    function handleVisibility() {
+        elements.forEach(element => {
+            if (isElementInViewport(element)) {
+                element.classList.add('visible');
+            }
+        });
+    }
+    
+    // Ejecutar al cargar y al hacer scroll
+    handleVisibility();
+    window.addEventListener('scroll', handleVisibility);
     
     // Validación del formulario de contacto con mejoras de accesibilidad
     if (contactForm) {
@@ -361,249 +329,23 @@ document.addEventListener('DOMContentLoaded', function() {
             default:
                 icon = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>';
         }
-        
-        // Crear contenedor para el contenido
-        const content = document.createElement('div');
-        content.className = 'notification-content';
-        
-        // Agregar icono
-        const iconSpan = document.createElement('span');
-        iconSpan.className = 'notification-icon';
-        iconSpan.innerHTML = icon;
-        content.appendChild(iconSpan);
-        
-        // Agregar mensaje
-        const messageSpan = document.createElement('span');
-        messageSpan.textContent = message;
-        content.appendChild(messageSpan);
-        
-        notification.appendChild(content);
-        
-        // Añadir botón de cerrar
-        const closeButton = document.createElement('button');
-        closeButton.innerHTML = '&times;';
-        closeButton.className = 'notification-close';
-        closeButton.setAttribute('aria-label', 'Cerrar notificación');
-        closeButton.addEventListener('click', function() {
-            removeNotification(notification);
-        });
-        
-        notification.appendChild(closeButton);
-        document.body.appendChild(notification);
-        
-        // Añadir clase para animar entrada
-        setTimeout(() => {
-            notification.classList.add('notification-visible');
-        }, 10);
-        
-        // Auto ocultar después de 5 segundos
-        const timeout = setTimeout(() => {
-            removeNotification(notification);
-        }, 5000);
-        
-        // Pausar el timeout al hover
-        notification.addEventListener('mouseenter', () => {
-            clearTimeout(timeout);
-        });
-        
-        // Reanudar al salir
-        notification.addEventListener('mouseleave', () => {
-            setTimeout(() => {
-                removeNotification(notification);
-            }, 2000);
-        });
-        
-        function removeNotification(notif) {
-            notif.classList.add('fade-out');
-            setTimeout(() => {
-                notif.remove();
-            }, 300);
-        }
-    }
-    
-    // Inicializar atributos ARIA para accesibilidad
-    if (menuToggle) {
-        menuToggle.setAttribute('aria-expanded', 'false');
-        menuToggle.setAttribute('aria-controls', menu.id);
-        menuToggle.setAttribute('aria-label', 'Menú principal');
-    }
-    
-    if (menu) {
-        menu.setAttribute('role', 'navigation');
-        menu.setAttribute('aria-label', 'Menú principal');
-        menu.setAttribute('aria-hidden', 'true');
-    }
-    
-    // Añadir estilos para las nuevas animaciones
-    const style = document.createElement('style');
-    style.textContent = `
-        .menu-toggle-bounce {
-            animation: menuToggleBounce 0.3s ease;
-        }
-        
-        @keyframes menuToggleBounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-        
-        .link-clicked {
-            transform: scale(0.95);
-            opacity: 0.8;
-            transition: transform 0.2s ease, opacity 0.2s ease;
-        }
-        
-        .menu.active .menu-item {
-            animation: slideInRight 0.5s ease forwards;
-        }
-        
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-    `;
-    
-    document.head.appendChild(style);
-});
+    });
 
-// Script para manejar efectos adicionales de los botones de login y registro
-document.addEventListener('DOMContentLoaded', function() {
-    // Referencias a los botones
-    const btnLogin = document.querySelector('.btn-login');
-    const btnRegistro = document.querySelector('.btn-registro');
-    
-    // Efecto de onda para el botón de registro
-    btnRegistro.addEventListener('click', function(e) {
-        // Crear elemento de onda
-        const ripple = document.createElement('span');
-        ripple.classList.add('btn-ripple');
-        
-        // Posicionar la onda en el punto de clic
-        const rect = this.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        ripple.style.left = `${x}px`;
-        ripple.style.top = `${y}px`;
-        
-        // Añadir la onda al botón
-        this.appendChild(ripple);
-        
-        // Eliminar la onda después de la animación
-        setTimeout(() => {
-            ripple.remove();
-        }, 600);
+    // Cerrar menú al hacer clic en un enlace o en el overlay
+    const menuLinks = document.querySelectorAll('.menu a');
+    menuLinks.forEach(link => {
+        link.addEventListener('click', function () {
+            menu.classList.remove('active');
+            menuToggle.classList.remove('active');
+            overlay.classList.remove('active');
+            menuToggle.setAttribute('aria-expanded', 'false');
+        });
     });
-    
-    // Efecto de brillo para el botón de login
-    btnLogin.addEventListener('mouseenter', function() {
-        // Crear elemento de brillo
-        const shine = document.createElement('span');
-        shine.classList.add('btn-shine');
-        this.appendChild(shine);
-        
-        // Eliminar el brillo después de la animación
-        setTimeout(() => {
-            shine.remove();
-        }, 1000);
+
+    overlay.addEventListener('click', function () {
+        menu.classList.remove('active');
+        menuToggle.classList.remove('active');
+        this.classList.remove('active');
+        menuToggle.setAttribute('aria-expanded', 'false');
     });
-    
-    // Añadir animación a los iconos en hover
-    btnLogin.addEventListener('mouseenter', function() {
-        const icon = this.querySelector('i');
-        icon.classList.add('icon-animated');
-    });
-    
-    btnLogin.addEventListener('mouseleave', function() {
-        const icon = this.querySelector('i');
-        icon.classList.remove('icon-animated');
-    });
-    
-    btnRegistro.addEventListener('mouseenter', function() {
-        const icon = this.querySelector('i');
-        icon.classList.add('icon-arrow-animated');
-    });
-    
-    btnRegistro.addEventListener('mouseleave', function() {
-        const icon = this.querySelector('i');
-        icon.classList.remove('icon-arrow-animated');
-    });
-    
-    // Añadir estilos adicionales necesarios
-    const style = document.createElement('style');
-    style.textContent = `
-        .btn-ripple {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 50%;
-            transform: scale(0);
-            animation: ripple 0.6s linear;
-            pointer-events: none;
-        }
-        
-        @keyframes ripple {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-        
-        .btn-shine {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                90deg, 
-                rgba(255, 255, 255, 0) 0%, 
-                rgba(255, 255, 255, 0.2) 50%, 
-                rgba(255, 255, 255, 0) 100%
-            );
-            animation: shine 1s ease-in-out;
-            pointer-events: none;
-        }
-        
-        @keyframes shine {
-            from {
-                transform: translateX(-100%);
-            }
-            to {
-                transform: translateX(100%);
-            }
-        }
-        
-        .icon-animated {
-            animation: bounce 0.6s ease;
-        }
-        
-        @keyframes bounce {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-5px);
-            }
-        }
-        
-        .icon-arrow-animated {
-            animation: slide 0.6s ease;
-        }
-        
-        @keyframes slide {
-            0%, 100% {
-                transform: translateX(0);
-            }
-            50% {
-                transform: translateX(5px);
-            }
-        }
-    `;
-    
-    document.head.appendChild(style);
 });
