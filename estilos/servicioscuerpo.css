@@ -2322,3 +2322,43 @@ section:first-of-type {
         margin-bottom: 1.2rem;
     }
 }
+
+/* Animaciones de scroll */
+.paquete, .tech-image, .tech-icons, .step, .category-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.paquete.visible, .tech-image.visible, .tech-icons.visible, .step.visible, .category-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Animaciones específicas para cada sección */
+.paquete {
+    transition-delay: 0.2s;
+}
+
+.tech-image {
+    transition-delay: 0.4s;
+}
+
+.tech-icons {
+    transition-delay: 0.6s;
+}
+
+.step {
+    transition-delay: 0.8s;
+}
+
+.category-item {
+    transition-delay: 1s;
+}
+
+/* Ajustes para dispositivos móviles */
+@media (max-width: 768px) {
+    .paquete, .tech-image, .tech-icons, .step, .category-item {
+        transition-delay: 0.1s;
+    }
+}

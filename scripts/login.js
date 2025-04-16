@@ -1,5 +1,6 @@
 // Elementos del DOM
 const signInBtn = document.querySelector("#sign-in-btn");
+const signInBtnPanel = document.querySelector("#sign-in-btn-panel");
 const signUpBtn = document.querySelector("#sign-up-btn");
 const container = document.querySelector(".login-container");
 const loginForm = document.querySelector("#loginForm");
@@ -420,6 +421,49 @@ signInBtn.addEventListener("click", () => {
     }, 2000);
 });
 
+signInBtnPanel.addEventListener("click", () => {
+    // Desactiva temporalmente los clics
+    signUpBtn.style.pointerEvents = 'none';
+    signInBtn.style.pointerEvents = 'none';
+    signInBtnPanel.style.pointerEvents = 'none';
+
+    // Añadimos clase animating para mejorar la transición
+    container.classList.add("animating");
+    container.classList.remove("sign-up-mode");
+    
+    // Añadimos una transición más suave para la burbuja
+    const waveBubble = document.querySelector(".wave-bubble");
+    waveBubble.style.transition = "all 1.8s cubic-bezier(0.645, 0.045, 0.355, 1.000)";
+    
+    // Animación más suave y controlada
+    waveBubble.style.transform = 'translate(-100%, -10%) scale(1.2)';
+    waveBubble.style.opacity = '0.9';
+    
+    // Efecto extra durante la transición
+    setTimeout(() => {
+        waveBubble.style.filter = "brightness(1.03)";
+        setTimeout(() => {
+            waveBubble.style.filter = "none";
+        }, 600);
+    }, 300);
+    
+    // Reseteamos la transición después de un tiempo
+    setTimeout(() => {
+        // Restaura los clics
+        signUpBtn.style.pointerEvents = 'auto';
+        signInBtn.style.pointerEvents = 'auto';
+        signInBtnPanel.style.pointerEvents = 'auto';
+        
+        // Reset de la transformación
+        waveBubble.style.transform = 'translate(0, 0) scale(1)';
+        waveBubble.style.opacity = '1';
+        
+        waveBubble.style.transition = "1.8s cubic-bezier(0.65, 0.05, 0.36, 1)";
+        // Quitamos la clase animating después de la transición
+        container.classList.remove("animating");
+    }, 2000);
+});
+
 // Animación al enfocar los campos
 inputFields.forEach(input => {
     input.addEventListener("focus", () => {
@@ -641,3 +685,121 @@ setInterval(() => {
     hueRotation = (hueRotation + 1) % 10;
     waveBubble.style.filter = `hue-rotate(${hueRotation}deg)`;
 }, 1000);
+// JavaScript para el carrusel
+document.addEventListener('DOMContentLoaded', function() {
+    const slides = document.querySelectorAll('.carousel-slide');
+    const indicators = document.querySelectorAll('.indicator');
+    let currentSlide = 0;
+    const slideInterval = 5000; // Tiempo entre slides: 5 segundos
+    
+    // Función para cambiar al slide específico
+    function goToSlide(slideIndex) {
+        // Quitar la clase active de todos los slides
+        slides.forEach(slide => {
+            slide.classList.remove('active');
+        });
+        
+        // Quitar la clase active de todos los indicadores
+        indicators.forEach(indicator => {
+            indicator.classList.remove('active');
+        });
+        
+        // Activar el slide e indicador actual
+        slides[slideIndex].classList.add('active');
+        indicators[slideIndex].classList.add('active');
+        
+        // Actualizar el índice del slide actual
+        currentSlide = slideIndex;
+    }
+    
+    // Función para avanzar al siguiente slide
+    function nextSlide() {
+        let nextIndex = currentSlide + 1;
+        if (nextIndex >= slides.length) {
+            nextIndex = 0;
+        }
+        goToSlide(nextIndex);
+    }
+    
+    // Configurar click en los indicadores
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+            goToSlide(index);
+            resetInterval(); // Reiniciar el intervalo al hacer clic
+        });
+    });
+    
+    // Iniciar carrusel automático
+    let slideTimer = setInterval(nextSlide, slideInterval);
+    
+    // Reiniciar el intervalo para evitar cambios bruscos
+    function resetInterval() {
+        clearInterval(slideTimer);
+        slideTimer = setInterval(nextSlide, slideInterval);
+    }
+    
+    // Detener la rotación al pasar el mouse por encima
+    const carouselContainer = document.querySelector('.carousel-container');
+    carouselContainer.addEventListener('mouseenter', () => {
+        clearInterval(slideTimer);
+    });
+    
+    // Reanudar la rotación al quitar el mouse
+    carouselContainer.addEventListener('mouseleave', () => {
+        slideTimer = setInterval(nextSlide, slideInterval);
+    });
+    
+    // Iniciar con el primer slide
+    goToSlide(0);
+    
+    // Opcional: Agregar swipe para móviles
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    const carouselWrapper = document.querySelector('.carousel-wrapper');
+    
+    carouselWrapper.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+    
+    carouselWrapper.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+    
+    function handleSwipe() {
+        const swipeThreshold = 50; // Mínima distancia para considerar un swipe
+        
+        if (touchEndX < touchStartX - swipeThreshold) {
+            // Swipe a la izquierda - próximo slide
+            nextSlide();
+            resetInterval();
+        } else if (touchEndX > touchStartX + swipeThreshold) {
+            // Swipe a la derecha - slide anterior
+            let prevIndex = currentSlide - 1;
+            if (prevIndex < 0) {
+                prevIndex = slides.length - 1;
+            }
+            goToSlide(prevIndex);
+            resetInterval();
+        }
+    }
+});
+
+// Mantener el código de transición en login.js
+// Este código es para la transición entre la vista de login e información
+// No necesitas modificar esta parte del código existente:
+
+/*
+const signUpButton = document.getElementById('sign-up-btn');
+const signInButton = document.getElementById('sign-in-btn');
+const container = document.getElementById('container');
+
+signUpButton.addEventListener('click', () => {
+    container.classList.add('sign-up-mode');
+});
+
+signInButton.addEventListener('click', () => {
+    container.classList.remove('sign-up-mode');
+});
+*/

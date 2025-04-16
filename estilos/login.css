@@ -951,3 +951,206 @@ html {
       font-size: 0.9rem;
   }
 }
+/* Modificaciones para mantener la transición original */
+.info-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 5rem;
+  transition: all 0.2s 0.7s;
+  overflow: hidden;
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  opacity: 0;
+  z-index: 1;
+}
+
+.login-container.sign-up-mode .info-form {
+  opacity: 1;
+  z-index: 2;
+}
+
+.login-container.sign-up-mode form.sign-in-form {
+  opacity: 0;
+  z-index: 1;
+}
+
+/* Estilos para los elementos dentro del contenedor info-form */
+.info-highlight {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 15px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 380px;
+}
+
+/* Carrusel de características */
+.carousel-container {
+  width: 100%;
+  max-width: 380px;
+  margin-bottom: 1.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.carousel-wrapper {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+}
+
+.carousel-slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.feature-icon {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.slide-content h3 {
+  font-size: 1.3rem;
+  color: var(--dark-text);
+  margin-bottom: 0.8rem;
+}
+
+.slide-content p {
+  color: var(--light-text);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.carousel-controls {
+  padding: 0.8rem;
+  display: flex;
+  justify-content: center;
+}
+
+.carousel-indicators {
+  display: flex;
+  gap: 8px;
+}
+
+.indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ddd;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.indicator.active {
+  background-color: var(--primary-color);
+  width: 20px;
+  border-radius: 10px;
+}
+
+/* Sección de información de la empresa */
+.company-info {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.info-image {
+  width: 180px;
+  height: auto;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.1));
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.info-text h3 {
+  font-size: 1.3rem;
+  color: var(--dark-text);
+  margin-bottom: 0.8rem;
+}
+
+.info-text p {
+  color: var(--light-text);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Responsive para nueva estructura */
+@media (max-width: 992px) {
+  .signin-centered {
+    left: 50%;
+    width: 80%;
+  }
+  
+  .info-panel {
+    display: none;
+  }
+  
+  /* Mostrar un poco del panel de información en tablet */
+  .info-panel {
+    position: fixed;
+    right: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    z-index: 1001;
+    transition: right 0.5s ease;
+    overflow-y: auto;
+  }
+  
+  .info-panel.active {
+    right: 0;
+  }
+}
+
+@media (max-width: 570px) {
+  .signin-centered {
+    width: 90%;
+  }
+}

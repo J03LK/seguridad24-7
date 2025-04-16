@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login & Registro con Navbar</title>
+    <title>Login - Detecta365</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="estilos/login.css">
@@ -31,13 +31,9 @@
                     <li><a href="#casos">Casos de Éxito</a></li>
                     <li><a href="#contacto">Contacto</a></li>
                     <li class="auth-buttons">
-                        <a href="#login" class="btn-login">
+                        <a href="login.html" class="btn-login">
                             <i class="fas fa-user"></i>
                             <span>Ingresar</span>
-                        </a>
-                        <a href="#registro" class="btn-registro">
-                            <span>Registrarse</span>
-                            <i class="fas fa-arrow-right"></i>
                         </a>
                     </li>
                 </ul>
@@ -49,13 +45,14 @@
     <!-- WRAPPER PARA CONTENIDO PRINCIPAL -->
     <div class="main-wrapper">
         <div class="login-container" id="container">
-            <!-- Nueva capa para la burbuja ondulante -->
+            <!-- Capa para la burbuja ondulante -->
             <div class="wave-container">
                 <div class="wave-bubble"></div>
             </div>
             
             <!-- Elementos flotantes decorativos -->
             <div class="floating-elements">
+                <div class="floating-circle"></div>
                 <div class="floating-circle"></div>
                 <div class="floating-circle"></div>
             </div>
@@ -86,65 +83,75 @@
                         </button>
                     </form>
 
-                    <!-- Formulario de Registro -->
-                    <form action="#" class="sign-up-form" id="registroForm">
-                        <h2 class="title">Registrarse</h2>
-                        <div class="input-field">
-                            <i class="fas fa-user"></i>
-                            <input type="text" placeholder="Nombre" id="nombre" name="nombre" required />
-                            <span class="password-toggle" id="toggle-nombre"><i class="fas fa-times-circle"></i></span>
-                        </div>
-                        <div class="error-message" id="nombre-error"></div>
+                    <!-- Panel de información en lugar de registro -->
+                    <div class="info-form">
+                        <h2 class="title">Nuestros Servicios</h2>
                         
-                        <div class="input-field">
-                            <i class="fas fa-user"></i>
-                            <input type="text" placeholder="Apellido" id="apellido" name="apellido" required />
-                            <span class="password-toggle" id="toggle-apellido"><i class="fas fa-times-circle"></i></span>
+                        <div class="carousel-container">
+                            <div class="carousel-wrapper">
+                                <div class="carousel-slide active">
+                                    <div class="slide-content">
+                                        <i class="fas fa-shield-alt feature-icon"></i>
+                                        <h3>Protección 24/7</h3>
+                                        <p>Nuestros sistemas de seguridad funcionan todo el día, todos los días del año.</p>
+                                    </div>
+                                </div>
+                                <div class="carousel-slide">
+                                    <div class="slide-content">
+                                        <i class="fas fa-bell feature-icon"></i>
+                                        <h3>Alertas Inmediatas</h3>
+                                        <p>Recibe notificaciones en tiempo real ante cualquier actividad sospechosa.</p>
+                                    </div>
+                                </div>
+                                <div class="carousel-slide">
+                                    <div class="slide-content">
+                                        <i class="fas fa-mobile-alt feature-icon"></i>
+                                        <h3>Control desde tu Móvil</h3>
+                                        <p>Administra tu sistema de seguridad desde cualquier lugar con nuestra app.</p>
+                                    </div>
+                                </div>
+                                <div class="carousel-slide">
+                                    <div class="slide-content">
+                                        <i class="fas fa-headset feature-icon"></i>
+                                        <h3>Soporte Técnico</h3>
+                                        <p>Equipo de soporte disponible para resolver cualquier incidencia técnica.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-controls">
+                                <div class="carousel-indicators">
+                                    <span class="indicator active" data-slide="0"></span>
+                                    <span class="indicator" data-slide="1"></span>
+                                    <span class="indicator" data-slide="2"></span>
+                                    <span class="indicator" data-slide="3"></span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="error-message" id="apellido-error"></div>
                         
-                        <div class="input-field">
-                            <i class="fas fa-user"></i>
-                            <input type="text" placeholder="Nombre de Usuario" id="username" name="username" required />
-                            <span class="password-toggle" id="toggle-username"><i class="fas fa-times-circle"></i></span>
+                        <div class="info-highlight">
+                            <i class="fas fa-lock-alt highlight-icon"></i>
+                            <p>Si necesitas una cuenta, por favor contacta con el administrador del sistema para solicitar acceso.</p>
                         </div>
-                        <div class="error-message" id="username-error"></div>
                         
-                        <div class="input-field">
-                            <i class="fas fa-envelope"></i>
-                            <input type="email" placeholder="Correo Electrónico" id="email-registro" name="email" required />
-                            <span class="password-toggle" id="toggle-email"><i class="fas fa-times-circle"></i></span>
-                        </div>
-                        <div class="error-message" id="email-error"></div>
-                        
-                        <div class="input-field">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" placeholder="Contraseña" id="password-registro" name="password" required />
-                            <span class="password-toggle" id="toggle-password"><i class="fas fa-eye"></i></span>
-                        </div>
-                        <div class="error-message" id="password-error"></div>
-                        
-                        <button type="submit" class="btn" id="registro-button">
-                            Registrarse
-                            <span class="loader"></span>
+                        <button class="btn" id="sign-in-btn">
+                            Volver al Login
                         </button>
-                    </form>
+                    </div>
                 </div>
             </div>
-
             <!-- Paneles para información -->
             <div class="panels-container">
                 <div class="panel left-panel">
                     <div class="content">
-                        <h3>¿Eres nuevo?</h3>
+                        <h3>¿Quieres saber más?</h3>
                         <p>
-                            Regístrate para gestionar tus pagos de seguridad y acceder a nuestros servicios 24/7.
+                            Conoce todos los detalles sobre nuestros servicios de seguridad y monitoreo 24/7.
                         </p>
                         <button class="btn transparent" id="sign-up-btn">
-                            Registrarse
+                            Ver Información
                         </button>
                     </div>
-                    <img src="imagenes/352856067_11423805.svg" class="image" alt="Gif de registro" />
+                    <img src="imagenes/352856067_11423805.svg" class="image" alt="Seguridad" />
                 </div>
                 <div class="panel right-panel">
                     <div class="content">
@@ -152,17 +159,17 @@
                         <p>
                             Inicia sesión para realizar tus pagos y administrar tu suscripción a nuestros servicios de seguridad.
                         </p>
-                        <button class="btn transparent" id="sign-in-btn">
+                        <button class="btn transparent" id="sign-in-btn-panel">
                             Iniciar Sesión
                         </button>
                     </div>
-                    <img src="imagenes/registro.svg" class="image" alt="Gif de inicio de sesión" />
+                    <img src="imagenes/registro.svg" class="image" alt="Login" />
                 </div>
-                
             </div>
         </div>
     </div>
     <script src="scripts/login.js"></script>
     <script src="scripts/navbar.js"></script>
+   
 </body>
 </html>
