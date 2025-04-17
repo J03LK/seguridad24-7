@@ -7,6 +7,7 @@
     <title>24-7 SEGURIDAD DEL ECUADOR</title>
     <link rel="stylesheet" href="estilos/home.css" />
     <link rel="stylesheet" href="estilos/navbar.css" />
+    <link rel="stylesheet" href="estilos/logo.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
@@ -53,6 +54,18 @@
         </nav>
         <div class="overlay" id="overlay"></div>
     </header>
+    <!-- Elemento para la iluminación ambiental -->
+<div class="background-neon-light" id="backgroundNeonLight"></div>
+<div class="background-neon-light" id="backgroundNeonLight"></div>
+<div class="content-overlay"></div>
+<!-- Contenedor para el logo y los efectos visuales -->
+<div class="neon-logo-wrap">
+    <img src="assets/Logo2.png" class="logo-neon" alt="Seguridad 24-7 Del Ecuador" id="neonLogo">
+    <!-- Las chispas se añadirán dinámicamente con JavaScript -->
+</div>
+     
+     <!-- Background Elements desde CSS -->
+     
 
     <div class="main-container">
         <section class="inicio-section" id="inicio">
@@ -129,7 +142,7 @@
 
         <!-- Sección de Estadísticas (después del Hero) -->
         <section class="stats-section">
-            <div class="stats-container">
+            
                 <div class="stat-card">
                     <div class="stat-icon"><i class="fas fa-award"></i></div>
                     <div class="stat-number with-plus" data-target="19">0</div>
@@ -150,7 +163,7 @@
                     <div class="stat-number with-plus" data-target="7">0</div>
                     <div class="stat-label">Certificaciones</div>
                 </div>
-            </div>
+            
         </section>
         
         <!-- Sección "¿Por qué nosotros?" (puede ir antes o después de la sección de servicios) -->
@@ -211,25 +224,25 @@
             <div class="container">
                 <div class="footer-content">
                     <div class="footer-logo">
-                        <img src="assets/logo.png" alt="24-7 Logo" />
+                        <img src="assets/Logo2.png" alt="24-7 Logo" />
                     </div>
                     <div class="footer-links">
                         <h4>Enlaces rápidos</h4>
                         <ul>
-                            <li><a href="#inicio">Inicio</a></li>
-                            <li><a href="#servicios">Servicios</a></li>
-                            <li><a href="#nosotros">Nosotros</a></li>
-                            <li><a href="#casos">Casos de Éxito</a></li>
-                            <li><a href="#contacto">Contacto</a></li>
+                            <li><a href="index.html">Inicio</a></li>
+                            <li><a href="servicios.html">Servicios</a></li>
+                            <li><a href="nosotros.html">Nosotros</a></li>
+                            <li><a href="casos.html">Casos de Éxito</a></li>
+                            <li><a href="contacto.html">Contacto</a></li>
                         </ul>
                     </div>
                     <div class="footer-servicios">
                         <h4>Servicios</h4>
                         <ul>
-                            <li><a href="#servicios">Detección de Personas</a></li>
-                            <li><a href="#servicios">Detección de Objetos</a></li>
-                            <li><a href="#servicios">Análisis Estadístico</a></li>
-                            <li><a href="#servicios">Seguridad Avanzada</a></li>
+                            <li><a href="servicios.html#guardia-virtual">Guardia Virtual</a></li>
+                            <li><a href="servicios.html#reconocimiento">Reconocimiento Facial</a></li>
+                            <li><a href="servicios.html#monitoreo">Monitoreo 24/7</a></li>
+                            <li><a href="servicios.html#accesos">Control de Accesos</a></li>
                         </ul>
                     </div>
                     <div class="footer-newsletter">
@@ -248,6 +261,7 @@
         </footer>
 
         <script src="scripts/script.js"></script>
+        <script src="scripts/logo.js"></script>
 
 </body>
 
