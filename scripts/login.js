@@ -1,191 +1,410 @@
 // Elementos del DOM
-const signInBtn = document.querySelector("#sign-in-btn");
-const signInBtnPanel = document.querySelector("#sign-in-btn-panel");
-const signUpBtn = document.querySelector("#sign-up-btn");
-const container = document.querySelector(".login-container");
-const loginForm = document.querySelector("#loginForm");
-const registroForm = document.querySelector("#registroForm");
-const passwordToggles = document.querySelectorAll(".password-toggle");
-const inputFields = document.querySelectorAll(".input-field input");
-const loginButton = document.querySelector("#login-button");
-const registroButton = document.querySelector("#registro-button");
-
-// Inicializar Firebase
 document.addEventListener('DOMContentLoaded', function() {
-    // Cargar Firebase desde CDN si no está ya disponible
-    if (typeof firebase === 'undefined') {
-        loadFirebaseScripts();
-    } else {
-        initializeFirebase();
+    // Selectores principales
+    const signInBtn = document.getElementById('sign-in-btn');
+    const signInBtnPanel = document.getElementById('sign-in-btn-panel');
+    const signUpBtn = document.getElementById('sign-up-btn');
+    const container = document.getElementById('container');
+    const loginForm = document.getElementById('loginForm');
+    
+    // Selectores para inputs y botones
+    const inputFields = document.querySelectorAll('.input-field input');
+    const passwordToggles = document.querySelectorAll('.password-toggle');
+    const loginButton = document.getElementById('login-button');
+    
+    // Cargar Firebase
+    loadFirebase();
+
+    // Cambio entre formularios con animación suave
+    if (signUpBtn) {
+        signUpBtn.addEventListener("click", () => {
+            // Desactiva temporalmente los clics
+            signUpBtn.style.pointerEvents = 'none';
+            signInBtn.style.pointerEvents = 'none';
+
+            // Añadimos clase animating para mejorar la transición
+            container.classList.add("animating");
+            container.classList.add("sign-up-mode");
+            
+            // Añadimos una transición más suave para la burbuja
+            const waveBubble = document.querySelector(".wave-bubble");
+            if (waveBubble) {
+                waveBubble.style.transition = "all 1.8s cubic-bezier(0.645, 0.045, 0.355, 1.000)";
+                
+                // Animación más suave y controlada
+                waveBubble.style.transform = 'translate(100%, -10%) scale(1.2)';
+                waveBubble.style.opacity = '0.9';
+                
+                // Efecto extra durante la transición
+                setTimeout(() => {
+                    waveBubble.style.filter = "brightness(1.03)";
+                    setTimeout(() => {
+                        waveBubble.style.filter = "none";
+                    }, 600);
+                }, 300);
+            }
+            
+            // Reseteamos la transición después de un tiempo
+            setTimeout(() => {
+                // Restaura los clics
+                signUpBtn.style.pointerEvents = 'auto';
+                signInBtn.style.pointerEvents = 'auto';
+                
+                if (waveBubble) {
+                    // Reset de la transformación
+                    waveBubble.style.transform = 'translate(0, 0) scale(1)';
+                    waveBubble.style.opacity = '1';
+                    
+                    waveBubble.style.transition = "1.8s cubic-bezier(0.65, 0.05, 0.36, 1)";
+                }
+                // Quitamos la clase animating después de la transición
+                container.classList.remove("animating");
+            }, 2000);
+        });
     }
+
+    if (signInBtn) {
+        signInBtn.addEventListener("click", () => {
+            // Desactiva temporalmente los clics
+            if (signUpBtn) signUpBtn.style.pointerEvents = 'none';
+            signInBtn.style.pointerEvents = 'none';
+
+            // Añadimos clase animating para mejorar la transición
+            container.classList.add("animating");
+            container.classList.remove("sign-up-mode");
+            
+            // Añadimos una transición más suave para la burbuja
+            const waveBubble = document.querySelector(".wave-bubble");
+            if (waveBubble) {
+                waveBubble.style.transition = "all 1.8s cubic-bezier(0.645, 0.045, 0.355, 1.000)";
+                
+                // Animación más suave y controlada
+                waveBubble.style.transform = 'translate(-100%, -10%) scale(1.2)';
+                waveBubble.style.opacity = '0.9';
+                
+                // Efecto extra durante la transición
+                setTimeout(() => {
+                    waveBubble.style.filter = "brightness(1.03)";
+                    setTimeout(() => {
+                        waveBubble.style.filter = "none";
+                    }, 600);
+                }, 300);
+            }
+            
+            // Reseteamos la transición después de un tiempo
+            setTimeout(() => {
+                // Restaura los clics
+                if (signUpBtn) signUpBtn.style.pointerEvents = 'auto';
+                signInBtn.style.pointerEvents = 'auto';
+                
+                if (waveBubble) {
+                    // Reset de la transformación
+                    waveBubble.style.transform = 'translate(0, 0) scale(1)';
+                    waveBubble.style.opacity = '1';
+                    
+                    waveBubble.style.transition = "1.8s cubic-bezier(0.65, 0.05, 0.36, 1)";
+                }
+                // Quitamos la clase animating después de la transición
+                container.classList.remove("animating");
+            }, 2000);
+        });
+    }
+
+    if (signInBtnPanel) {
+        signInBtnPanel.addEventListener("click", () => {
+            // Desactiva temporalmente los clics
+            if (signUpBtn) signUpBtn.style.pointerEvents = 'none';
+            if (signInBtn) signInBtn.style.pointerEvents = 'none';
+            signInBtnPanel.style.pointerEvents = 'none';
+
+            // Añadimos clase animating para mejorar la transición
+            container.classList.add("animating");
+            container.classList.remove("sign-up-mode");
+            
+            // Añadimos una transición más suave para la burbuja
+            const waveBubble = document.querySelector(".wave-bubble");
+            if (waveBubble) {
+                waveBubble.style.transition = "all 1.8s cubic-bezier(0.645, 0.045, 0.355, 1.000)";
+                
+                // Animación más suave y controlada
+                waveBubble.style.transform = 'translate(-100%, -10%) scale(1.2)';
+                waveBubble.style.opacity = '0.9';
+                
+                // Efecto extra durante la transición
+                setTimeout(() => {
+                    waveBubble.style.filter = "brightness(1.03)";
+                    setTimeout(() => {
+                        waveBubble.style.filter = "none";
+                    }, 600);
+                }, 300);
+            }
+            
+            // Reseteamos la transición después de un tiempo
+            setTimeout(() => {
+                // Restaura los clics
+                if (signUpBtn) signUpBtn.style.pointerEvents = 'auto';
+                if (signInBtn) signInBtn.style.pointerEvents = 'auto';
+                signInBtnPanel.style.pointerEvents = 'auto';
+                
+                if (waveBubble) {
+                    // Reset de la transformación
+                    waveBubble.style.transform = 'translate(0, 0) scale(1)';
+                    waveBubble.style.opacity = '1';
+                    
+                    waveBubble.style.transition = "1.8s cubic-bezier(0.65, 0.05, 0.36, 1)";
+                }
+                // Quitamos la clase animating después de la transición
+                container.classList.remove("animating");
+            }, 2000);
+        });
+    }
+
+    // Animación al enfocar los campos
+    inputFields.forEach(input => {
+        input.addEventListener("focus", () => {
+            const parent = input.parentElement;
+            parent.classList.add("animate-focus");
+            
+            // Eliminar la animación después de que termine
+            setTimeout(() => {
+                parent.classList.remove("animate-focus");
+            }, 400);
+        });
+    });
+
+    // Mostrar/ocultar contraseña
+    passwordToggles.forEach(toggle => {
+        if (toggle.id.includes("password")) {
+            toggle.addEventListener("click", () => {
+                let inputId;
+                
+                if (toggle.id === 'toggle-login-password') {
+                    inputId = 'password-login';
+                } else if (toggle.id === 'toggle-password-login') {
+                    inputId = 'password-login';
+                } else {
+                    // Extraer el id del input del id del toggle
+                    inputId = toggle.id.replace("toggle-", "");
+                }
+                
+                const input = document.getElementById(inputId);
+                const icon = toggle.querySelector("i");
+                
+                if (input && input.type === "password") {
+                    input.type = "text";
+                    icon.classList.remove("fa-eye");
+                    icon.classList.add("fa-eye-slash");
+                } else if (input) {
+                    input.type = "password";
+                    icon.classList.remove("fa-eye-slash");
+                    icon.classList.add("fa-eye");
+                }
+            });
+        } else {
+            // Para campos que no son contraseña, el icono es para limpiar el campo
+            toggle.addEventListener("click", () => {
+                let inputId;
+                
+                if (toggle.id === 'toggle-login-username') {
+                    inputId = 'email-login';
+                } else {
+                    // Extraer el id del input del id del toggle
+                    inputId = toggle.id.replace("toggle-", "").replace("-username", "");
+                }
+                
+                const input = document.getElementById(inputId);
+                if (input) {
+                    input.value = "";
+                    input.focus();
+                }
+            });
+        }
+    });
+
+    // Configurar validación del formulario
+    if (loginForm) {
+        loginForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            let isValid = true;
+            
+            // Validación del email/usuario
+            const emailLogin = document.getElementById("email-login");
+            const emailLoginError = document.getElementById("email-login-error");
+            
+            if (emailLogin && emailLogin.value.trim() === "") {
+                showError(emailLogin, emailLoginError, "Por favor, introduce tu usuario o correo electrónico");
+                isValid = false;
+            } else if (emailLogin && emailLoginError) {
+                hideError(emailLogin, emailLoginError);
+            }
+            
+            // Validación de la contraseña
+            const passwordLogin = document.getElementById("password-login");
+            const passwordLoginError = document.getElementById("password-login-error");
+            
+            if (passwordLogin && passwordLogin.value.trim() === "") {
+                showError(passwordLogin, passwordLoginError, "Por favor, introduce tu contraseña");
+                isValid = false;
+            } else if (passwordLogin && passwordLoginError) {
+                hideError(passwordLogin, passwordLoginError);
+            }
+            
+            // Si el formulario es válido, hacemos login con Firebase
+            if (isValid && emailLogin && passwordLogin) {
+                loginWithFirebase(emailLogin.value, passwordLogin.value);
+            }
+        });
+    }
+
+    // Validación en tiempo real
+    inputFields.forEach(input => {
+        input.addEventListener("input", () => {
+            validateInput(input);
+        });
+        
+        input.addEventListener("blur", () => {
+            validateInput(input);
+        });
+    });
+
+    // Efecto de onda al hacer clic en los botones
+    const buttons = document.querySelectorAll(".btn");
+    buttons.forEach(button => {
+        button.addEventListener("click", function(e) {
+            // Solo aplicamos el efecto a los botones transparentes o de tipo submit
+            if (this.type !== "submit" && !this.classList.contains("transparent")) return;
+            
+            const x = e.clientX - e.target.getBoundingClientRect().left;
+            const y = e.clientY - e.target.getBoundingClientRect().top;
+            
+            const ripple = document.createElement("span");
+            ripple.style.left = `${x}px`;
+            ripple.style.top = `${y}px`;
+            ripple.classList.add("ripple");
+            
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    });
+
+    // Opcional: Mantener el estado del formulario en localStorage
+    const savedState = localStorage.getItem("formState");
+    if (savedState === "signup") {
+        container.classList.add("sign-up-mode");
+    }
+    
+    // Verificar si viene con un hash en la URL
+    if (window.location.hash === '#registro') {
+        container.classList.add("sign-up-mode");
+    }
+
+    // Guardar el estado del formulario al cambiar
+    if (signUpBtn) {
+        signUpBtn.addEventListener("click", () => {
+            localStorage.setItem("formState", "signup");
+        });
+    }
+
+    if (signInBtn) {
+        signInBtn.addEventListener("click", () => {
+            localStorage.setItem("formState", "signin");
+        });
+    }
+
+    // Cargar y configurar el carrusel
+    initCarousel();
 });
 
-// Cargar scripts de Firebase dinámicamente
-function loadFirebaseScripts() {
-    const firebaseScript = document.createElement('script');
-    firebaseScript.src = 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js';
-    document.head.appendChild(firebaseScript);
+// Cargar Firebase con manejo de errores
+function loadFirebase() {
+    // Si Firebase ya está definido, inicializar directamente
+    if (typeof firebase !== 'undefined') {
+        initializeFirebase();
+        return;
+    }
 
-    firebaseScript.onload = function() {
-        const authScript = document.createElement('script');
-        authScript.src = 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js';
-        document.head.appendChild(authScript);
+    // Cargar scripts de Firebase
+    const scripts = [
+        'https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js',
+        'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js',
+        'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js'
+    ];
 
-        const firestoreScript = document.createElement('script');
-        firestoreScript.src = 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js';
-        document.head.appendChild(firestoreScript);
-
-        firestoreScript.onload = initializeFirebase;
-    };
+    let scriptsLoaded = 0;
+    
+    scripts.forEach(src => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.async = true;
+        
+        script.onload = () => {
+            scriptsLoaded++;
+            if (scriptsLoaded === scripts.length) {
+                initializeFirebase();
+            }
+        };
+        
+        script.onerror = (error) => {
+            console.error(`Error al cargar el script ${src}:`, error);
+            alert('Error al cargar Firebase. Por favor, recarga la página o verifica tu conexión a internet.');
+        };
+        
+        document.head.appendChild(script);
+    });
 }
 
 // Inicializar Firebase
 function initializeFirebase() {
-    // Configuración de Firebase
-    const firebaseConfig = {
-        apiKey: "AIzaSyD_C3sJCghWpV1DHn4Qyxsa-exdcEJGst0",
-        authDomain: "seguridad-24-7.firebaseapp.com",
-        projectId: "seguridad-24-7",
-        storageBucket: "seguridad-24-7.firebasestorage.app",
-        messagingSenderId: "979899411271",
-        appId: "1:979899411271:web:4d8db498a9388054a7fa62",
-        measurementId: "G-XQG0KDMMX4"
-    };
+    try {
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_C3sJCghWpV1DHn4Qyxsa-exdcEJGst0",
+            authDomain: "seguridad-24-7.firebaseapp.com",
+            projectId: "seguridad-24-7",
+            storageBucket: "seguridad-24-7.firebasestorage.app",
+            messagingSenderId: "979899411271",
+            appId: "1:979899411271:web:4d8db498a9388054a7fa62",
+            measurementId: "G-XQG0KDMMX4"
+        };
 
-    // Inicializar Firebase
-    firebase.initializeApp(firebaseConfig);
+        // Inicializar Firebase (evitar inicialización múltiple)
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
 
-    // Verificar si hay un usuario ya autenticado
-    firebase.auth().onAuthStateChanged(function(user) {
-        if (user) {
-            console.log("Usuario autenticado:", user.email);
-            // No redirigir automáticamente aquí
-        } else {
-            console.log("No hay usuario autenticado");
-        }
-    });
+        // Verificar si hay un usuario ya autenticado
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                console.log("Usuario autenticado:", user.email);
+                // No redirigir automáticamente aquí, lo haremos en el login
+            } else {
+                console.log("No hay usuario autenticado");
+            }
+        });
 
-    // Configurar los manejadores de formularios para Firebase
-    setupFormHandlers();
-}
-
-// Configurar manejadores de formularios con Firebase
-function setupFormHandlers() {
-    // Validación del formulario de inicio de sesión con Firebase
-    loginForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        let isValid = true;
-        
-        // Validación del email/usuario
-        const emailLogin = document.getElementById("email-login");
-        const emailLoginError = document.getElementById("email-login-error");
-        
-        if (emailLogin.value.trim() === "") {
-            showError(emailLogin, emailLoginError, "Por favor, introduce tu usuario o correo electrónico");
-            isValid = false;
-        } else {
-            hideError(emailLogin, emailLoginError);
-        }
-        
-        // Validación de la contraseña
-        const passwordLogin = document.getElementById("password-login");
-        const passwordLoginError = document.getElementById("password-login-error");
-        
-        if (passwordLogin.value.trim() === "") {
-            showError(passwordLogin, passwordLoginError, "Por favor, introduce tu contraseña");
-            isValid = false;
-        } else {
-            hideError(passwordLogin, passwordLoginError);
-        }
-        
-        // Si el formulario es válido, hacemos login con Firebase
-        if (isValid) {
-            loginWithFirebase(emailLogin.value, passwordLogin.value);
-        }
-    });
-
-    // Validación del formulario de registro con Firebase
-    registroForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        let isValid = true;
-        
-        // Validación del nombre
-        const nombre = document.getElementById("nombre");
-        const nombreError = document.getElementById("nombre-error");
-        
-        if (nombre.value.trim() === "") {
-            showError(nombre, nombreError, "Por favor, introduce tu nombre");
-            isValid = false;
-        } else {
-            hideError(nombre, nombreError);
-        }
-        
-        // Validación del apellido
-        const apellido = document.getElementById("apellido");
-        const apellidoError = document.getElementById("apellido-error");
-        
-        if (apellido.value.trim() === "") {
-            showError(apellido, apellidoError, "Por favor, introduce tu apellido");
-            isValid = false;
-        } else {
-            hideError(apellido, apellidoError);
-        }
-        
-        // Validación del nombre de usuario
-        const username = document.getElementById("username");
-        const usernameError = document.getElementById("username-error");
-        
-        if (username.value.trim() === "") {
-            showError(username, usernameError, "Por favor, introduce un nombre de usuario");
-            isValid = false;
-        } else if (username.value.trim().length < 5) {
-            showError(username, usernameError, "El nombre de usuario debe tener al menos 5 caracteres");
-            isValid = false;
-        } else {
-            hideError(username, usernameError);
-        }
-        
-        // Validación del email
-        const email = document.getElementById("email-registro");
-        const emailError = document.getElementById("email-error");
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        
-        if (email.value.trim() === "") {
-            showError(email, emailError, "Por favor, introduce tu correo electrónico");
-            isValid = false;
-        } else if (!emailRegex.test(email.value.trim())) {
-            showError(email, emailError, "Por favor, introduce un correo electrónico válido");
-            isValid = false;
-        } else {
-            hideError(email, emailError);
-        }
-        
-        // Validación de la contraseña
-        const password = document.getElementById("password-registro");
-        const passwordError = document.getElementById("password-error");
-        
-        if (password.value.trim() === "") {
-            showError(password, passwordError, "Por favor, introduce una contraseña");
-            isValid = false;
-        } else if (password.value.trim().length < 8) {
-            showError(password, passwordError, "La contraseña debe tener al menos 8 caracteres");
-            isValid = false;
-        } else {
-            hideError(password, passwordError);
-        }
-        
-        // Si el formulario es válido, registramos con Firebase
-        if (isValid) {
-            registerWithFirebase(nombre.value, apellido.value, username.value, email.value, password.value);
-        }
-    });
+        console.log("Firebase inicializado correctamente");
+    } catch (error) {
+        console.error("Error al inicializar Firebase:", error);
+    }
 }
 
 // Iniciar sesión con Firebase
 function loginWithFirebase(email, password) {
+    // Verificar que Firebase esté disponible
+    if (typeof firebase === 'undefined' || !firebase.auth) {
+        alert('Error: Firebase no está disponible. Por favor, recarga la página.');
+        return;
+    }
+
     // Mostrar el loader y deshabilitar el botón
-    loginButton.classList.add("loading");
-    loginButton.disabled = true;
+    const loginButton = document.getElementById('login-button');
+    if (loginButton) {
+        loginButton.classList.add("loading");
+        loginButton.disabled = true;
+    }
     
     // Autenticar con Firebase
     firebase.auth().signInWithEmailAndPassword(email, password)
@@ -193,36 +412,59 @@ function loginWithFirebase(email, password) {
             // Éxito al autenticar, obtener rol
             const user = userCredential.user;
             
-            // Agregamos la animación de éxito
-            loginForm.classList.add("success-animation");
+            // Animación de éxito
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.classList.add("success-animation");
+            }
             
             // Efecto adicional en la burbuja ondulante
             const waveBubble = document.querySelector(".wave-bubble");
-            waveBubble.style.filter = "hue-rotate(30deg) brightness(1.05)";
-            
-            setTimeout(() => {
-                waveBubble.style.filter = "none";
-            }, 800);
+            if (waveBubble) {
+                waveBubble.style.filter = "hue-rotate(30deg) brightness(1.05)";
+                
+                setTimeout(() => {
+                    waveBubble.style.filter = "none";
+                }, 800);
+            }
             
             // Verificar rol y redirigir
-            firebase.firestore().collection('users').doc(user.uid).get()
-                .then(function(doc) {
-                    if (doc.exists) {
-                        const userData = doc.data();
-                        if (userData.role === 'admin') {
-                            window.location.href = "dashboardAdmin.html";
-                        } else {
-                            window.location.href = "usuario.html";
-                        }
-                    } else {
-                        // Si no hay datos adicionales, asumir rol de usuario
-                        window.location.href = "usuario.html";
-                    }
-                })
+           // Verificar rol y redirigir
+firebase.firestore().collection('users').doc(user.uid).get()
+.then(function(doc) {
+    if (doc.exists) {
+        const userData = doc.data();
+        console.log("Datos del usuario:", userData);
+        console.log("Rol del usuario:", userData.role);
+        
+        // Comprobación simplificada pero efectiva
+        if (userData.role === "admin") {
+            console.log("Rol admin detectado, redirigiendo a administrador");
+            // Usar tiempo de espera para asegurar que los logs se muestren
+            setTimeout(() => {
+                window.location.href = "dashboardAdmin.html";
+            }, 100);
+        } else {
+            console.log("Rol no es admin, redirigiendo a usuario");
+            setTimeout(() => {
+                window.location.href = "dashboardUsuario.html";
+            }, 100);
+        }
+    } else {
+        console.log("Documento no existe, redirigiendo a usuario");
+        window.location.href = "dashboardAdmin.html";
+    }
+})
                 .catch(function(error) {
                     // Error al obtener rol
                     console.error("Error al verificar rol:", error);
                     showLoginError("Error al verificar tu rol. Por favor, inténtalo de nuevo.");
+                    
+                    // Restablecer botón de login
+                    if (loginButton) {
+                        loginButton.classList.remove("loading");
+                        loginButton.disabled = false;
+                    }
                 });
         })
         .catch(function(error) {
@@ -230,8 +472,10 @@ function loginWithFirebase(email, password) {
             console.error("Error de autenticación:", error);
             
             // Ocultamos el loader y habilitamos el botón
-            loginButton.classList.remove("loading");
-            loginButton.disabled = false;
+            if (loginButton) {
+                loginButton.classList.remove("loading");
+                loginButton.disabled = false;
+            }
             
             // Mostrar mensaje de error según el código
             switch(error.code) {
@@ -250,264 +494,19 @@ function loginWithFirebase(email, password) {
         });
 }
 
-// Registrar usuario con Firebase
-function registerWithFirebase(nombre, apellido, username, email, password) {
-    // Mostrar el loader y deshabilitar el botón
-    registroButton.classList.add("loading");
-    registroButton.disabled = true;
-    
-    // Verificar si el nombre de usuario ya existe
-    firebase.firestore().collection('users').where('username', '==', username).get()
-        .then(function(querySnapshot) {
-            if (!querySnapshot.empty) {
-                throw { code: 'username-exists', message: 'Este nombre de usuario ya está en uso' };
-            }
-            
-            // Crear usuario en Firebase Authentication
-            return firebase.auth().createUserWithEmailAndPassword(email, password);
-        })
-        .then(function(userCredential) {
-            // Éxito al crear usuario
-            const user = userCredential.user;
-            
-            // Guardar datos adicionales en Firestore
-            return firebase.firestore().collection('users').doc(user.uid).set({
-                name: nombre + ' ' + apellido,
-                username: username,
-                email: email,
-                role: 'usuario', // Por defecto, asignar rol de usuario
-                createdAt: new Date(),
-                status: 'active'
-            });
-        })
-        .then(function() {
-            // Agregamos la animación de éxito
-            registroForm.classList.add("success-animation");
-            
-            // Efecto adicional en la burbuja ondulante
-            const waveBubble = document.querySelector(".wave-bubble");
-            waveBubble.style.filter = "hue-rotate(-30deg) brightness(1.05)";
-            
-            setTimeout(() => {
-                waveBubble.style.filter = "none";
-            }, 800);
-            
-            // Redirigir a la vista de usuario
-            setTimeout(() => {
-                window.location.href = "usuario.html";
-            }, 1000);
-        })
-        .catch(function(error) {
-            // Ocultamos el loader y habilitamos el botón
-            registroButton.classList.remove("loading");
-            registroButton.disabled = false;
-            
-            console.error("Error en el registro:", error);
-            
-            // Mostrar mensaje de error según el código
-            if (error.code === 'username-exists') {
-                showRegistroError(document.getElementById("username-error"), error.message);
-            } else {
-                switch(error.code) {
-                    case 'auth/email-already-in-use':
-                        showRegistroError(document.getElementById("email-error"), "Este correo electrónico ya está registrado");
-                        break;
-                    case 'auth/invalid-email':
-                        showRegistroError(document.getElementById("email-error"), "Formato de correo electrónico inválido");
-                        break;
-                    case 'auth/weak-password':
-                        showRegistroError(document.getElementById("password-error"), "La contraseña es demasiado débil");
-                        break;
-                    default:
-                        showRegistroError(document.getElementById("email-error"), "Error al registrar: " + error.message);
-                }
-            }
-        });
-}
-
 // Mostrar error en el formulario de login
 function showLoginError(message) {
     const emailLoginError = document.getElementById("email-login-error");
-    emailLoginError.textContent = message;
-    emailLoginError.classList.add("active");
-}
-
-// Mostrar error en el formulario de registro
-function showRegistroError(errorElement, message) {
-    errorElement.textContent = message;
-    errorElement.classList.add("active");
-}
-
-// Cambio entre formularios con animación suave
-signUpBtn.addEventListener("click", () => {
-    // Desactiva temporalmente los clics
-    signUpBtn.style.pointerEvents = 'none';
-    signInBtn.style.pointerEvents = 'none';
-
-    // Añadimos clase animating para mejorar la transición
-    container.classList.add("animating");
-    container.classList.add("sign-up-mode");
-    
-    // Añadimos una transición más suave para la burbuja
-    const waveBubble = document.querySelector(".wave-bubble");
-    waveBubble.style.transition = "all 1.8s cubic-bezier(0.645, 0.045, 0.355, 1.000)";
-    
-    // Animación más suave y controlada
-    waveBubble.style.transform = 'translate(100%, -10%) scale(1.2)';
-    waveBubble.style.opacity = '0.9';
-    
-    // Efecto extra durante la transición
-    setTimeout(() => {
-        waveBubble.style.filter = "brightness(1.03)";
-        setTimeout(() => {
-            waveBubble.style.filter = "none";
-        }, 600);
-    }, 300);
-    
-    // Reseteamos la transición después de un tiempo
-    setTimeout(() => {
-        // Restaura los clics
-        signUpBtn.style.pointerEvents = 'auto';
-        signInBtn.style.pointerEvents = 'auto';
-        
-        // Reset de la transformación
-        waveBubble.style.transform = 'translate(0, 0) scale(1)';
-        waveBubble.style.opacity = '1';
-        
-        waveBubble.style.transition = "1.8s cubic-bezier(0.65, 0.05, 0.36, 1)";
-        // Quitamos la clase animating después de la transición
-        container.classList.remove("animating");
-    }, 2000);
-});
-
-signInBtn.addEventListener("click", () => {
-    // Desactiva temporalmente los clics
-    signUpBtn.style.pointerEvents = 'none';
-    signInBtn.style.pointerEvents = 'none';
-
-    // Añadimos clase animating para mejorar la transición
-    container.classList.add("animating");
-    container.classList.remove("sign-up-mode");
-    
-    // Añadimos una transición más suave para la burbuja
-    const waveBubble = document.querySelector(".wave-bubble");
-    waveBubble.style.transition = "all 1.8s cubic-bezier(0.645, 0.045, 0.355, 1.000)";
-    
-    // Animación más suave y controlada
-    waveBubble.style.transform = 'translate(-100%, -10%) scale(1.2)';
-    waveBubble.style.opacity = '0.9';
-    
-    // Efecto extra durante la transición
-    setTimeout(() => {
-        waveBubble.style.filter = "brightness(1.03)";
-        setTimeout(() => {
-            waveBubble.style.filter = "none";
-        }, 600);
-    }, 300);
-    
-    // Reseteamos la transición después de un tiempo
-    setTimeout(() => {
-        // Restaura los clics
-        signUpBtn.style.pointerEvents = 'auto';
-        signInBtn.style.pointerEvents = 'auto';
-        
-        // Reset de la transformación
-        waveBubble.style.transform = 'translate(0, 0) scale(1)';
-        waveBubble.style.opacity = '1';
-        
-        waveBubble.style.transition = "1.8s cubic-bezier(0.65, 0.05, 0.36, 1)";
-        // Quitamos la clase animating después de la transición
-        container.classList.remove("animating");
-    }, 2000);
-});
-
-signInBtnPanel.addEventListener("click", () => {
-    // Desactiva temporalmente los clics
-    signUpBtn.style.pointerEvents = 'none';
-    signInBtn.style.pointerEvents = 'none';
-    signInBtnPanel.style.pointerEvents = 'none';
-
-    // Añadimos clase animating para mejorar la transición
-    container.classList.add("animating");
-    container.classList.remove("sign-up-mode");
-    
-    // Añadimos una transición más suave para la burbuja
-    const waveBubble = document.querySelector(".wave-bubble");
-    waveBubble.style.transition = "all 1.8s cubic-bezier(0.645, 0.045, 0.355, 1.000)";
-    
-    // Animación más suave y controlada
-    waveBubble.style.transform = 'translate(-100%, -10%) scale(1.2)';
-    waveBubble.style.opacity = '0.9';
-    
-    // Efecto extra durante la transición
-    setTimeout(() => {
-        waveBubble.style.filter = "brightness(1.03)";
-        setTimeout(() => {
-            waveBubble.style.filter = "none";
-        }, 600);
-    }, 300);
-    
-    // Reseteamos la transición después de un tiempo
-    setTimeout(() => {
-        // Restaura los clics
-        signUpBtn.style.pointerEvents = 'auto';
-        signInBtn.style.pointerEvents = 'auto';
-        signInBtnPanel.style.pointerEvents = 'auto';
-        
-        // Reset de la transformación
-        waveBubble.style.transform = 'translate(0, 0) scale(1)';
-        waveBubble.style.opacity = '1';
-        
-        waveBubble.style.transition = "1.8s cubic-bezier(0.65, 0.05, 0.36, 1)";
-        // Quitamos la clase animating después de la transición
-        container.classList.remove("animating");
-    }, 2000);
-});
-
-// Animación al enfocar los campos
-inputFields.forEach(input => {
-    input.addEventListener("focus", () => {
-        const parent = input.parentElement;
-        parent.classList.add("animate-focus");
-        
-        // Eliminar la animación después de que termine
-        setTimeout(() => {
-            parent.classList.remove("animate-focus");
-        }, 400);
-    });
-});
-
-// Mostrar/ocultar contraseña
-passwordToggles.forEach(toggle => {
-    if (toggle.id.includes("password")) {
-        toggle.addEventListener("click", () => {
-            const inputId = toggle.id.replace("toggle-", "");
-            const input = document.getElementById(inputId);
-            const icon = toggle.querySelector("i");
-            
-            if (input.type === "password") {
-                input.type = "text";
-                icon.classList.remove("fa-eye");
-                icon.classList.add("fa-eye-slash");
-            } else {
-                input.type = "password";
-                icon.classList.remove("fa-eye-slash");
-                icon.classList.add("fa-eye");
-            }
-        });
-    } else {
-        // Para campos que no son contraseña, el icono es para limpiar el campo
-        toggle.addEventListener("click", () => {
-            const inputId = toggle.id.replace("toggle-", "").replace("-username", "");
-            const input = document.getElementById(inputId);
-            input.value = "";
-            input.focus();
-        });
+    if (emailLoginError) {
+        emailLoginError.textContent = message;
+        emailLoginError.classList.add("active");
     }
-});
+}
 
 // Función para mostrar errores
 function showError(input, errorElement, message) {
+    if (!input || !errorElement) return;
+    
     input.parentElement.classList.add("error");
     errorElement.textContent = message;
     errorElement.classList.add("active");
@@ -515,84 +514,17 @@ function showError(input, errorElement, message) {
 
 // Función para ocultar errores
 function hideError(input, errorElement) {
+    if (!input || !errorElement) return;
+    
     input.parentElement.classList.remove("error");
     errorElement.textContent = "";
     errorElement.classList.remove("active");
 }
 
-// Efecto de onda al hacer clic en los botones con mejora visual
-const buttons = document.querySelectorAll(".btn");
-
-buttons.forEach(button => {
-    button.addEventListener("click", function(e) {
-        // Solo aplicamos el efecto a los botones transparentes o de tipo submit
-        if (this.type !== "submit" && !this.classList.contains("transparent")) return;
-        
-        const x = e.clientX - e.target.getBoundingClientRect().left;
-        const y = e.clientY - e.target.getBoundingClientRect().top;
-        
-        const ripple = document.createElement("span");
-        ripple.style.left = `${x}px`;
-        ripple.style.top = `${y}px`;
-        ripple.classList.add("ripple");
-        
-        this.appendChild(ripple);
-        
-        setTimeout(() => {
-            ripple.remove();
-        }, 600);
-    });
-});
-
-// Mejora de accesibilidad: permitir el uso de la tecla Enter para cambiar entre formularios
-document.addEventListener("keydown", function(e) {
-    if (e.key === "Enter") {
-        const activeElement = document.activeElement;
-        
-        if (activeElement === signUpBtn) {
-            container.classList.add("sign-up-mode");
-        } else if (activeElement === signInBtn) {
-            container.classList.remove("sign-up-mode");
-        }
-    }
-});
-
-// Opcional: Mantener el estado del formulario en localStorage
-// para recordar si el usuario estaba en registro o inicio de sesión
-window.addEventListener("load", () => {
-    const savedState = localStorage.getItem("formState");
-    
-    if (savedState === "signup") {
-        container.classList.add("sign-up-mode");
-    }
-    
-    // Verificar si viene con un hash en la URL
-    if (window.location.hash === '#registro') {
-        container.classList.add("sign-up-mode");
-    }
-});
-
-// Guardar el estado del formulario al cambiar
-signUpBtn.addEventListener("click", () => {
-    localStorage.setItem("formState", "signup");
-});
-
-signInBtn.addEventListener("click", () => {
-    localStorage.setItem("formState", "signin");
-});
-
-// Validación en tiempo real
-inputFields.forEach(input => {
-    input.addEventListener("input", () => {
-        validateInput(input);
-    });
-    
-    input.addEventListener("blur", () => {
-        validateInput(input);
-    });
-});
-
+// Validación de inputs
 function validateInput(input) {
+    if (!input) return;
+    
     const id = input.id;
     let errorElement;
     let isValid = true;
@@ -615,80 +547,23 @@ function validateInput(input) {
                 errorMessage = "Por favor, introduce tu contraseña";
             }
             break;
-            
-        case "nombre":
-            errorElement = document.getElementById("nombre-error");
-            if (input.value.trim() === "") {
-                isValid = false;
-                errorMessage = "Por favor, introduce tu nombre";
-            }
-            break;
-            
-        case "apellido":
-            errorElement = document.getElementById("apellido-error");
-            if (input.value.trim() === "") {
-                isValid = false;
-                errorMessage = "Por favor, introduce tu apellido";
-            }
-            break;
-            
-        case "username":
-            errorElement = document.getElementById("username-error");
-            if (input.value.trim() === "") {
-                isValid = false;
-                errorMessage = "Por favor, introduce un nombre de usuario";
-            } else if (input.value.trim().length < 5) {
-                isValid = false;
-                errorMessage = "El usuario debe tener al menos 5 caracteres";
-            }
-            break;
-            
-        case "email-registro":
-            errorElement = document.getElementById("email-error");
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            
-            if (input.value.trim() === "") {
-                isValid = false;
-                errorMessage = "Por favor, introduce tu correo electrónico";
-            } else if (!emailRegex.test(input.value.trim())) {
-                isValid = false;
-                errorMessage = "Introduce un correo electrónico válido";
-            }
-            break;
-            
-        case "password-registro":
-            errorElement = document.getElementById("password-error");
-            if (input.value.trim() === "") {
-                isValid = false;
-                errorMessage = "Por favor, introduce una contraseña";
-            } else if (input.value.trim().length < 8) {
-                isValid = false;
-                errorMessage = "La contraseña debe tener al menos 8 caracteres";
-            }
-            break;
     }
     
     // Mostrar u ocultar el error según corresponda
-    if (!isValid) {
+    if (!isValid && errorElement) {
         showError(input, errorElement, errorMessage);
-    } else {
+    } else if (errorElement) {
         hideError(input, errorElement);
     }
 }
 
-// Animación adicional para la burbuja ondulante
-const waveBubble = document.querySelector(".wave-bubble");
-let hueRotation = 0;
-
-// Pequeña variación de color durante la animación
-setInterval(() => {
-    hueRotation = (hueRotation + 1) % 10;
-    waveBubble.style.filter = `hue-rotate(${hueRotation}deg)`;
-}, 1000);
-// JavaScript para el carrusel
-document.addEventListener('DOMContentLoaded', function() {
+// Inicializar carrusel
+function initCarousel() {
     const slides = document.querySelectorAll('.carousel-slide');
     const indicators = document.querySelectorAll('.indicator');
+    
+    if (!slides.length || !indicators.length) return;
+    
     let currentSlide = 0;
     const slideInterval = 5000; // Tiempo entre slides: 5 segundos
     
@@ -740,14 +615,16 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Detener la rotación al pasar el mouse por encima
     const carouselContainer = document.querySelector('.carousel-container');
-    carouselContainer.addEventListener('mouseenter', () => {
-        clearInterval(slideTimer);
-    });
-    
-    // Reanudar la rotación al quitar el mouse
-    carouselContainer.addEventListener('mouseleave', () => {
-        slideTimer = setInterval(nextSlide, slideInterval);
-    });
+    if (carouselContainer) {
+        carouselContainer.addEventListener('mouseenter', () => {
+            clearInterval(slideTimer);
+        });
+        
+        // Reanudar la rotación al quitar el mouse
+        carouselContainer.addEventListener('mouseleave', () => {
+            slideTimer = setInterval(nextSlide, slideInterval);
+        });
+    }
     
     // Iniciar con el primer slide
     goToSlide(0);
@@ -758,14 +635,16 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const carouselWrapper = document.querySelector('.carousel-wrapper');
     
-    carouselWrapper.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-    });
-    
-    carouselWrapper.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-    });
+    if (carouselWrapper) {
+        carouselWrapper.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        carouselWrapper.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+    }
     
     function handleSwipe() {
         const swipeThreshold = 50; // Mínima distancia para considerar un swipe
@@ -784,22 +663,4 @@ document.addEventListener('DOMContentLoaded', function() {
             resetInterval();
         }
     }
-});
-
-// Mantener el código de transición en login.js
-// Este código es para la transición entre la vista de login e información
-// No necesitas modificar esta parte del código existente:
-
-/*
-const signUpButton = document.getElementById('sign-up-btn');
-const signInButton = document.getElementById('sign-in-btn');
-const container = document.getElementById('container');
-
-signUpButton.addEventListener('click', () => {
-    container.classList.add('sign-up-mode');
-});
-
-signInButton.addEventListener('click', () => {
-    container.classList.remove('sign-up-mode');
-});
-*/
+}

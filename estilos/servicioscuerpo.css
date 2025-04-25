@@ -1431,9 +1431,9 @@ body {
     color: #ffffff;
     margin: 0;
 }
-
 .feature-description {
     color: var(--text-secondary);
+    /*aumentar tamano de letra*/
     line-height: 1.6;
     margin-bottom: 20px;
 }

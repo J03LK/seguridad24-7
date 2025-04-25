@@ -3,879 +3,1102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Administrador | 24/7 Seguridad</title>
+    <title>Dashboard Administrativo | Seguridad 24/7</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="assets/img/favicon.ico" type="image/x-icon">
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+    
+    <!-- Leaflet CSS para el mapa (alternativa a Google Maps) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    
+    <!-- Chart.js para los gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+    
+    <!-- jsPDF para generación de facturas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    
+    <!-- Estilos CSS -->
     <link rel="stylesheet" href="estilos/Admin.css">
 </head>
 <body>
-    <!-- Botón Menu para responsive -->
-    <button class="menu-toggle" id="menu-toggle">
-        <i class="fas fa-bars"></i>
-    </button>
-    
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="logo">
-                <i class="fas fa-shield-alt"></i><span>24/7</span> Seguridad
+    <!-- Contenedor principal -->
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <img src="assets/img/logo.png" alt="Seguridad 24/7" class="logo">
+                <h3>Seguridad 24/7</h3>
             </div>
-        </div>
-        <ul class="nav-links">
-            <li><a href="#dashboard" class="active" data-section="dashboard-section"><i class="fas fa-home"></i> Dashboard</a></li>
-            <li><a href="#usuarios" data-section="usuarios-section"><i class="fas fa-users"></i> Usuarios</a></li>
-            <li><a href="#productos" data-section="productos-section"><i class="fas fa-video"></i> Productos</a></li>
-            <li><a href="#ubicaciones" data-section="ubicaciones-section"><i class="fas fa-map-marker-alt"></i> Ubicaciones</a></li>
-            <li><a href="#pagos" data-section="pagos-section"><i class="fas fa-money-bill-wave"></i> Pagos</a></li>
-            <li><a href="#reportes" data-section="reportes-section"><i class="fas fa-chart-bar"></i> Reportes</a></li>
-            <li><a href="#configuracion" data-section="configuracion-section"><i class="fas fa-cog"></i> Configuración</a></li>
-        </ul>
-    </aside>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="top-bar">
-            <div class="search-container">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Buscar...">
-            </div>
-            
             <div class="user-info">
-                <div class="notification">
-                    <i class="fas fa-bell"></i>
-                    <span class="badge">3</span>
-                </div>
-                <div class="user-profile">
-                    <div class="avatar">A</div>
-                    <div class="info">
-                        <span class="name">Admin</span>
-                        <span class="role">Administrador</span>
-                    </div>
-                    <button id="logout-btn" class="logout-btn">
-                        <i class="fas fa-sign-out-alt"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Dashboard Section -->
-        <section id="dashboard-section">
-            <h1 class="page-title">Dashboard</h1>
-            
-            <div class="stats-container">
-                <div class="stat-card">
-                    <div class="title">Clientes Activos</div>
-                    <div class="value" id="clientes-activos">0</div>
-                    <div class="change positive"><i class="fas fa-arrow-up"></i> 12%</div>
-                    <div class="icon"><i class="fas fa-users"></i></div>
-                </div>
-                <div class="stat-card accent">
-                    <div class="title">Servicios Instalados</div>
-                    <div class="value" id="servicios-instalados">0</div>
-                    <div class="change positive"><i class="fas fa-arrow-up"></i> 8%</div>
-                    <div class="icon"><i class="fas fa-video"></i></div>
-                </div>
-                <div class="stat-card">
-                    <div class="title">Alertas</div>
-                    <div class="value" id="alertas-actuales">0</div>
-                    <div class="change negative"><i class="fas fa-arrow-up"></i> 5%</div>
-                    <div class="icon"><i class="fas fa-exclamation-triangle"></i></div>
-                </div>
-                <div class="stat-card accent">
-                    <div class="title">Ingresos Mensuales</div>
-                    <div class="value" id="ingresos-mensuales">$0</div>
-                    <div class="change positive"><i class="fas fa-arrow-up"></i> 15%</div>
-                    <div class="icon"><i class="fas fa-money-bill-wave"></i></div>
+                <img src="assets/img/avatar.png" alt="Usuario" class="user-avatar">
+                <div class="user-details">
+                    <h4 id="user-name">Administrador</h4>
+                    <p id="user-role">Admin</p>
                 </div>
             </div>
 
-            <div class="dashboard-grid">
-                <div class="chart-section">
-                    <div class="section-title">
-                        <span>Rendimiento del Sistema</span>
-                        <div class="time-filter">
-                            <button class="active" data-period="daily">Día</button>
-                            <button data-period="weekly">Semana</button>
-                            <button data-period="monthly">Mes</button>
+            <ul class="list-unstyled components">
+                <li class="active">
+                    <a href="#" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                </li>
+                <li>
+                    <a href="#" data-tab="usuarios"><i class="fas fa-users"></i> Usuarios</a>
+                </li>
+                <li>
+                    <a href="#" data-tab="productos"><i class="fas fa-box"></i> Productos</a>
+                </li>
+                <li>
+                    <a href="#" data-tab="ubicaciones"><i class="fas fa-map-marker-alt"></i> Ubicaciones</a>
+                </li>
+                <li>
+                    <a href="#" data-tab="reportes"><i class="fas fa-exclamation-triangle"></i> Reportes</a>
+                </li>
+                <li>
+                    <a href="#" data-tab="pagos"><i class="fas fa-credit-card"></i> Pagos</a>
+                </li>
+                <li>
+                    <a href="#" data-tab="estadisticas"><i class="fas fa-chart-bar"></i> Estadísticas</a>
+                </li>
+                <li>
+                    <a href="#" data-tab="configuracion"><i class="fas fa-cog"></i> Configuración</a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button>
+            </div>
+        </nav>
+
+        <!-- Contenido principal -->
+        <div id="content">
+            <!-- Barra superior -->
+            <header class="top-bar">
+                <button id="sidebarCollapse" class="btn toggle-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-input" placeholder="Buscar...">
+                </div>
+                <div class="top-bar-actions">
+                    <a href="#" class="notification-icon">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </a>
+                    <a href="#" class="notification-icon">
+                        <i class="fas fa-envelope"></i>
+                        <span class="badge">5</span>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Contenido del dashboard -->
+            <div class="main-content">
+                <!-- Sección Dashboard Principal -->
+                <section id="dashboard-tab" class="content-tab active">
+                    <h2>Panel de Control</h2>
+                    <div class="dashboard-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon active">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Clientes</h3>
+                                <p class="count" id="clientes-count">0</p>
+                                <p class="trend"><i class="fas fa-arrow-up"></i> 5% este mes</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon pending">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Reportes</h3>
+                                <p class="count" id="reportes-count">0</p>
+                                <p class="trend"><i class="fas fa-arrow-down"></i> 2% este mes</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon success">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Ingresos</h3>
+                                <p class="count" id="ingresos-count">$0</p>
+                                <p class="trend"><i class="fas fa-arrow-up"></i> 8% este mes</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon error">
+                                <i class="fas fa-bell"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Alertas</h3>
+                                <p class="count" id="alertas-count">0</p>
+                                <p class="trend"><i class="fas fa-arrow-up"></i> 3% este mes</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="chart-container">
-                        <canvas id="performance-chart"></canvas>
-                    </div>
-                </div>
-                <div class="recent-activities">
-                    <div class="section-title">Actividades Recientes</div>
-                    <ul class="activity-list" id="activity-list">
-                        <!-- Se llenará con JavaScript -->
-                    </ul>
-                </div>
-            </div>
 
-            <div class="map-section">
-                <div class="section-title">
-                    <span>Mapa de Clientes</span>
-                    <div class="map-controls">
-                        <div class="filter-group">
-                            <button class="filter-btn active" data-filter="all">Todos</button>
-                            <button class="filter-btn" data-filter="active">Activos</button>
-                            <button class="filter-btn" data-filter="alert">Alertas</button>
+                    <div class="dashboard-row">
+                        <div class="dashboard-card chart-card">
+                            <div class="card-header">
+                                <h3>Clientes activos</h3>
+                                <div class="card-actions">
+                                    <select id="clientes-chart-period">
+                                        <option value="week">Última semana</option>
+                                        <option value="month" selected>Último mes</option>
+                                        <option value="year">Último año</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="clientes-chart"></canvas>
+                            </div>
                         </div>
-                        <button class="add-location" id="add-location-btn">
+                        <div class="dashboard-card recent-activities">
+                            <div class="card-header">
+                                <h3>Actividad reciente</h3>
+                                <div class="card-actions">
+                                    <a href="#" class="btn-action">Ver todas</a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <ul class="activity-list" id="activity-list">
+                                    <!-- La lista de actividades se cargará dinámicamente -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-row">
+                        <div class="dashboard-card map-preview">
+                            <div class="card-header">
+                                <h3>Mapa de ubicaciones</h3>
+                                <div class="card-actions">
+                                    <a href="#" data-tab="ubicaciones" class="btn-action">Ver completo</a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="map-preview-container"></div>
+                            </div>
+                        </div>
+                        <div class="dashboard-card pending-tasks">
+                            <div class="card-header">
+                                <h3>Tareas pendientes</h3>
+                                <div class="card-actions">
+                                    <a href="#" class="btn-action">Ver todas</a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <ul class="task-list" id="task-list">
+                                    <!-- La lista de tareas se cargará dinámicamente -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sección Usuarios -->
+                <section id="usuarios-tab" class="content-tab">
+                    <div class="section-header">
+                        <h2>Gestión de Usuarios</h2>
+                        <button class="btn-primary" id="crear-usuario-btn">
+                            <i class="fas fa-plus"></i> Nuevo Usuario
+                        </button>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="filter-container">
+                                <div class="search-box">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="buscar-usuario" placeholder="Buscar usuario...">
+                                </div>
+                                <div class="filter-options">
+                                    <select id="filtro-rol">
+                                        <option value="todos">Todos los roles</option>
+                                        <option value="admin">Administrador</option>
+                                        <option value="usuario">Usuario</option>
+                                    </select>
+                                    <select id="filtro-estado">
+                                        <option value="todos">Todos los estados</option>
+                                        <option value="activo">Activo</option>
+                                        <option value="inactivo">Inactivo</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="data-table" id="usuarios-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nombre</th>
+                                            <th>Email</th>
+                                            <th>Rol</th>
+                                            <th>Estado</th>
+                                            <th>Último acceso</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="usuarios-table-body">
+                                        <!-- Los datos de usuarios se cargarán dinámicamente -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="pagination" id="usuarios-pagination">
+                                <!-- Paginación -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal para crear/editar usuario -->
+                    <div class="modal" id="usuario-modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 id="usuario-modal-title">Nuevo Usuario</h3>
+                                <button class="close-modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="usuario-form">
+                                    <div class="form-group">
+                                        <label for="usuario-nombre">Nombre completo</label>
+                                        <input type="text" id="usuario-nombre" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="usuario-email">Email</label>
+                                        <input type="email" id="usuario-email" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="usuario-password">Contraseña</label>
+                                        <input type="password" id="usuario-password">
+                                        <small>Dejar en blanco para mantener la contraseña actual (en edición)</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="usuario-rol">Rol</label>
+                                        <select id="usuario-rol" required>
+                                            <option value="admin">Administrador</option>
+                                            <option value="usuario">Usuario</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="usuario-estado">Estado</label>
+                                        <select id="usuario-estado" required>
+                                            <option value="activo">Activo</option>
+                                            <option value="inactivo">Inactivo</option>
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn-secondary" id="usuario-cancel-btn">Cancelar</button>
+                                <button class="btn-primary" id="usuario-save-btn">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sección Productos -->
+                <section id="productos-tab" class="content-tab">
+                    <div class="section-header">
+                        <h2>Gestión de Productos</h2>
+                        <button class="btn-primary" id="crear-producto-btn">
+                            <i class="fas fa-plus"></i> Nuevo Producto
+                        </button>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="filter-container">
+                                <div class="search-box">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="buscar-producto" placeholder="Buscar producto...">
+                                </div>
+                                <div class="filter-options">
+                                    <select id="filtro-categoria">
+                                        <option value="todos">Todas las categorías</option>
+                                        <option value="camaras">Cámaras</option>
+                                        <option value="alarmas">Alarmas</option>
+                                        <option value="sensores">Sensores</option>
+                                        <option value="otros">Otros</option>
+                                    </select>
+                                    <select id="filtro-disponibilidad">
+                                        <option value="todos">Todas las disponibilidades</option>
+                                        <option value="disponible">Disponible</option>
+                                        <option value="agotado">Agotado</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="products-grid" id="productos-grid">
+                                <!-- Los productos se cargarán dinámicamente -->
+                            </div>
+                            <div class="pagination" id="productos-pagination">
+                                <!-- Paginación -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal para crear/editar producto -->
+                    <div class="modal" id="producto-modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 id="producto-modal-title">Nuevo Producto</h3>
+                                <button class="close-modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="producto-form">
+                                    <div class="form-group">
+                                        <label for="producto-nombre">Nombre del producto</label>
+                                        <input type="text" id="producto-nombre" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="producto-categoria">Categoría</label>
+                                        <select id="producto-categoria" required>
+                                            <option value="camaras">Cámaras</option>
+                                            <option value="alarmas">Alarmas</option>
+                                            <option value="sensores">Sensores</option>
+                                            <option value="otros">Otros</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="producto-precio">Precio ($)</label>
+                                        <input type="number" id="producto-precio" step="0.01" min="0" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="producto-descripcion">Descripción</label>
+                                        <textarea id="producto-descripcion" rows="4" required></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="producto-imagen">Imagen</label>
+                                        <input type="file" id="producto-imagen" accept="image/*">
+                                        <div id="producto-preview-container" class="image-preview">
+                                            <img id="producto-preview" src="" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="producto-stock">Stock disponible</label>
+                                        <input type="number" id="producto-stock" min="0" required>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn-secondary" id="producto-cancel-btn">Cancelar</button>
+                                <button class="btn-primary" id="producto-save-btn">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sección Ubicaciones -->
+                <section id="ubicaciones-tab" class="content-tab">
+                    <div class="section-header">
+                        <h2>Ubicaciones de Clientes</h2>
+                        <button class="btn-primary" id="crear-ubicacion-btn">
                             <i class="fas fa-plus"></i> Nueva Ubicación
                         </button>
                     </div>
-                </div>
-                <div id="map"></div>
-            </div>
-        </section>
-
-        <!-- Usuarios Section -->
-        <section id="usuarios-section" class="section-hide">
-            <h1 class="page-title">Gestión de Usuarios</h1>
-            
-            <div class="table-container">
-                <div class="table-header">
-                    <div class="section-title">Lista de Usuarios</div>
-                    <button class="action-btn" id="add-user-btn">
-                        <i class="fas fa-plus"></i> Nuevo Usuario
-                    </button>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Email</th>
-                            <th>Teléfono</th>
-                            <th>Dirección</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="users-table">
-                        <!-- Se llenará con JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- Productos Section -->
-        <section id="productos-section" class="section-hide">
-            <h1 class="page-title">Gestión de Productos</h1>
-            
-            <div class="stats-container">
-                <div class="stat-card">
-                    <div class="title">Cámaras</div>
-                    <div class="value" id="camaras-stock">0</div>
-                    <div class="change positive"><i class="fas fa-arrow-up"></i> 5%</div>
-                    <div class="icon"><i class="fas fa-video"></i></div>
-                </div>
-                <div class="stat-card accent">
-                    <div class="title">Cercos Eléctricos</div>
-                    <div class="value" id="cercos-stock">0</div>
-                    <div class="change negative"><i class="fas fa-arrow-down"></i> 2%</div>
-                    <div class="icon"><i class="fas fa-bolt"></i></div>
-                </div>
-                <div class="stat-card">
-                    <div class="title">Baterías</div>
-                    <div class="value" id="baterias-stock">0</div>
-                    <div class="change positive"><i class="fas fa-arrow-up"></i> 10%</div>
-                    <div class="icon"><i class="fas fa-battery-full"></i></div>
-                </div>
-                <div class="stat-card accent">
-                    <div class="title">Otros</div>
-                    <div class="value" id="otros-stock">0</div>
-                    <div class="change positive"><i class="fas fa-arrow-up"></i> 3%</div>
-                    <div class="icon"><i class="fas fa-boxes"></i></div>
-                </div>
-            </div>
-            
-            <div class="table-container">
-                <div class="table-header">
-                    <div class="section-title">Inventario de Productos</div>
-                    <button class="action-btn" id="add-product-btn">
-                        <i class="fas fa-plus"></i> Nuevo Producto
-                    </button>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Producto</th>
-                            <th>Categoría</th>
-                            <th>Stock</th>
-                            <th>Precio</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="products-table">
-                        <!-- Se llenará con JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- Ubicaciones Section -->
-        <section id="ubicaciones-section" class="section-hide">
-            <h1 class="page-title">Gestión de Ubicaciones</h1>
-            
-            <div class="map-section">
-                <div class="section-title">
-                    <span>Mapa de Clientes</span>
-                    <button class="add-location" id="add-location-btn-2">
-                        <i class="fas fa-plus"></i> Nueva Ubicación</button>
-                </div>
-                <div id="map-location" class="map"></div>
-            </div>
-            
-            <div class="table-container">
-                <div class="table-header">
-                    <div class="section-title">Lista de Ubicaciones</div>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Cliente</th>
-                            <th>Dirección</th>
-                            <th>Tipo</th>
-                            <th>Estado</th>
-                            <th>Última Verificación</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="locations-table">
-                        <!-- Se llenará con JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- Pagos Section -->
-        <section id="pagos-section" class="section-hide">
-            <h1 class="page-title">Gestión de Pagos</h1>
-            
-            <div class="stats-container">
-                <div class="stat-card">
-                    <div class="title">Ingresos del Mes</div>
-                    <div class="value" id="ingresos-mes">$0</div>
-                    <div class="change positive"><i class="fas fa-arrow-up"></i> 8%</div>
-                    <div class="icon"><i class="fas fa-dollar-sign"></i></div>
-                </div>
-                <div class="stat-card accent">
-                    <div class="title">Pagos Pendientes</div>
-                    <div class="value" id="pagos-pendientes">0</div>
-                    <div class="change negative"><i class="fas fa-arrow-up"></i> 3%</div>
-                    <div class="icon"><i class="fas fa-clock"></i></div>
-                </div>
-                <div class="stat-card">
-                    <div class="title">Facturas Emitidas</div>
-                    <div class="value" id="facturas-mes">0</div>
-                    <div class="change positive"><i class="fas fa-arrow-up"></i> 5%</div>
-                    <div class="icon"><i class="fas fa-file-invoice"></i></div>
-                </div>
-                <div class="stat-card accent">
-                    <div class="title">Servicios Activos</div>
-                    <div class="value" id="servicios-activos">0</div>
-                    <div class="change positive"><i class="fas fa-arrow-up"></i> 2%</div>
-                    <div class="icon"><i class="fas fa-shield-alt"></i></div>
-                </div>
-            </div>
-            
-            <div class="dashboard-grid">
-                <div class="chart-section">
-                    <div class="section-title">
-                        <span>Ingresos vs Gastos</span>
-                        <div class="time-filter">
-                            <button class="active" data-period="monthly">Mensual</button>
-                            <button data-period="quarterly">Trimestral</button>
-                            <button data-period="yearly">Anual</button>
+                    
+                    <div class="location-container">
+                        <div class="location-sidebar">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="buscar-ubicacion" placeholder="Buscar cliente...">
+                            </div>
+                            <div class="filter-options">
+                                <select id="filtro-estado-ubicacion">
+                                    <option value="todos">Todos los estados</option>
+                                    <option value="activo">Activo</option>
+                                    <option value="pendiente">Pendiente</option>
+                                    <option value="error">Error</option>
+                                </select>
+                            </div>
+                            <div class="locations-list" id="ubicaciones-list">
+                                <!-- La lista de ubicaciones se cargará dinámicamente -->
+                            </div>
+                        </div>
+                        <div class="map-container">
+                            <div id="map"></div>
+                            <div class="location-details" id="location-details">
+                                <!-- Los detalles de la ubicación seleccionada se mostrarán aquí -->
+                            </div>
                         </div>
                     </div>
-                    <div class="chart-container">
-                        <canvas id="finance-chart"></canvas>
-                    </div>
-                </div>
-                <div class="chart-section">
-                    <div class="section-title">
-                        <span>Distribución de Servicios</span>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="services-chart"></canvas>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="table-container">
-                <div class="table-header">
-                    <div class="section-title">Historial de Pagos</div>
-                    <button class="action-btn" id="add-payment-btn">
-                        <i class="fas fa-plus"></i> Registrar Pago
-                    </button>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Factura</th>
-                            <th>Cliente</th>
-                            <th>Monto</th>
-                            <th>Fecha</th>
-                            <th>Método</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="payments-table">
-                        <!-- Se llenará con JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
 
-        <!-- Reportes Section -->
-        <section id="reportes-section" class="section-hide">
-            <h1 class="page-title">Reportes</h1>
-            
-            <div class="stats-container">
-                <div class="stat-card">
-                    <div class="title">Instalaciones</div>
-                    <div class="value" id="total-instalaciones">0</div>
-                    <div class="change positive"><i class="fas fa-arrow-up"></i> 15%</div>
-                    <div class="icon"><i class="fas fa-tools"></i></div>
-                </div>
-                <div class="stat-card accent">
-                    <div class="title">Alertas Atendidas</div>
-                    <div class="value" id="alertas-atendidas">0</div>
-                    <div class="change positive"><i class="fas fa-arrow-up"></i> 7%</div>
-                    <div class="icon"><i class="fas fa-bell"></i></div>
-                </div>
-                <div class="stat-card">
-                    <div class="title">Mantenimientos</div>
-                    <div class="value" id="total-mantenimientos">0</div>
-                    <div class="change positive"><i class="fas fa-arrow-up"></i> 10%</div>
-                    <div class="icon"><i class="fas fa-wrench"></i></div>
-                </div>
-                <div class="stat-card accent">
-                    <div class="title">Clientes Nuevos</div>
-                    <div class="value" id="nuevos-clientes">0</div>
-                    <div class="change positive"><i class="fas fa-arrow-up"></i> 12%</div>
-                    <div class="icon"><i class="fas fa-user-plus"></i></div>
-                </div>
-            </div>
-            
-            <div class="dashboard-grid">
-                <div class="chart-section">
-                    <div class="section-title">
-                        <span>Desempeño Anual</span>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="annual-chart"></canvas>
-                    </div>
-                </div>
-                <div class="recent-activities">
-                    <div class="section-title">Reportes Disponibles</div>
-                    <ul class="activity-list">
-                        <li class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-file-pdf"></i>
+                    <!-- Modal para crear/editar ubicación -->
+                    <div class="modal" id="ubicacion-modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 id="ubicacion-modal-title">Nueva Ubicación</h3>
+                                <button class="close-modal">&times;</button>
                             </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Ventas Mensuales</div>
-                                <div class="activity-time">Actualizado: Hace 2 días</div>
+                            <div class="modal-body">
+                                <form id="ubicacion-form">
+                                    <div class="form-group">
+                                        <label for="ubicacion-cliente">Cliente</label>
+                                        <select id="ubicacion-cliente" required>
+                                            <!-- Los clientes se cargarán dinámicamente -->
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ubicacion-direccion">Dirección</label>
+                                        <input type="text" id="ubicacion-direccion" required>
+                                    </div>
+                                    <div class="form-group coordinates">
+                                        <div>
+                                            <label for="ubicacion-latitud">Latitud</label>
+                                            <input type="number" id="ubicacion-latitud" step="0.000001" required>
+                                        </div>
+                                        <div>
+                                            <label for="ubicacion-longitud">Longitud</label>
+                                            <input type="number" id="ubicacion-longitud" step="0.000001" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ubicacion-estado">Estado</label>
+                                        <select id="ubicacion-estado" required>
+                                            <option value="activo">Activo</option>
+                                            <option value="pendiente">Pendiente</option>
+                                            <option value="error">Error</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ubicacion-imagen">Imagen del lugar</label>
+                                        <input type="file" id="ubicacion-imagen" accept="image/*">
+                                        <div id="ubicacion-preview-container" class="image-preview">
+                                            <img id="ubicacion-preview" src="" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ubicacion-notas">Notas adicionales</label>
+                                        <textarea id="ubicacion-notas" rows="3"></textarea>
+                                    </div>
+                                </form>
                             </div>
-                        </li>
-                        <li class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-file-excel"></i>
+                            <div class="modal-footer">
+                                <button class="btn-secondary" id="ubicacion-cancel-btn">Cancelar</button>
+                                <button class="btn-primary" id="ubicacion-save-btn">Guardar</button>
                             </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Rendimiento por Zona</div>
-                                <div class="activity-time">Actualizado: Hoy</div>
-                            </div>
-                        </li>
-                        <li class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-file-pdf"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Inventario Detallado</div>
-                                <div class="activity-time">Actualizado: Hace 1 semana</div>
-                            </div>
-                        </li>
-                        <li class="activity-item">
-                            <div class="activity-icon warning">
-                                <i class="fas fa-file-excel"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Alertas por Cliente</div>
-                                <div class="activity-time">Actualizado: Hace 3 días</div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="table-container">
-                <div class="table-header">
-                    <div class="section-title">Alertas Recientes</div>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Cliente</th>
-                            <th>Ubicación</th>
-                            <th>Tipo</th>
-                            <th>Fecha</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="alerts-table">
-                        <!-- Se llenará con JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
-        
-        <!-- Configuración Section -->
-        <section id="configuracion-section" class="section-hide">
-            <h1 class="page-title">Configuración</h1>
-            
-            <div class="table-container">
-                <div class="section-title">Preferencias del Sistema</div>
-                
-                <div class="form-group">
-                    <label for="tema">Tema</label>
-                    <select id="tema" class="form-control">
-                        <option value="dark">Oscuro</option>
-                        <option value="light">Claro</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="idioma">Idioma</label>
-                    <select id="idioma" class="form-control">
-                        <option value="es">Español</option>
-                        <option value="en">Inglés</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="notificaciones">Notificaciones</label>
-                    <div>
-                        <input type="checkbox" id="not-email" checked>
-                        <label for="not-email" style="display: inline; margin-left: 5px;">Email</label>
+                        </div>
                     </div>
-                    <div style="margin-top: 10px;">
-                        <input type="checkbox" id="not-app" checked>
-                        <label for="not-app" style="display: inline; margin-left: 5px;">Aplicación</label>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="tiempo-sesion">Tiempo de Sesión (minutos)</label>
-                    <input type="number" id="tiempo-sesion" class="form-control" value="30" min="5" max="120">
-                </div>
-                
-                <button class="btn btn-primary" style="margin-top: 20px;">
-                    Guardar Configuración
-                </button>
-            </div>
-            
-            <div class="table-container">
-                <div class="section-title">Perfil de Usuario</div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="user-name-profile">Nombre</label>
-                        <input type="text" id="user-name-profile" class="form-control" value="Administrador">
-                    </div>
-                    <div class="form-group">
-                        <label for="user-email-profile">Email</label>
-                        <input type="email" id="user-email-profile" class="form-control" value="admin@seguridad247.com">
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="current-password">Contraseña Actual</label>
-                    <input type="password" id="current-password" class="form-control">
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="new-password">Nueva Contraseña</label>
-                        <input type="password" id="new-password" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="confirm-password">Confirmar Contraseña</label>
-                        <input type="password" id="confirm-password" class="form-control">
-                    </div>
-                </div>
-                
-                <button class="btn btn-primary" style="margin-top: 20px;">
-                    Actualizar Perfil
-                </button>
-            </div>
-        </section>
-    </main>
+                </section>
 
-    <!-- Modales -->
-    <!-- Modal para Añadir Usuario -->
-    <!-- Modal para Añadir Usuario -->
-<div id="add-user-modal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2 class="modal-title">Añadir Nuevo Usuario</h2>
-            <span class="close">&times;</span>
-        </div>
-        <form id="add-user-form">
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="user-name">Nombre Completo</label>
-                    <input type="text" id="user-name" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="user-email">Email</label>
-                    <input type="email" id="user-email" class="form-control" required>
-                </div>
-            </div>
-            <!-- Nuevo campo para contraseña -->
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="user-password">Contraseña</label>
-                    <input type="password" id="user-password" class="form-control" required>
-                </div>
-                <!-- Nuevo campo para seleccionar rol -->
-                <div class="form-group">
-                    <label for="user-role">Rol</label>
-                    <select id="user-role" class="form-control" required>
-                        <option value="">Seleccionar</option>
-                        <option value="admin">Administrador</option>
-                        <option value="usuario">Usuario</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="user-phone">Teléfono</label>
-                    <input type="tel" id="user-phone" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="user-type">Tipo</label>
-                    <select id="user-type" class="form-control" required>
-                        <option value="">Seleccionar</option>
-                        <option value="residential">Residencial</option>
-                        <option value="commercial">Comercial</option>
-                        <option value="industrial">Industrial</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="user-address">Dirección</label>
-                <input type="text" id="user-address" class="form-control" required>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary modal-close">Cancelar</button>
-                <button type="submit" class="btn btn-primary">Guardar</button>
-            </div>
-        </form>
-    </div>
-</div>
+                <!-- Sección Reportes -->
+                <section id="reportes-tab" class="content-tab">
+                    <div class="section-header">
+                        <h2>Gestión de Reportes</h2>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="filter-container">
+                                <div class="search-box">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="buscar-reporte" placeholder="Buscar reporte...">
+                                </div>
+                                <div class="filter-options">
+                                    <select id="filtro-estado-reporte">
+                                        <option value="todos">Todos los estados</option>
+                                        <option value="pendiente">Pendiente</option>
+                                        <option value="en_proceso">En proceso</option>
+                                        <option value="resuelto">Resuelto</option>
+                                    </select>
+                                    <select id="filtro-prioridad">
+                                        <option value="todos">Todas las prioridades</option>
+                                        <option value="alta">Alta</option>
+                                        <option value="media">Media</option>
+                                        <option value="baja">Baja</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="data-table" id="reportes-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Cliente</th>
+                                            <th>Tipo</th>
+                                            <th>Descripción</th>
+                                            <th>Fecha</th>
+                                            <th>Prioridad</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="reportes-table-body">
+                                        <!-- Los datos de reportes se cargarán dinámicamente -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="pagination" id="reportes-pagination">
+                                <!-- Paginación -->
+                            </div>
+                        </div>
+                    </div>
 
-    <!-- Modal para Añadir Producto -->
-    <div id="add-product-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Añadir Nuevo Producto</h2>
-                <span class="close">&times;</span>
+                    <!-- Modal para ver/editar reporte -->
+                    <div class="modal" id="reporte-modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 id="reporte-modal-title">Detalles del Reporte</h3>
+                                <button class="close-modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="reporte-details">
+                                    <div class="reporte-info">
+                                        <h4>Información del reporte</h4>
+                                        <p><strong>ID:</strong> <span id="reporte-id"></span></p>
+                                        <p><strong>Cliente:</strong> <span id="reporte-cliente"></span></p>
+                                        <p><strong>Tipo:</strong> <span id="reporte-tipo"></span></p>
+                                        <p><strong>Fecha:</strong> <span id="reporte-fecha"></span></p>
+                                        <p><strong>Descripción:</strong></p>
+                                        <p id="reporte-descripcion" class="reporte-descripcion"></p>
+                                    </div>
+                                    <div class="reporte-status">
+                                        <h4>Estado del reporte</h4>
+                                        <form id="reporte-form">
+                                            <div class="form-group">
+                                                <label for="reporte-estado">Estado actual</label>
+                                                <select id="reporte-estado">
+                                                    <option value="pendiente">Pendiente</option>
+                                                    <option value="en_proceso">En proceso</option>
+                                                    <option value="resuelto">Resuelto</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="reporte-prioridad">Prioridad</label>
+                                                <select id="reporte-prioridad">
+                                                    <option value="alta">Alta</option>
+                                                    <option value="media">Media</option>
+                                                    <option value="baja">Baja</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="reporte-comentario">Añadir comentario</label>
+                                                <textarea id="reporte-comentario" rows="3"></textarea>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="reporte-timeline">
+                                    <h4>Historial de actividad</h4>
+                                    <ul class="timeline" id="reporte-timeline">
+                                        <!-- El historial se cargará dinámicamente -->
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn-secondary" id="reporte-cancel-btn">Cerrar</button>
+                                <button class="btn-primary" id="reporte-save-btn">Guardar cambios</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sección Pagos -->
+                <section id="pagos-tab" class="content-tab">
+                    <div class="section-header">
+                        <h2>Gestión de Pagos</h2>
+                        <button class="btn-primary" id="registrar-pago-btn">
+                            <i class="fas fa-plus"></i> Registrar Pago
+                        </button>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="filter-container">
+                                <div class="search-box">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="buscar-pago" placeholder="Buscar pago...">
+                                </div>
+                                <div class="filter-options">
+                                    <select id="filtro-estado-pago">
+                                        <option value="todos">Todos los estados</option>
+                                        <option value="completado">Completado</option>
+                                        <option value="pendiente">Pendiente</option>
+                                        <option value="rechazado">Rechazado</option>
+                                    </select>
+                                    <select id="filtro-metodo-pago">
+                                        <option value="todos">Todos los métodos</option>
+                                        <option value="efectivo">Efectivo</option>
+                                        <option value="transferencia">Transferencia</option>
+                                        <option value="tarjeta">Tarjeta de crédito</option>
+                                    </select>
+                                    <div class="date-filter">
+                                        <label for="fecha-desde">Desde:</label>
+                                        <input type="date" id="fecha-desde">
+                                        <label for="fecha-hasta">Hasta:</label>
+                                        <input type="date" id="fecha-hasta">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="data-table" id="pagos-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Cliente</th>
+                                            <th>Monto</th>
+                                            <th>Fecha</th>
+                                            <th>Método</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="pagos-table-body">
+                                        <!-- Los datos de pagos se cargarán dinámicamente -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="pagination" id="pagos-pagination">
+                                <!-- Paginación -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal para registrar/ver pago -->
+                    <div class="modal" id="pago-modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 id="pago-modal-title">Registrar Pago</h3>
+                                <button class="close-modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="pago-form">
+                                    <div class="form-group">
+                                        <label for="pago-cliente">Cliente</label>
+                                        <select id="pago-cliente" required>
+                                            <!-- Los clientes se cargarán dinámicamente -->
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pago-concepto">Concepto</label>
+                                        <input type="text" id="pago-concepto" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pago-monto">Monto ($)</label>
+                                        <input type="number" id="pago-monto" step="0.01" min="0" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pago-fecha">Fecha</label>
+                                        <input type="date" id="pago-fecha" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pago-metodo">Método de pago</label>
+                                        <select id="pago-metodo" required>
+                                            <option value="efectivo">Efectivo</option>
+                                            <option value="transferencia">Transferencia</option>
+                                            <option value="tarjeta">Tarjeta de crédito</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pago-comprobante">Comprobante (opcional)</label>
+                                        <input type="file" id="pago-comprobante" accept="image/*,application/pdf">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pago-notas">Notas adicionales</label>
+                                        <textarea id="pago-notas" rows="3"></textarea>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn-secondary" id="pago-cancel-btn">Cancelar</button>
+                                <button class="btn-primary" id="pago-save-btn">Guardar</button>
+                                <button class="btn-success" id="pago-factura-btn">Generar Factura</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sección Estadísticas -->
+                <section id="estadisticas-tab" class="content-tab">
+                    <div class="section-header">
+                        <h2>Estadísticas</h2>
+                        <div class="period-selector">
+                            <button class="btn-small" data-period="week">Semana</button>
+                            <button class="btn-small active" data-period="month">Mes</button>
+                            <button class="btn-small" data-period="year">Año</button>
+                            <button class="btn-small" data-period="custom">Personalizado</button>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3>Clientes Activos</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="clientes-activos-chart"></canvas>
+                            </div>
+                        </div>
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3>Reportes por Mes</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="reportes-mes-chart"></canvas>
+                            </div>
+                        </div>
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3>Pagos Realizados vs Pendientes</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="pagos-estado-chart"></canvas>
+                            </div>
+                        </div>
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3>Distribución de Clientes</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="clientes-ubicacion-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-row">
+                        <div class="dashboard-card full-width">
+                            <div class="card-header">
+                                <h3>Tendencia de Ingresos</h3>
+                                <div class="card-actions">
+                                    <select id="ingresos-chart-view">
+                                        <option value="daily">Diario</option>
+                                        <option value="weekly">Semanal</option>
+                                        <option value="monthly" selected>Mensual</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="ingresos-trend-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-row">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3>Top Productos</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="top-productos-chart"></canvas>
+                            </div>
+                        </div>
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3>Tipo de Reportes</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="tipo-reportes-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sección Configuración -->
+                <section id="configuracion-tab" class="content-tab">
+                    <div class="section-header">
+                        <h2>Configuración</h2>
+                    </div>
+                    
+                    <div class="config-tabs">
+                        <div class="config-tab-buttons">
+                            <button class="config-tab-btn active" data-tab="perfil">Perfil</button>
+                            <button class="config-tab-btn" data-tab="empresa">Empresa</button>
+                            <button class="config-tab-btn" data-tab="notificaciones">Notificaciones</button>
+                            <button class="config-tab-btn" data-tab="seguridad">Seguridad</button>
+                        </div>
+                        
+                        <div class="config-tab-content">
+                            <!-- Perfil -->
+                            <div class="config-tab-pane active" id="perfil-tab">
+                                <div class="profile-container">
+                                    <div class="profile-header">
+                                        <div class="profile-avatar">
+                                            <img src="assets/img/avatar.png" alt="Usuario" id="profile-avatar-img">
+                                            <button class="edit-avatar-btn"><i class="fas fa-camera"></i></button>
+                                            <input type="file" id="avatar-input" accept="image/*" style="display: none;">
+                                        </div>
+                                        <div class="profile-info">
+                                            <h3 id="profile-name">Nombre de Usuario</h3>
+                                            <p id="profile-role">Administrador</p>
+                                            <p id="profile-email">usuario@ejemplo.com</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="profile-form">
+                                        <h4>Información Personal</h4>
+                                        <form id="profile-form">
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label for="profile-nombre">Nombre</label>
+                                                    <input type="text" id="profile-nombre">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="profile-apellido">Apellido</label>
+                                                    <input type="text" id="profile-apellido">
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label for="profile-telefono">Teléfono</label>
+                                                    <input type="tel" id="profile-telefono">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="profile-email-edit">Email</label>
+                                                    <input type="email" id="profile-email-edit">
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn-primary">Guardar Cambios</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Empresa -->
+                            <div class="config-tab-pane" id="empresa-tab">
+                                <form id="empresa-form">
+                                    <div class="form-group">
+                                        <label for="empresa-nombre">Nombre de la Empresa</label>
+                                        <input type="text" id="empresa-nombre" value="Seguridad 24/7">
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="empresa-ruc">RUC</label>
+                                            <input type="text" id="empresa-ruc">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="empresa-telefono">Teléfono</label>
+                                            <input type="tel" id="empresa-telefono">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="empresa-direccion">Dirección</label>
+                                        <input type="text" id="empresa-direccion">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="empresa-email">Email</label>
+                                        <input type="email" id="empresa-email">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="empresa-website">Sitio Web</label>
+                                        <input type="url" id="empresa-website">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="empresa-logo">Logo</label>
+                                        <input type="file" id="empresa-logo" accept="image/*">
+                                        <div class="logo-preview">
+                                            <img src="assets/img/logo.png" alt="Logo" id="logo-preview">
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn-primary">Guardar Cambios</button>
+                                </form>
+                            </div>
+                            
+                            <!-- Notificaciones -->
+                            <div class="config-tab-pane" id="notificaciones-tab">
+                                <div class="notification-settings">
+                                    <h4>Preferencias de Notificaciones</h4>
+                                    <div class="notification-option">
+                                        <div class="option-info">
+                                            <h5>Nuevos Reportes</h5>
+                                            <p>Recibir notificaciones cuando se cree un nuevo reporte</p>
+                                        </div>
+                                        <div class="toggle-container">
+                                            <input type="checkbox" id="notif-nuevos-reportes" class="toggle-input" checked>
+                                            <label for="notif-nuevos-reportes" class="toggle-label"></label>
+                                        </div>
+                                    </div>
+                                    <div class="notification-option">
+                                        <div class="option-info">
+                                            <h5>Pagos Recibidos</h5>
+                                            <p>Recibir notificaciones cuando se registre un nuevo pago</p>
+                                        </div>
+                                        <div class="toggle-container">
+                                            <input type="checkbox" id="notif-pagos" class="toggle-input" checked>
+                                            <label for="notif-pagos" class="toggle-label"></label>
+                                        </div>
+                                    </div>
+                                    <div class="notification-option">
+                                        <div class="option-info">
+                                            <h5>Alertas de Seguridad</h5>
+                                            <p>Recibir notificaciones de alertas de seguridad en los clientes</p>
+                                        </div>
+                                        <div class="toggle-container">
+                                            <input type="checkbox" id="notif-alertas" class="toggle-input" checked>
+                                            <label for="notif-alertas" class="toggle-label"></label>
+                                        </div>
+                                    </div>
+                                    <div class="notification-option">
+                                        <div class="option-info">
+                                            <h5>Nuevos Usuarios</h5>
+                                            <p>Recibir notificaciones cuando se registre un nuevo usuario</p>
+                                        </div>
+                                        <div class="toggle-container">
+                                            <input type="checkbox" id="notif-usuarios" class="toggle-input">
+                                            <label for="notif-usuarios" class="toggle-label"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="notification-delivery">
+                                    <h4>Métodos de Entrega</h4>
+                                    <div class="notification-option">
+                                        <div class="option-info">
+                                            <h5>Email</h5>
+                                            <p>Recibir notificaciones por correo electrónico</p>
+                                        </div>
+                                        <div class="toggle-container">
+                                            <input type="checkbox" id="entrega-email" class="toggle-input" checked>
+                                            <label for="entrega-email" class="toggle-label"></label>
+                                        </div>
+                                    </div>
+                                    <div class="notification-option">
+                                        <div class="option-info">
+                                            <h5>SMS</h5>
+                                            <p>Recibir notificaciones por mensaje de texto</p>
+                                        </div>
+                                        <div class="toggle-container">
+                                            <input type="checkbox" id="entrega-sms" class="toggle-input">
+                                            <label for="entrega-sms" class="toggle-label"></label>
+                                        </div>
+                                    </div>
+                                    <div class="notification-option">
+                                        <div class="option-info">
+                                            <h5>Push</h5>
+                                            <p>Recibir notificaciones push en el navegador</p>
+                                        </div>
+                                        <div class="toggle-container">
+                                            <input type="checkbox" id="entrega-push" class="toggle-input" checked>
+                                            <label for="entrega-push" class="toggle-label"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <button class="btn-primary">Guardar Preferencias</button>
+                            </div>
+                            
+                            <!-- Seguridad -->
+                            <div class="config-tab-pane" id="seguridad-tab">
+                                <div class="security-settings">
+                                    <h4>Cambiar Contraseña</h4>
+                                    <form id="password-form">
+                                        <div class="form-group">
+                                            <label for="current-password">Contraseña Actual</label>
+                                            <input type="password" id="current-password" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="new-password">Nueva Contraseña</label>
+                                            <input type="password" id="new-password" required>
+                                            <div class="password-strength">
+                                                <div class="strength-meter">
+                                                    <div class="meter-bar"></div>
+                                                </div>
+                                                <span class="strength-text">Débil</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="confirm-password">Confirmar Contraseña</label>
+                                            <input type="password" id="confirm-password" required>
+                                        </div>
+                                        <button type="submit" class="btn-primary">Actualizar Contraseña</button>
+                                    </form>
+                                    
+                                    <h4>Sesiones Activas</h4>
+                                    <div class="sessions-list">
+                                        <div class="session-item current">
+                                            <div class="session-info">
+                                                <i class="fas fa-laptop"></i>
+                                                <div>
+                                                    <h5>Este dispositivo</h5>
+                                                    <p>Windows 10 · Chrome · Quito, Ecuador</p>
+                                                    <span class="session-time">Activo ahora</span>
+                                                </div>
+                                            </div>
+                                            <button class="btn-text">Está aquí</button>
+                                        </div>
+                                        <div class="session-item">
+                                            <div class="session-info">
+                                                <i class="fas fa-mobile-alt"></i>
+                                                <div>
+                                                    <h5>Dispositivo móvil</h5>
+                                                    <p>iOS 15 · Safari · Guayaquil, Ecuador</p>
+                                                    <span class="session-time">Hace 2 horas</span>
+                                                </div>
+                                            </div>
+                                            <button class="btn-danger">Cerrar sesión</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <button class="btn-danger btn-outline">Cerrar todas las sesiones</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
-            <form id="add-product-form">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="product-name">Nombre del Producto</label>
-                        <input type="text" id="product-name" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="product-category">Categoría</label>
-                        <select id="product-category" class="form-control" required>
-                            <option value="">Seleccionar</option>
-                            <option value="camera">Cámara</option>
-                            <option value="fence">Cerco Eléctrico</option>
-                            <option value="battery">Batería</option>
-                            <option value="other">Otro</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="product-price">Precio</label>
-                        <input type="number" id="product-price" class="form-control" required min="0" step="0.01">
-                    </div>
-                    <div class="form-group">
-                        <label for="product-stock">Stock</label>
-                        <input type="number" id="product-stock" class="form-control" required min="0">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="product-description">Descripción</label>
-                    <textarea id="product-description" class="form-control" rows="3"></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary modal-close">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
-                </div>
-            </form>
         </div>
     </div>
 
-    <!-- Modal para Añadir Ubicación -->
-    <div id="add-location-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Añadir Nueva Ubicación</h2>
-                <span class="close">&times;</span>
-            </div>
-            <form id="add-location-form">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="location-client">Cliente</label>
-                        <select id="location-client" class="form-control" required>
-                            <option value="">Seleccionar Cliente</option>
-                            <!-- Se llenará dinámicamente -->
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="location-type">Tipo</label>
-                        <select id="location-type" class="form-control" required>
-                            <option value="">Seleccionar</option>
-                            <option value="residential">Residencial</option>
-                            <option value="commercial">Comercial</option>
-                            <option value="industrial">Industrial</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="location-address">Dirección</label>
-                    <input type="text" id="location-address" class="form-control" required>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="location-lat">Latitud</label>
-                        <input type="text" id="location-lat" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="location-lng">Longitud</label>
-                        <input type="text" id="location-lng" class="form-control" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="location-description">Notas</label>
-                    <textarea id="location-description" class="form-control" rows="2"></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary modal-close">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-<!-- Modal para Registrar Pago -->
-<div id="add-payment-modal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2 class="modal-title">Registrar Pago</h2>
-            <span class="close">&times;</span>
-        </div>
-        <form id="add-payment-form">
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="payment-client">Cliente</label>
-                    <select id="payment-client" class="form-control" required>
-                        <option value="">Seleccionar Cliente</option>
-                        <!-- Se llenará dinámicamente -->
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="payment-amount">Monto</label>
-                    <input type="number" id="payment-amount" class="form-control" required min="0" step="0.01">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="payment-date">Fecha</label>
-                    <input type="date" id="payment-date" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="payment-method">Método</label>
-                    <select id="payment-method" class="form-control" required>
-                        <option value="">Seleccionar</option>
-                        <option value="cash">Efectivo</option>
-                        <option value="card">Tarjeta</option>
-                        <option value="transfer">Transferencia</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="payment-description">Descripción</label>
-                <textarea id="payment-description" class="form-control" rows="2"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="generate-invoice">Generar Factura</label>
-                <div>
-                    <input type="checkbox" id="generate-invoice" checked>
-                    <label for="generate-invoice" style="display: inline; margin-left: 5px;">Sí, generar factura</label>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary modal-close">Cancelar</button>
-                <button type="submit" class="btn btn-primary">Registrar</button>
-            </div>
-        </form>
-    </div>
-</div>
-<!-- Firebase SDK -->
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
 
-<!-- Script para inicializar Firebase y manejar usuarios -->
 <script>
-  // Inicializar Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyD_C3sJCghWpV1DHn4Qyxsa-exdcEJGst0",
-    authDomain: "seguridad-24-7.firebaseapp.com",
-    projectId: "seguridad-24-7",
-    storageBucket: "seguridad-24-7.firebasestorage.app",
-    messagingSenderId: "979899411271",
-    appId: "1:979899411271:web:4d8db498a9388054a7fa62",
-    measurementId: "G-XQG0KDMMX4"
-  };
+// Tu configuración Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyD_C3sJCghWpV1DHn4Qyxsa-exdcEJGst0",
+  authDomain: "seguridad-24-7.firebaseapp.com",
+  projectId: "seguridad-24-7",
+  storageBucket: "seguridad-24-7.firebasestorage.app",
+  messagingSenderId: "979899411271",
+  appId: "1:979899411271:web:4d8db498a9388054a7fa62",
+  measurementId: "G-XQG0KDMMX4"
+};
 
-  // Inicializar Firebase
-  firebase.initializeApp(firebaseConfig);
-
-  // Referencias
-  const auth = firebase.auth();
-  const db = firebase.firestore();
-
-  // Manejar formulario de usuario
-  const userForm = document.getElementById('add-user-form');
-  if (userForm) {
-    userForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      // Obtener datos
-      const email = document.getElementById('user-email').value;
-      const password = document.getElementById('user-password').value;
-      const name = document.getElementById('user-name').value;
-      const role = document.getElementById('user-role').value;
-      const phone = document.getElementById('user-phone').value;
-      const address = document.getElementById('user-address').value;
-      const type = document.getElementById('user-type').value;
-      
-      // Validación básica
-      if (!email || !password || !name || !role) {
-        showNotification("Por favor complete todos los campos obligatorios", "warning");
-        return;
-      }
-      
-      // Crear usuario
-      auth.createUserWithEmailAndPassword(email, password)
-        .then(function(userCredential) {
-          // Guardar datos adicionales
-          return db.collection("users").doc(userCredential.user.uid).set({
-            email: email,
-            name: name,
-            role: role,
-            phone: phone || "",
-            address: address || "",
-            type: type || "",
-            status: "active",
-            createdAt: new Date()
-          });
-        })
-        .then(function() {
-          // Éxito
-          const modal = userForm.closest('.modal');
-          if (modal) modal.style.display = 'none';
-          userForm.reset();
-          showNotification(`Usuario ${name} creado exitosamente como ${role}`, "success");
-        })
-        .catch(function(error) {
-          // Error
-          console.error("Error:", error);
-          showNotification("Error: " + error.message, "error");
-        });
-    });
-  }
-</script>
-<script>
-    // Verificar autenticación y rol de usuario
-    document.addEventListener('DOMContentLoaded', function() {
-        if (typeof firebase !== 'undefined') {
-            // Verificar el estado de autenticación
-            firebase.auth().onAuthStateChanged(function(user) {
-                if (user) {
-                    // Verificar si el usuario es admin
-                    firebase.firestore().collection('users').doc(user.uid).get()
-                        .then(function(doc) {
-                            if (doc.exists) {
-                                const userData = doc.data();
-                                
-                                if (userData.role !== 'admin') {
-                                    // No es admin, redirigir a página de usuario
-                                    window.location.href = "usuario.html";
-                                } else {
-                                    // Actualizar información del admin en la UI
-                                    const userNameElement = document.querySelector('.user-profile .name');
-                                    if (userNameElement) {
-                                        userNameElement.textContent = userData.name || 'Admin';
-                                    }
-                                }
-                            } else {
-                                // No hay datos de usuario, redirigir al login
-                                window.location.href = "login.html";
-                            }
-                        })
-                        .catch(function(error) {
-                            console.error("Error al verificar rol:", error);
-                            window.location.href = "login.html";
-                        });
-                } else {
-                    // No hay usuario autenticado, redirigir al login
-                    window.location.href = "login.html";
-                }
-            });
-            
-            // Agregar funcionalidad de cierre de sesión
-            const userProfile = document.querySelector('.user-profile');
-            if (userProfile) {
-                userProfile.addEventListener('click', function() {
-                    if (confirm('¿Desea cerrar sesión?')) {
-                        firebase.auth().signOut()
-                            .then(function() {
-                                window.location.href = "login.html";
-                            })
-                            .catch(function(error) {
-                                console.error("Error al cerrar sesión:", error);
-                            });
-                    }
-                });
-            }
-        }
-    });
+// Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
 </script>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script type="module" src="scripts/dashboardAdmin.js"></script>
-<script type="module" src="firebase/firebase.js"></script>
-<script type="module" src="firebase/userManagement.js"></script>
-<script type="module" src="firebase/1.js"></script>
-<script type="module" src="firebase/2.js"></script>
+    
+    <script src="firebase/globals.js"></script>
+    <script src="dashboardsjs/estadisticas.js"></script>
+    <script src="dashboardsjs/navegacion.js"></script>
 
+    <script src="dashboardsjs/ubicaciones.js"></script>
+    <script src="dashboardsjs/usuarios.js"></script>
+    <script src="firebase/config.js"></script>
+    <script src="firebase/2.js"></script>
+   
+    <script src="firebase/globals.js"></script>
+
+    
+   
+    
+
+    
+    
 </body>
 </html>
