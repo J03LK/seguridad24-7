@@ -1,0 +1,264 @@
+/* Estilos para la página de Error en su Pago */
+
+/* Estilos generales */
+body {
+    background-color: #011730;
+    color: #ffffff;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenedor principal */
+.error-container {
+    padding: 60px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.error-content {
+    background: rgba(1, 23, 48, 0.7);
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(255, 0, 72, 0.2);
+    border: 1px solid rgba(255, 0, 72, 0.3);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efecto de borde brillante */
+.error-content::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #ff0048, #0094FF, #ff0048);
+    z-index: -1;
+    border-radius: 16px;
+    animation: border-glow 3s linear infinite;
+}
+
+/* Título principal */
+.error-content h1 {
+    color: #ff0048;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    text-shadow: 0 0 15px rgba(255, 0, 72, 0.5);
+}
+
+/* Mensaje principal */
+.message {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    color: #ffffff;
+}
+
+/* Ícono de error */
+.error-icon {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 30px;
+}
+
+#error-animation {
+    width: 100%;
+    height: 100%;
+}
+
+/* Secciones de información */
+.error-details, .next-steps, .support-info {
+    background: rgba(0, 20, 40, 0.5);
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 30px;
+    border: 1px solid rgba(0, 148, 255, 0.2);
+    text-align: left;
+}
+
+.error-details h2, .next-steps h2, .support-info h2 {
+    color: #0094FF;
+    margin-top: 0;
+    font-size: 1.5rem;
+    border-bottom: 1px solid rgba(0, 148, 255, 0.3);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* Lista de posibles problemas */
+.error-details ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.error-details li {
+    padding: 10px 0;
+    display: flex;
+    align-items: flex-start;
+}
+
+.error-details li i {
+    color: #ff0048;
+    margin-right: 10px;
+    font-size: 1.1rem;
+    margin-top: 3px;
+}
+
+/* Lista de pasos a seguir */
+.next-steps ol {
+    padding-left: 20px;
+    margin-top: 0;
+}
+
+.next-steps li {
+    padding: 10px 0;
+    color: #a0a8b3;
+}
+
+.next-steps li::marker {
+    color: #0094FF;
+    font-weight: bold;
+}
+
+/* Información de soporte */
+.contact-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.contact-method {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.contact-method i {
+    color: #0094FF;
+    font-size: 1.2rem;
+    min-width: 30px;
+    text-align: center;
+}
+
+/* Botones de acción */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.btn-retry, .btn-home {
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-weight: 600;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.btn-retry {
+    background: linear-gradient(135deg, #0094FF, #0077CC);
+    color: white;
+    border: none;
+}
+
+.btn-home {
+    background: transparent;
+    color: #a0a8b3;
+    border: 1px solid #a0a8b3;
+}
+
+.btn-retry:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 148, 255, 0.3);
+}
+
+.btn-home:hover {
+    background: rgba(160, 168, 179, 0.1);
+    transform: translateY(-3px);
+}
+
+/* Animaciones */
+@keyframes border-glow {
+    0% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 0.8;
+    }
+    100% {
+        opacity: 0.6;
+    }
+}
+
+/* Efecto de luz ambiental */
+.error-content::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 30% 30%, rgba(255, 0, 72, 0.1) 0%, rgba(255, 0, 72, 0) 50%),
+        radial-gradient(circle at 70% 70%, rgba(0, 148, 255, 0.1) 0%, rgba(0, 148, 255, 0) 50%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .error-container {
+        padding: 40px 15px;
+    }
+    
+    .error-content {
+        padding: 30px 20px;
+    }
+    
+    .error-content h1 {
+        font-size: 2rem;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .btn-retry, .btn-home {
+        width: 100%;
+    }
+    
+    .contact-methods {
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .error-icon {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .error-content h1 {
+        font-size: 1.8rem;
+    }
+    
+    .message {
+        font-size: 1rem;
+    }
+    
+    .contact-method {
+        flex-direction: column;
+        gap: 5px;
+        align-items: flex-start;
+    }
+}

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gracias por su Compra - 24-7 Seguridad</title>
+    <link rel="stylesheet" href="/seguridad24-7/estilos/navbar.css">
+    <link rel="stylesheet" href="/seguridad24-7/estilos/footer.css">
+    <link rel="stylesheet" href="/seguridad24-7/estilos/success.css">
+    <link rel="stylesheet" href="/seguridad24-7/estilos/logo.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="https://unpkg.com/lottie-web@5.7.4/build/player/lottie.min.js"></script>
+</head>
+<body>
+  
+
+    <!-- Elemento para la iluminación ambiental -->
+    <div class="background-neon-light" id="backgroundNeonLight"></div>
+    <div class="background-neon-light" id="backgroundNeonLight"></div>
+    <div class="content-overlay"></div>
+
+    <!-- Contenedor para el logo y los efectos visuales -->
+    <div class="neon-logo-wrap">
+        <img src="assets/Logo2.png" class="logo-neon" alt="Seguridad 24-7 Del Ecuador" id="neonLogo">
+        <!-- Las chispas se añadirán dinámicamente con JavaScript -->
+    </div>
+      
+    <!-- Background Elements desde CSS -->
+    <div class="background-container">
+        <div class="floating-logo"></div>
+        <div class="bg-glow bg-glow-1"></div>
+        <div class="bg-glow bg-glow-2"></div>
+    </div>
+      
+    <header>
+      <div class="container">
+        <nav>
+            <div class="logo">
+                <a href="index.html">
+                    <img src="/seguridad24-7/assets/logo.png" alt="Detecta365 Logo" />
+                </a>
+            </div>
+            <button id="menu-toggle" class="menu-toggle" aria-label="Menú" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="menu" id="menu">
+                <li><a href="#inicio" class="active">Inicio</a></li>
+                <li><a href="servicios.html">Servicios</a></li>
+                <li><a href="Paquetes.html">Paquetes</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+                <li class="auth-buttons">
+                    <a href="login.html" class="btn-login">
+                        <i class="fas fa-user"></i>
+                        <span>Ingresar</span>
+                    </a>
+                    <a href="#registro" class="btn-registro">
+                        <span>Registrarse</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+        <div class="overlay" id="overlay"></div>
+    </header>
+
+    <main class="success-container">
+        <div class="success-content">
+            <div class="success-icon">
+                <div id="checkmark-animation"></div>
+            </div>
+            <h1>¡Gracias por su compra!</h1>
+            <p class="message">Su pedido ha sido procesado exitosamente.</p>
+            
+            <div class="order-details">
+                <h2>Detalles de su pedido</h2>
+                <p><strong>Número de pedido:</strong> <span id="order-number">24795-XXXX</span></p>
+                <p><strong>Fecha:</strong> <span id="order-date"></span></p>
+                <p class="confirmation-message">Hemos enviado un correo de confirmación con todos los detalles.</p>
+            </div>
+            
+            <div class="next-steps">
+                <h2>Próximos pasos</h2>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> Nuestro equipo se pondrá en contacto con usted en las próximas 24 horas para coordinar la instalación.</li>
+                    <li><i class="fas fa-check-circle"></i> Recibirá actualizaciones sobre el estado de su compra por correo electrónico.</li>
+                    <li><i class="fas fa-check-circle"></i> Para cualquier consulta, no dude en contactar a nuestro equipo de soporte.</li>
+                </ul>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="/seguridad24-7/index.html" class="btn-home">Volver al inicio</a>
+                <a href="/seguridad24-7/carrito.html" class="btn-products">Ver más productos</a>
+            </div>
+        </div>
+    </main>
+          <!-- Scripts -->
+    <script src="/seguridad24-7/scripts/success.js"></script>
+    <script src="scripts/logo.js"></script>
+   
+    <footer>
+      <div class="container">
+          <div class="footer-content">
+              <div class="footer-logo">
+                  <img src="/seguridad24-7/assets/logo.png" alt="24-7 Logo" />
+              </div>
+              <div class="footer-links">
+                  <h4>Enlaces rápidos</h4>
+                  <ul>
+                      <li><a href="index.html">Inicio</a></li>
+                      <li><a href="servicios.html">Servicios</a></li>
+                      <li><a href="nosotros.html">Nosotros</a></li>
+                      <li><a href="casos.html">Casos de Éxito</a></li>
+                      <li><a href="contacto.html">Contacto</a></li>
+                  </ul>
+              </div>
+              <div class="footer-servicios">
+                  <h4>Servicios</h4>
+                  <ul>
+                      <li><a href="servicios.html#guardia-virtual">Guardia Virtual</a></li>
+                      <li><a href="servicios.html#reconocimiento">Reconocimiento Facial</a></li>
+                      <li><a href="servicios.html#monitoreo">Monitoreo 24/7</a></li>
+                      <li><a href="servicios.html#accesos">Control de Accesos</a></li>
+                  </ul>
+              </div>
+              <div class="footer-newsletter">
+                  <h4>Suscríbete</h4>
+                  <p>Recibe nuestras novedades y ofertas</p>
+                  <form id="newsletter-form">
+                      <input type="email" placeholder="Tu correo electrónico" required />
+                      <button type="submit">Suscribirse</button>
+                  </form>
+              </div>
+          </div>
+          <div class="copyright">
+              <p>&copy; 2025 24-7 SEGURIDAD DEL ECUADOR. Todos los derechos reservados.</p>
+          </div>
+      </div>
+  </footer>
+   
+</body>
+</html>
