@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+ HEAD
 // Carrito de compras con modal de productos completo
 document.addEventListener('DOMContentLoaded', async function() {
     // Array para almacenar los productos del carrito
@@ -345,7 +345,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     initializeApp(); // Llamar a la función de inicialización
   });
-=======
+
 // Solución para asegurar que los productos aparezcan en el carrito
 // Y conectar el botón "FINALIZAR COMPRA" con la pasarela de pagos
 import { procesarPagoStripe } from './productos.js';
@@ -708,4 +708,4 @@ document.addEventListener('DOMContentLoaded', function() {
       return productosCarrito.length;
   };
 });
->>>>>>> 52b7fbd (Corrigiendoa)
+(Corrigiendoa)

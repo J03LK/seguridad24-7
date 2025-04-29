@@ -5,14 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paquetes - 24-7 Seguridad</title>
     <link rel="stylesheet" href="estilos/navbar.css">
+    <link rel="stylesheet" href="estilos/navbar.css">
     <link rel="stylesheet" href="estilos/Paquetes.css">
     <link rel="stylesheet" href="estilos/logo.css">
     <link rel="stylesheet" href="estilos/footer.css">
     <link href="/website/css/uicons-solid-rounded.css"> 
-<<<<<<< HEAD
-=======
     <link rel="stylesheet" href="estilos/Carrito.css">
->>>>>>> 52b7fbd (Corrigiendoa)
     <script src="https://unpkg.com/lottie-web@5.7.4/build/player/lottie.min.js"></script>
    
 </head>
@@ -34,39 +32,46 @@
           <div class="bg-glow bg-glow-2"></div>
       </div>
       
-    <header>
-        <div class="container">
-            <nav>
-                <div class="logo">
-                    <a href="index.html">
-                        <img src="assets/logo.png" alt="Detecta365 Logo" />
+      <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/Logo.png" alt="Detecta365 Logo" />
+                </a>
+            </div>
+            <ul class="menu" id="menu">
+                <li><a href="#inicio" class="active">Inicio</a></li>
+                <li><a href="servicios.html">Servicios</a></li>
+                <li><a href="Paquetes.html">Paquetes</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="#contacto" class="btn-contacto">Contacto</a></li>
+                <li class="auth-buttons-mobile">
+                    <a href="login.html" class="btn-login">
+                        <i class="fas fa-user"></i>
+                        <span>Ingresar</span>
                     </a>
-                </div>
-                <button id="menu-toggle" class="menu-toggle" aria-label="Menú" aria-expanded="false">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-                <ul class="menu" id="menu">
-                    <li><a href="index.html">Inicio</a></li> <!-- Link a index.html -->
-                    <li><a href="servicios.html">Servicios</a></li>
-                    <li><a href="Paquetes.html" class="active">Paquetes</a></li> <!-- Marcar Paquetes como activo -->
-                    <li><a href="nosotros.html">Nosotros</a></li>
-                    <li><a href="dashboardAdmin.html">dashboard</a></li>
-                    <li><a href="index.html#contacto">Contacto</a></li> <!-- Link a index.html#contacto -->
-                    <li class="auth-buttons">
-                        <a href="login.html" class="btn-login">
-                            <i class="fas fa-user"></i>
-                            <span>Ingresar</span>
-                        </a>
-                        <a href="#registro" class="btn-registro"> <!-- Asumiendo que #registro es un modal o sección en index -->
-                            <span>Registrarse</span>
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+                    <a href="#registro" class="btn-registro">
+                        <span>Registrarse</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </li>
+            </ul>
+            <button id="menu-toggle" class="menu-toggle" aria-label="Menú" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="auth-buttons">
+                <a href="login.html" class="btn-login">
+                    <i class="fas fa-user"></i>
+                    <span>Ingresar</span>
+                </a>
+                <a href="#registro" class="btn-registro">
+                    <span>Registrarse</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </nav>
         <div class="overlay" id="overlay"></div>
     </header>
     <section class="image-section">
@@ -83,16 +88,6 @@
           <div class="paquete">
             <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE4.jpg" alt="Paquete Básico" />
             <div class="contenido">
-<<<<<<< HEAD
-              <h3>Paquete Básico</h3>
-              <p class="descripcion">Protección básica ideal para hogares o negocios pequeños.</p>
-              <ul>
-                <li><strong>Cámaras inteligentes:</strong> Seguridad en alta definición.</li>
-                <li><strong>Control de accesos:</strong> Gestión de entradas.</li>
-                <li><strong>Perifoneo:</strong> Comunicación por altavoces.</li>
-                <li><strong>Reconocimiento facial:</strong> No disponible.</li>
-                <li><strong>Reconocimiento de placas:</strong> No disponible.</li>
-=======
               <h3>🔒 Paquete Básico de Seguridad Integral</h3>
               <p class="descripcion">Incluye los siguientes servicios esenciales para la protección de tu propiedad 24/7</p>
               <ul>
@@ -109,7 +104,7 @@
             <strong>👮‍♂️ Supervisión Presencial Diaria</strong>
             <li>Visita diaria de guardias supervisores, debidamente uniformados, equipados y armados para reforzar la seguridad.</li>
                 <strong>*El monitoreo del cerco eléctrico aplica solo en caso de contar con dicho sistema instalado.</strong>
->>>>>>> 52b7fbd (Corrigiendoa)
+
               </ul>
               <button>Seleccionar</button>
             </div>
@@ -119,17 +114,6 @@
           <div class="paquete">
             <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE6.jpg" alt="Paquete Premium" />
             <div class="contenido">
-<<<<<<< HEAD
-              <h3>Paquete Premium</h3>
-              <p class="descripcion">Máxima seguridad con reconocimiento facial y monitoreo total.</p>
-              <ul>
-                <li><strong>Cámaras inteligentes:</strong> Seguridad en alta definición.</li>
-                <li><strong>Control de accesos:</strong> Gestión de entradas.</li>
-                <li><strong>Perifoneo:</strong> Comunicación por altavoces.</li>
-                <li><strong>Reconocimiento facial:</strong> Acceso a áreas restringidas.</li>
-                <li><strong>Reconocimiento de placas:</strong> Monitoreo de vehículos.</li>
-              </ul>
-=======
               <h3>👑 Paquete Premium de Seguridad Total</h3>
               <p class="descripcion">Máximo nivel de protección, tecnología avanzada y atención inmediata 24/7.</p>
                 <ul>
@@ -150,7 +134,7 @@
                        <li>Control y visualización de cámaras desde app o navegador.</li>
                        <li>Recibe notificaciones, alertas y controla accesos desde cualquier lugar.</li>
                       </ul>
->>>>>>> 52b7fbd (Corrigiendoa)
+
               <button>Seleccionar</button>
             </div>
           </div>
@@ -202,63 +186,55 @@
             </div>
         </div>
     </section>
-<<<<<<< HEAD
+
     <section class="how-it-works">
-        <h2>Así de fácil es proteger lo que más te importa:</h2>
-        <div class="steps">
-            <div class="step">
-=======
-    <br>
-    <br>
+        <!-- Sección de pasos en una sola columna horizontal -->
+<div class="steps-section">
+    <h2>Así de fácil es proteger lo que más te importa:</h2>
     
-    <section class="how-it-works">
-        <h2>Así de fácil es proteger lo que más te importa:</h2>
-        <div class="steps-container">
-            <div class="step-item">
->>>>>>> 52b7fbd (Corrigiendoa)
-                <div class="step-number">1</div>
-                <h3>Contáctanos</h3>
-                <p>Cuéntanos tus necesidades y te asesoramos en la selección del paquete ideal.</p>
-            </div>
-<<<<<<< HEAD
-            <div class="step">
-=======
-            <div class="step-item">
->>>>>>> 52b7fbd (Corrigiendoa)
-                <div class="step-number">2</div>
-                <h3>Instalación rápida y sencilla</h3>
-                <p>Nuestros técnicos configuran todo para que tu sistema de seguridad esté listo.</p>
-            </div>
-<<<<<<< HEAD
-            <div class="step">
-=======
-            <div class="step-item">
->>>>>>> 52b7fbd (Corrigiendoa)
-                <div class="step-number">3</div>
-                <h3>Monitoreo constante</h3>
-                <p>Desde ese momento, monitoreamos tus cámaras las 24 horas del día, con alertas inmediatas si algo sucede.</p>
-            </div>
-<<<<<<< HEAD
-            <div class="step">
-                <div class="step-number">4</div>
-                <h3>Respuestas rápidas</h3>
-                <p>En caso de incidente, notificamos a las autoridades y a ti en tiempo real.</p>
-=======
-            <div class="step-item">
-                <div class="step-number">4</div>
-                <h3>Prueba gratis </h3>
-                <p>Ponemos a tu disposición una prueba gratuita para que puedas evaluar la calidad de nuestro servicio. Si cumple con tus expectativas,
-                 estaremos encantados de seguir colaborando contigo.</p>
->>>>>>> 52b7fbd (Corrigiendoa)
-            </div>
+    <div class="steps-container">
+        <!-- Paso 1 -->
+        <div class="step-item">
+            <div class="step-number">1</div>
+            <h3>Contáctanos</h3>
+            <p>Cuéntanos tus necesidades y te asesoramos en la selección del paquete ideal.</p>
         </div>
+        
+        <!-- Paso 2 -->
+        <div class="step-item">
+            <div class="step-number">2</div>
+            <h3>Instalación rápida y sencilla</h3>
+            <p>Nuestros técnicos configuran todo para que tu sistema de seguridad esté listo.</p>
+        </div>
+        
+        <!-- Paso 3 -->
+        <div class="step-item">
+            <div class="step-number">3</div>
+            <h3>Monitoreo constante</h3>
+            <p>Desde ese momento, monitoreamos tus cámaras las 24 horas del día, con alertas inmediatas si algo sucede.</p>
+        </div>
+        
+        <!-- Paso 4 -->
+        <div class="step-item">
+            <div class="step-number">4</div>
+            <h3>Respuestas rápidas</h3>
+            <p>En caso de incidente, notificamos a las autoridades y a ti en tiempo real.</p>
+        </div>
+        
+        <!-- Paso 5 (opcional) -->
+        <div class="step-item">
+            <div class="step-number">5</div>
+            <h3>Prueba gratis</h3>
+            <p>Disfruta de una prueba gratuita de nuestro servicio para comprobar su eficacia.</p>
+        </div>
+    </div>
+</div>
     </section>
-</section>
+    
 
 
-<section class="product-categories">
+   <section class="product-categories">
     <h2>Nuestros Productos</h2>
-<<<<<<< HEAD
     <div class="categories-container">
         <a href="carrito.html" class="category-item">
             <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUTE16.jpg" alt="Camaras">
@@ -284,12 +260,9 @@
             <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE20.jpeg" alt="Boton de panico">
             <span>Botones de Panico</span>
         </a> 
-</section>
+  </section>
 
- <script src="scripts/script.js"></script> 
-=======
-</section>
-<section class="productsCar" id="productsCar"></section>
+  <section class="productsCar" id="productsCar"></section>
     <!-- HTML Templates for JavaScript -->
     <template id="product-card-template">
         <figure class="products-seguridad">
@@ -297,31 +270,36 @@
             <figcaption></figcaption>
         </figure>
     </template>
->>>>>>> 52b7fbd (Corrigiendoa)
-    <!-- Footer -->
+    <script src="scripts/paquetesProdctos.js" type="module"></script>
+    <script src="scripts/productos.js"type="module"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="scripts/Paquetes.js"></script>
+    <script src="scripts/script.js"></script>
+    <script src="scripts/logo.js"></script>
+
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-logo">
-                    <img src="assets/logo.png" alt="24-7 Logo" />
+                    <img src="assets/Logo2.png" alt="24-7 Logo" />
                 </div>
                 <div class="footer-links">
                     <h4>Enlaces rápidos</h4>
                     <ul>
-                        <li><a href="#inicio">Inicio</a></li>
-                        <li><a href="#servicios">Servicios</a></li>
-                        <li><a href="#nosotros">Nosotros</a></li>
-                        <li><a href="#casos">Casos de Éxito</a></li>
-                        <li><a href="#contacto">Contacto</a></li>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="servicios.html">Servicios</a></li>
+                        <li><a href="nosotros.html">Nosotros</a></li>
+                        <li><a href="casos.html">Casos de Éxito</a></li>
+                        <li><a href="contacto.html">Contacto</a></li>
                     </ul>
                 </div>
                 <div class="footer-servicios">
                     <h4>Servicios</h4>
                     <ul>
-                        <li><a href="#servicios">Detección de Personas</a></li>
-                        <li><a href="#servicios">Detección de Objetos</a></li>
-                        <li><a href="#servicios">Análisis Estadístico</a></li>
-                        <li><a href="#servicios">Seguridad Avanzada</a></li>
+                        <li><a href="servicios.html#guardia-virtual">Guardia Virtual</a></li>
+                        <li><a href="servicios.html#reconocimiento">Reconocimiento Facial</a></li>
+                        <li><a href="servicios.html#monitoreo">Monitoreo 24/7</a></li>
+                        <li><a href="servicios.html#accesos">Control de Accesos</a></li>
                     </ul>
                 </div>
                 <div class="footer-newsletter">
@@ -338,15 +316,5 @@
             </div>
         </div>
     </footer>
-<<<<<<< HEAD
-=======
- 
-    <script src="scripts/paquetesProdctos.js" type="module"></script>
-    <script src="scripts/productos.js"type="module"></script>
-    <script src="https://js.stripe.com/v3/"></script>
-    <script src="scripts/Paquetes.js"></script>
-    <script src="scripts/script.js"></script>
->>>>>>> 52b7fbd (Corrigiendoa)
-    <script src="scripts/logo.js"></script>
 </body>
 </html>

@@ -20,56 +20,6 @@ function showDetails(paquete) {
 function closePopup() {
     const popup = document.getElementById('popup');
     popup.style.display = 'none';
-}
-<<<<<<< HEAD
-
-
-=======
-// Base de datos de productos para la página de paquetes
-const productosPaquetes = [
-    {
-        id: 1,
-        nombre: 'Cámaras de Seguridad HD',
-        descripcion: 'Cámaras de vigilancia HD con visión nocturna, detección de movimiento y almacenamiento en la nube. Ideales para monitorear tu hogar o negocio las 24 horas del día con la mejor calidad de imagen.',
-        imagen: 'assets/IMAGEN-PAQUETE/IMAGENPAQUTE16.jpg',
-        categoria: 'cameras'
-    },
-    {
-        id: 2,
-        nombre: 'Cercos Eléctricos Perimetrales',
-        descripcion: 'Sistemas de cercos eléctricos de alta tecnología para la protección perimetral de tu propiedad. Incluyen alarma, señalización y control remoto desde tu smartphone. Instalación profesional y garantizada.',
-        imagen: 'assets/IMAGEN-PAQUETE/IMAGENPAQUETE17.jpg',
-        categoria: 'fences'
-    },
-    {
-        id: 3,
-        nombre: 'Control de Acceso Biométrico',
-        descripcion: 'Sistemas avanzados de control de acceso con tecnología biométrica, tarjetas RFID y código PIN. Perfectos para empresas que necesitan gestionar el acceso de personal a áreas específicas con máxima seguridad.',
-        imagen: 'assets/IMAGEN-PAQUETE/IMAGENPAQUETE18.jpg',
-        categoria: 'access'
-    },
-    {
-        id: 4,
-        nombre: 'Sistemas de Voceo IP',
-        descripcion: 'Soluciones de comunicación por altavoces IP con audio bidireccional. Ideal para anuncios, comunicados de emergencia y atención al público en comercios, escuelas e instituciones.',
-        imagen: 'assets/IMAGEN-PAQUETE/IMAGENPAQUETE19.jpg',
-        categoria: 'audio'
-    },
-    {
-        id: 5,
-        nombre: 'Sistemas de Alarma Inteligentes',
-        descripcion: 'Alarmas de última generación con conexión WiFi, sensores de movimiento, sensores para puertas/ventanas y notificaciones al smartphone. Protección completa para tu hogar o negocio con monitoreo 24/7.',
-        imagen: 'assets/IMAGEN-PAQUETE/IMAGENPAQUETE22.webp',
-        categoria: 'alarms'
-    },
-    {
-        id: 6,
-        nombre: 'Botones de Pánico Inalámbricos',
-        descripcion: 'Botones de pánico inalámbricos con tecnología de respuesta inmediata. Al activarse, alertan automáticamente a nuestro centro de monitoreo para una respuesta rápida ante emergencias.',
-        imagen: 'assets/IMAGEN-PAQUETE/IMAGENPAQUETE20.jpeg',
-        categoria: 'panic'
-    }
-];
 
 // Función para inicializar la página
 document.addEventListener('DOMContentLoaded', function() {
@@ -380,4 +330,5 @@ function mostrarToastConfirmacion(producto) {
         }, 300);
     }, 3000);
 }
->>>>>>> 52b7fbd (Corrigiendoa)
+ (Corrigiendoa)
+}

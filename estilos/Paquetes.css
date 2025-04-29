@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 /* 
 =================================
 Archivo: estilos/Paquetes.css 
@@ -7,8 +7,6 @@ Contiene los estilos animados para la página de paquetes
 */
 
 /* Reset básico y definición de variables */
-=======
->>>>>>> 52b7fbd (Corrigiendoa)
 :root {
     --primary-color: #0094FF;
     --accent-color: #00FFC2;
@@ -464,37 +462,28 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Sección de cómo funciona con animaciones */
 .how-it-works {
-<<<<<<< HEAD
     padding: 80px 0;
     text-align: center;
     position: relative;
     z-index: 1;
-=======
+
     padding: 100px;
     text-align: center;
     position: relative;
     z-index: 1;
     margin-top: 0;
->>>>>>> 52b7fbd (Corrigiendoa)
 }
 
 .how-it-works h2 {
     font-size: 2.5rem;
     color: #fff;
-<<<<<<< HEAD
     margin-bottom: 50px;
-=======
     margin-bottom: 70px;
->>>>>>> 52b7fbd (Corrigiendoa)
     text-shadow: 0 0 10px rgba(0, 255, 194, 0.3);
 }
 
 .how-it-works h2::after {
-<<<<<<< HEAD
     content: '';
-=======
-
->>>>>>> 52b7fbd (Corrigiendoa)
     position: absolute;
     bottom: -15px;
     left: 50%;
@@ -513,7 +502,6 @@ h1, h2, h3, h4, h5, h6 {
     flex-wrap: wrap;
     max-width: 1200px;
     margin: 0 auto;
-<<<<<<< HEAD
     padding: 0 20px;
 }
 
@@ -540,7 +528,6 @@ h1, h2, h3, h4, h5, h6 {
     height: 50px;
     background: linear-gradient(135deg, #0094FF, #00FFC2);
     color: #fff;
-=======
     padding: 0 40px;
 }
 
@@ -586,12 +573,10 @@ h1, h2, h3, h4, h5, h6 {
     height: 38px;
     background: var(--neon-text, #00FFC2);
     color: var(--dark-bg, #011730);
->>>>>>> 52b7fbd (Corrigiendoa)
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-<<<<<<< HEAD
     font-size: 1.5rem;
     font-weight: bold;
     margin: 0 auto 20px;
@@ -621,7 +606,6 @@ h1, h2, h3, h4, h5, h6 {
 
 .step:hover p {
     color: #fff;
-=======
     font-size: 1.1rem;
     font-weight: bold;
     margin: 0 auto 0.7rem;
@@ -641,7 +625,6 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 1.3;
     margin: 0;
     word-break: break-word;
->>>>>>> 52b7fbd (Corrigiendoa)
 }
 
 /* Sección de categorías de productos animadas */
@@ -672,13 +655,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .categories-container {
     display: grid;
-<<<<<<< HEAD
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 30px;
-=======
     grid-template-columns: repeat(3, 1fr);
     gap: 40px;
->>>>>>> 52b7fbd (Corrigiendoa)
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
@@ -813,8 +793,6 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
-<<<<<<< HEAD
-=======
 @media (max-width: 900px) {
     .categories-container {
         grid-template-columns: repeat(2, 1fr);
@@ -826,8 +804,6 @@ h1, h2, h3, h4, h5, h6 {
         grid-template-columns: 1fr;
     }
 }
-
->>>>>>> 52b7fbd (Corrigiendoa)
 /* Animación de CTA flotante */
 .floating-cta {
     position: fixed;
@@ -1286,15 +1262,11 @@ h1, h2, h3, h4, h5, h6 {
     50% {
         transform: translate(50px, -30px);
     }
-<<<<<<< HEAD
-=======
 }
 
 /* Estilos de la sección de pasos */
 .steps-section {
-    padding: 2rem;
     background: linear-gradient(180deg, var(--dark-bg) 0%, rgba(0, 24, 48, 0.95) 100%);
-    width: 100%;
 }
 
 .steps-section h2 {
@@ -1304,171 +1276,124 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 2rem;
     text-shadow: 0 0 10px var(--neon-glow);
 }
+/* 
+=================================
+Modificación para mostrar los pasos en una sola fila horizontal
+=================================
+*/
 
+/* Contenedor principal de los pasos */
 .steps-container {
     display: flex;
+    flex-direction: row;
     flex-wrap: nowrap;
     justify-content: center;
     align-items: stretch;
-    gap: 1.5rem;
+    gap: 20px;
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
+    padding: 20px;
     overflow-x: auto;
-    margin-top: 60px;
-}
-
-.step-item {
-    flex: 0 0 210px;
-    max-width: 210px;
-    min-width: 180px;
+  }
+  
+  /* Cada paso individual */
+  .step-item {
+    flex: 1 1 0;
+    min-width: 200px;
+    max-width: 250px;
     text-align: center;
-    padding: 1rem;
+    padding: 1.5rem;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 15px;
     backdrop-filter: blur(10px);
-    transition: transform 0.3s ease;
-    box-shadow: 0 0 15px var(--neon-glow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    box-shadow: 0 0 15px rgba(0, 255, 194, 0.3);
     border: 1px solid rgba(0, 255, 194, 0.15);
-    margin: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-.step-item:hover {
+  }
+  
+  .step-item:hover {
     transform: translateY(-8px);
-    box-shadow: 0 8px 24px var(--neon-glow);
+    box-shadow: 0 8px 24px rgba(0, 255, 194, 0.5);
     border-color: var(--accent-color);
-}
-
-.step-number {
+  }
+  
+  /* Número de paso */
+  .step-number {
     width: 38px;
     height: 38px;
-    background: var(--neon-text, #00FFC2);
-    color: var(--dark-bg, #011730);
+    background: var(--accent-color, #00FFC2);
+    color: var(--bg-color, #011730);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: bold;
-    margin: 0 auto 0.7rem;
-    box-shadow: 0 0 10px var(--neon-glow);
-}
-
-.step-item h3 {
-    color: var(--neon-text, #00FFC2);
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-    text-shadow: 0 0 5px var(--neon-glow);
-}
-
-.step-item p {
-    color: var(--text-light, #fff);
-    font-size: 0.85rem;
-    line-height: 1.3;
+    margin: 0 auto 15px;
+    transition: transform 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 255, 194, 0.5);
+  }
+  
+  /* Título de cada paso */
+  .step-item h3 {
+    color: var(--accent-color, #00FFC2);
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    text-shadow: 0 0 5px rgba(0, 255, 194, 0.3);
+  }
+  
+  /* Descripción de cada paso */
+  .step-item p {
+    color: var(--text-color, #ffffff);
+    font-size: 0.95rem;
+    line-height: 1.4;
     margin: 0;
-    word-break: break-word;
-}
-
-.btn-agregar-carrito {
-    display: block;
-    width: 80%;
-    margin: 18px auto 0 auto;
-    padding: 12px 0;
-    background: linear-gradient(90deg, #0094FF 60%, #00FFC2 100%);
-    color: #fff;
-    font-weight: bold;
-    font-size: 1rem;
-    border: none;
-    border-radius: 30px;
-    box-shadow: 0 0 10px #00FFC2, 0 2px 8px rgba(0,0,0,0.15);
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
-    letter-spacing: 1px;
-}
-.btn-agregar-carrito:hover {
-    background: linear-gradient(90deg, #00FFC2 60%, #0094FF 100%);
-    color: #011730;
-    transform: translateY(-3px) scale(1.04);
-    box-shadow: 0 0 20px #00FFC2, 0 4px 16px rgba(0,0,0,0.18);
-}
-
-/* Modal de información de producto - estilos mejorados */
-.modal-producto {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.75);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    animation: fadeIn 0.3s;
-}
-.modal-content-producto {
-    background: linear-gradient(135deg, #0a223a 80%, #0094FF 100%);
-    padding: 2.5rem 2.5rem 2rem 2.5rem;
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 24px #00FFC2;
-    color: #fff;
-    max-width: 380px;
-    width: 90vw;
-    text-align: center;
-    position: relative;
-    animation: modalFadeIn 0.4s;
-    border: 2px solid #00FFC2;
-}
-@keyframes modalFadeIn {
-    from { opacity: 0; transform: translateY(-30px);}
-    to { opacity: 1; transform: translateY(0);}
-}
-.close-modal-producto {
+  }
+  
+  /* Diseño responsivo para pantallas pequeñas */
+  @media (max-width: 768px) {
+    .steps-container {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      justify-content: flex-start;
+      padding: 15px;
+      gap: 15px;
+    }
+    
+    .step-item {
+      flex: 0 0 200px;
+      min-width: 200px;
+      padding: 1.2rem;
+    }
+  }
+  
+  /* Animación de entrada para los pasos */
+  .steps-container .step-item {
+    animation: fadeIn 0.6s ease-out forwards;
+    animation-fill-mode: both;
+  }
+  
+  .steps-container .step-item:nth-child(1) { animation-delay: 0.1s; }
+  .steps-container .step-item:nth-child(2) { animation-delay: 0.2s; }
+  .steps-container .step-item:nth-child(3) { animation-delay: 0.3s; }
+  .steps-container .step-item:nth-child(4) { animation-delay: 0.4s; }
+  .steps-container .step-item:nth-child(5) { animation-delay: 0.5s; }
+  
+  /* Flecha entre pasos (opcional) */
+  .step-item:not(:last-child)::after {
+    content: '';
     position: absolute;
-    top: 10px;
-    right: 18px;
-    font-size: 2.2rem;
-    color: #00FFC2;
-    cursor: pointer;
-    font-weight: bold;
-    transition: color 0.2s, transform 0.2s;
-    z-index: 2;
-}
-.close-modal-producto:hover {
-    color: #0094FF;
-    transform: scale(1.15);
-}
-.modal-content-producto img {
-    max-width: 100%;
-    border-radius: 12px;
-    margin-bottom: 1.2rem;
-    box-shadow: 0 0 18px #00FFC2;
-}
-.modal-content-producto h3 {
-    color: #00FFC2;
-    margin-bottom: 0.7rem;
-    font-size: 1.4rem;
-    text-shadow: 0 0 10px #0094FF;
-    font-weight: bold;
-}
-.modal-content-producto p {
-    color: #fff;
-    font-size: 1.05rem;
-    margin-bottom: 0;
-    line-height: 1.5;
-}
-@media (max-width: 600px) {
-    .modal-content-producto {
-        padding: 1.2rem 0.5rem 1.2rem 0.5rem;
-        max-width: 95vw;
-    }
-    .modal-content-producto h3 {
-        font-size: 1.1rem;
-    }
-    .close-modal-producto {
-        font-size: 1.7rem;
-    }
-}
+    top: 38px;
+    right: -15px;
+    width: 30px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-color), transparent);
+    display: none; /* Activar con display: block; si se desea usar */
+  }
 
 .modal-caracteristicas {
     list-style: none;
@@ -1490,5 +1415,4 @@ h1, h2, h3, h4, h5, h6 {
     left: 0;
     font-size: 1.2em;
     line-height: 1;
->>>>>>> 52b7fbd (Corrigiendoa)
 }
