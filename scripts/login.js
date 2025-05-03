@@ -11,10 +11,41 @@ document.addEventListener('DOMContentLoaded', function() {
     const inputFields = document.querySelectorAll('.input-field input');
     const passwordToggles = document.querySelectorAll('.password-toggle');
     const loginButton = document.getElementById('login-button');
+    const loader = loginButton.querySelector('.loader');
+    const emailInput = document.getElementById('email-login');
+    const passwordInput = document.getElementById('password-login');
+    const emailError = document.getElementById('email-login-error');
+    const passwordError = document.getElementById('password-login-error');
     
-    // Cargar Firebase
-    loadFirebase();
+    // Configuración de Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyD_C3sJCghWpV1DHn4Qyxsa-exdcEJGst0",
+        authDomain: "seguridad-24-7.firebaseapp.com",
+        projectId: "seguridad-24-7",
+        storageBucket: "seguridad-24-7.firebasestorage.app",
+        messagingSenderId: "979899411271",
+        appId: "1:979899411271:web:4d8db498a9388054a7fa62",
+        measurementId: "G-XQG0KDMMX4"
+    };
 
+    // Inicializar Firebase
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // Verificar si el usuario ya está autenticado
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            // Usuario autenticado, verificar rol
+            checkUserRole(user);
+        }
+    });
+
+    // ==================== ANIMACIONES ====================
+    
     // Cambio entre formularios con animación suave
     if (signUpBtn) {
         signUpBtn.addEventListener("click", () => {
@@ -221,52 +252,189 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Configurar validación del formulario
-    if (loginForm) {
-        loginForm.addEventListener("submit", (e) => {
-            e.preventDefault();
-            let isValid = true;
+    // ==================== AUTENTICACIÓN MEJORADA ====================
+    
+    // Manejar envío del formulario de login
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Limpiar mensajes de error previos
+        clearErrors();
+        
+        // Obtener valores
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+        
+        // Validar campos
+        if (!email) {
+            showError('email-login-error', 'El correo electrónico es requerido');
+            return;
+        }
+        
+        if (!password) {
+            showError('password-login-error', 'La contraseña es requerida');
+            return;
+        }
+        
+        // Mostrar loader
+        showLoader();
+        
+        try {
+            // Intentar iniciar sesión
+            const userCredential = await auth.signInWithEmailAndPassword(email, password);
+            const user = userCredential.user;
             
-            // Validación del email/usuario
-            const emailLogin = document.getElementById("email-login");
-            const emailLoginError = document.getElementById("email-login-error");
+            // Animación de éxito
+            loginForm.classList.add("success-animation");
             
-            if (emailLogin && emailLogin.value.trim() === "") {
-                showError(emailLogin, emailLoginError, "Por favor, introduce tu usuario o correo electrónico");
-                isValid = false;
-            } else if (emailLogin && emailLoginError) {
-                hideError(emailLogin, emailLoginError);
+            // Efecto adicional en la burbuja ondulante
+            const waveBubble = document.querySelector(".wave-bubble");
+            if (waveBubble) {
+                waveBubble.style.filter = "hue-rotate(30deg) brightness(1.05)";
+                
+                setTimeout(() => {
+                    waveBubble.style.filter = "none";
+                }, 800);
             }
             
-            // Validación de la contraseña
-            const passwordLogin = document.getElementById("password-login");
-            const passwordLoginError = document.getElementById("password-login-error");
+            // Verificar rol del usuario
+            await checkUserRole(user);
             
-            if (passwordLogin && passwordLogin.value.trim() === "") {
-                showError(passwordLogin, passwordLoginError, "Por favor, introduce tu contraseña");
-                isValid = false;
-            } else if (passwordLogin && passwordLoginError) {
-                hideError(passwordLogin, passwordLoginError);
+        } catch (error) {
+            hideLoader();
+            handleAuthError(error);
+        }
+    });
+
+    // Verificar el rol del usuario
+    async function checkUserRole(user) {
+        try {
+            // Obtener datos del usuario desde Firestore
+            const userDoc = await db.collection('usuarios').doc(user.uid).get();
+            
+            if (!userDoc.exists) {
+                throw new Error('No se encontró información del usuario');
             }
             
-            // Si el formulario es válido, hacemos login con Firebase
-            if (isValid && emailLogin && passwordLogin) {
-                loginWithFirebase(emailLogin.value, passwordLogin.value);
+            const userData = userDoc.data();
+            const userRole = userData.role || 'user';
+            
+            // Solo permitir acceso a administradores
+            if (userRole === 'admin') {
+                // Guardar información del usuario en localStorage para usar en el dashboard
+                localStorage.setItem('adminUser', JSON.stringify({
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: userData.name || user.email.split('@')[0],
+                    photoURL: userData.photoURL || null,
+                    role: userRole
+                }));
+                
+                // Redirigir al dashboard administrativo
+                window.location.href = 'dashboardAdmin.html';
+            } else {
+                // Si no es administrador, cerrar sesión y mostrar error
+                await auth.signOut();
+                hideLoader();
+                showError('password-login-error', 'Acceso denegado. Solo los administradores pueden ingresar a este panel.');
             }
+            
+        } catch (error) {
+            console.error('Error verificando rol:', error);
+            hideLoader();
+            showError('password-login-error', 'Error al verificar permisos de usuario');
+            await auth.signOut();
+        }
+    }
+
+    // Manejar errores de autenticación
+    function handleAuthError(error) {
+        console.error('Error de autenticación:', error);
+        
+        switch (error.code) {
+            case 'auth/invalid-email':
+                showError('email-login-error', 'El correo electrónico no es válido');
+                break;
+            case 'auth/user-disabled':
+                showError('email-login-error', 'Esta cuenta ha sido deshabilitada');
+                break;
+            case 'auth/user-not-found':
+                showError('email-login-error', 'No existe una cuenta con este correo electrónico');
+                break;
+            case 'auth/wrong-password':
+                showError('password-login-error', 'La contraseña es incorrecta');
+                break;
+            case 'auth/too-many-requests':
+                showError('password-login-error', 'Demasiados intentos fallidos. Por favor, intenta más tarde');
+                break;
+            default:
+                showError('password-login-error', 'Error al iniciar sesión. Por favor, intenta nuevamente');
+        }
+    }
+
+    // Mostrar error en el campo correspondiente
+    function showError(elementId, message) {
+        const errorElement = document.getElementById(elementId);
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            errorElement.classList.add("active");
+        }
+    }
+
+    // Limpiar mensajes de error
+    function clearErrors() {
+        const errorElements = document.querySelectorAll('.error-message');
+        errorElements.forEach(element => {
+            element.textContent = '';
+            element.style.display = 'none';
+            element.classList.remove("active");
         });
     }
 
-    // Validación en tiempo real
-    inputFields.forEach(input => {
-        input.addEventListener("input", () => {
-            validateInput(input);
-        });
-        
-        input.addEventListener("blur", () => {
-            validateInput(input);
-        });
-    });
+    // Mostrar loader
+    function showLoader() {
+        loginButton.disabled = true;
+        loginButton.classList.add("loading");
+        if (loader) {
+            loader.style.display = 'inline-block';
+        }
+    }
 
+    // Ocultar loader
+    function hideLoader() {
+        loginButton.disabled = false;
+        loginButton.classList.remove("loading");
+        if (loader) {
+            loader.style.display = 'none';
+        }
+    }
+
+    // Manejar el botón de "Olvidaste tu contraseña"
+    const forgotPasswordLink = document.querySelector('.forgot-password');
+    if (forgotPasswordLink) {
+        forgotPasswordLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            const email = emailInput.value.trim();
+            
+            if (!email) {
+                showError('email-login-error', 'Por favor ingresa tu correo electrónico para restablecer la contraseña');
+                return;
+            }
+            
+            auth.sendPasswordResetEmail(email)
+                .then(() => {
+                    alert('Se ha enviado un enlace para restablecer tu contraseña a tu correo electrónico');
+                })
+                .catch((error) => {
+                    console.error('Error al enviar correo de restablecimiento:', error);
+                    showError('email-login-error', 'Error al enviar el correo de restablecimiento. Verifica que el correo sea correcto.');
+                });
+        });
+    }
+
+    // ==================== OTROS ELEMENTOS UI ====================
+    
     // Efecto de onda al hacer clic en los botones
     const buttons = document.querySelectorAll(".btn");
     buttons.forEach(button => {
@@ -290,7 +458,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Opcional: Mantener el estado del formulario en localStorage
+    // Mantener el estado del formulario en localStorage
     const savedState = localStorage.getItem("formState");
     if (savedState === "signup") {
         container.classList.add("sign-up-mode");
@@ -317,245 +485,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Cargar y configurar el carrusel
     initCarousel();
 });
-
-// Cargar Firebase con manejo de errores
-function loadFirebase() {
-    // Si Firebase ya está definido, inicializar directamente
-    if (typeof firebase !== 'undefined') {
-        initializeFirebase();
-        return;
-    }
-
-    // Cargar scripts de Firebase
-    const scripts = [
-        'https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js',
-        'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js',
-        'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js'
-    ];
-
-    let scriptsLoaded = 0;
-    
-    scripts.forEach(src => {
-        const script = document.createElement('script');
-        script.src = src;
-        script.async = true;
-        
-        script.onload = () => {
-            scriptsLoaded++;
-            if (scriptsLoaded === scripts.length) {
-                initializeFirebase();
-            }
-        };
-        
-        script.onerror = (error) => {
-            console.error(`Error al cargar el script ${src}:`, error);
-            alert('Error al cargar Firebase. Por favor, recarga la página o verifica tu conexión a internet.');
-        };
-        
-        document.head.appendChild(script);
-    });
-}
-
-// Inicializar Firebase
-function initializeFirebase() {
-    try {
-        // Configuración de Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyD_C3sJCghWpV1DHn4Qyxsa-exdcEJGst0",
-            authDomain: "seguridad-24-7.firebaseapp.com",
-            projectId: "seguridad-24-7",
-            storageBucket: "seguridad-24-7.firebasestorage.app",
-            messagingSenderId: "979899411271",
-            appId: "1:979899411271:web:4d8db498a9388054a7fa62",
-            measurementId: "G-XQG0KDMMX4"
-        };
-
-        // Inicializar Firebase (evitar inicialización múltiple)
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-
-        // Verificar si hay un usuario ya autenticado
-        firebase.auth().onAuthStateChanged(function(user) {
-            if (user) {
-                console.log("Usuario autenticado:", user.email);
-                // No redirigir automáticamente aquí, lo haremos en el login
-            } else {
-                console.log("No hay usuario autenticado");
-            }
-        });
-
-        console.log("Firebase inicializado correctamente");
-    } catch (error) {
-        console.error("Error al inicializar Firebase:", error);
-    }
-}
-
-// Iniciar sesión con Firebase
-function loginWithFirebase(email, password) {
-    // Verificar que Firebase esté disponible
-    if (typeof firebase === 'undefined' || !firebase.auth) {
-        alert('Error: Firebase no está disponible. Por favor, recarga la página.');
-        return;
-    }
-
-    // Mostrar el loader y deshabilitar el botón
-    const loginButton = document.getElementById('login-button');
-    if (loginButton) {
-        loginButton.classList.add("loading");
-        loginButton.disabled = true;
-    }
-    
-    // Autenticar con Firebase
-    firebase.auth().signInWithEmailAndPassword(email, password)
-        .then(function(userCredential) {
-            // Éxito al autenticar, obtener rol
-            const user = userCredential.user;
-            
-            // Animación de éxito
-            const loginForm = document.getElementById('loginForm');
-            if (loginForm) {
-                loginForm.classList.add("success-animation");
-            }
-            
-            // Efecto adicional en la burbuja ondulante
-            const waveBubble = document.querySelector(".wave-bubble");
-            if (waveBubble) {
-                waveBubble.style.filter = "hue-rotate(30deg) brightness(1.05)";
-                
-                setTimeout(() => {
-                    waveBubble.style.filter = "none";
-                }, 800);
-            }
-            
-            // Verificar rol y redirigir
-           // Verificar rol y redirigir
-firebase.firestore().collection('users').doc(user.uid).get()
-.then(function(doc) {
-    if (doc.exists) {
-        const userData = doc.data();
-        console.log("Datos del usuario:", userData);
-        console.log("Rol del usuario:", userData.role);
-        
-        // Comprobación simplificada pero efectiva
-        if (userData.role === "admin") {
-            console.log("Rol admin detectado, redirigiendo a administrador");
-            // Usar tiempo de espera para asegurar que los logs se muestren
-            setTimeout(() => {
-                window.location.href = "dashboardAdmin.html";
-            }, 100);
-        } else {
-            console.log("Rol no es admin, redirigiendo a usuario");
-            setTimeout(() => {
-                window.location.href = "dashboardUsuario.html";
-            }, 100);
-        }
-    } else {
-        console.log("Documento no existe, redirigiendo a usuario");
-        window.location.href = "dashboardAdmin.html";
-    }
-})
-                .catch(function(error) {
-                    // Error al obtener rol
-                    console.error("Error al verificar rol:", error);
-                    showLoginError("Error al verificar tu rol. Por favor, inténtalo de nuevo.");
-                    
-                    // Restablecer botón de login
-                    if (loginButton) {
-                        loginButton.classList.remove("loading");
-                        loginButton.disabled = false;
-                    }
-                });
-        })
-        .catch(function(error) {
-            // Error de autenticación
-            console.error("Error de autenticación:", error);
-            
-            // Ocultamos el loader y habilitamos el botón
-            if (loginButton) {
-                loginButton.classList.remove("loading");
-                loginButton.disabled = false;
-            }
-            
-            // Mostrar mensaje de error según el código
-            switch(error.code) {
-                case 'auth/user-not-found':
-                    showLoginError("No existe una cuenta con este correo electrónico");
-                    break;
-                case 'auth/wrong-password':
-                    showLoginError("Contraseña incorrecta");
-                    break;
-                case 'auth/invalid-email':
-                    showLoginError("Formato de correo electrónico inválido");
-                    break;
-                default:
-                    showLoginError("Error al iniciar sesión: " + error.message);
-            }
-        });
-}
-
-// Mostrar error en el formulario de login
-function showLoginError(message) {
-    const emailLoginError = document.getElementById("email-login-error");
-    if (emailLoginError) {
-        emailLoginError.textContent = message;
-        emailLoginError.classList.add("active");
-    }
-}
-
-// Función para mostrar errores
-function showError(input, errorElement, message) {
-    if (!input || !errorElement) return;
-    
-    input.parentElement.classList.add("error");
-    errorElement.textContent = message;
-    errorElement.classList.add("active");
-}
-
-// Función para ocultar errores
-function hideError(input, errorElement) {
-    if (!input || !errorElement) return;
-    
-    input.parentElement.classList.remove("error");
-    errorElement.textContent = "";
-    errorElement.classList.remove("active");
-}
-
-// Validación de inputs
-function validateInput(input) {
-    if (!input) return;
-    
-    const id = input.id;
-    let errorElement;
-    let isValid = true;
-    let errorMessage = "";
-    
-    // Encontrar el elemento de error correspondiente
-    switch(id) {
-        case "email-login":
-            errorElement = document.getElementById("email-login-error");
-            if (input.value.trim() === "") {
-                isValid = false;
-                errorMessage = "Por favor, introduce tu usuario o correo";
-            }
-            break;
-            
-        case "password-login":
-            errorElement = document.getElementById("password-login-error");
-            if (input.value.trim() === "") {
-                isValid = false;
-                errorMessage = "Por favor, introduce tu contraseña";
-            }
-            break;
-    }
-    
-    // Mostrar u ocultar el error según corresponda
-    if (!isValid && errorElement) {
-        showError(input, errorElement, errorMessage);
-    } else if (errorElement) {
-        hideError(input, errorElement);
-    }
-}
 
 // Inicializar carrusel
 function initCarousel() {

@@ -3,658 +3,573 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Administrativo | Seguridad 24/7</title>
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="assets/img/favicon.ico" type="image/x-icon">
-    
-    <!-- Font Awesome -->
+    <title>Dashboard - Seguridad 24/7</title>
+    <!-- Font Awesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Leaflet CSS para el mapa (alternativa a Google Maps) -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    
-    <!-- Chart.js para los gráficos -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
-    
-    <!-- jsPDF para generación de facturas -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-    
-    <!-- Estilos CSS -->
-    <link rel="stylesheet" href="estilos/Admin.css">
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- CSS principal -->
+    <link rel="stylesheet" href="styleadmin/Admin.css">
+    <link rel="stylesheet" href="styleadmin/reportes.css">
 </head>
 <body>
-    <!-- Contenedor principal -->
-    <div class="wrapper">
+    <div class="dashboard-container">
         <!-- Sidebar -->
-        <nav id="sidebar">
+        <aside class="sidebar">
             <div class="sidebar-header">
-                <img src="assets/img/logo.png" alt="Seguridad 24/7" class="logo">
-                <h3>Seguridad 24/7</h3>
-            </div>
-
-            <div class="user-info">
-                <img src="assets/img/avatar.png" alt="Usuario" class="user-avatar">
-                <div class="user-details">
-                    <h4 id="user-name">Administrador</h4>
-                    <p id="user-role">Admin</p>
+                <div class="logo">
+                    <img src="assets/Logo2.png" alt="Logo">
+                    <h2>Seguridad 24/7</h2>
                 </div>
-            </div>
-
-            <ul class="list-unstyled components">
-                <li class="active">
-                    <a href="#" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                </li>
-                <li>
-                    <a href="#" data-tab="usuarios"><i class="fas fa-users"></i> Usuarios</a>
-                </li>
-                <li>
-                    <a href="#" data-tab="productos"><i class="fas fa-box"></i> Productos</a>
-                </li>
-                <li>
-                    <a href="#" data-tab="ubicaciones"><i class="fas fa-map-marker-alt"></i> Ubicaciones</a>
-                </li>
-                <li>
-                    <a href="#" data-tab="reportes"><i class="fas fa-exclamation-triangle"></i> Reportes</a>
-                </li>
-                <li>
-                    <a href="#" data-tab="pagos"><i class="fas fa-credit-card"></i> Pagos</a>
-                </li>
-                <li>
-                    <a href="#" data-tab="estadisticas"><i class="fas fa-chart-bar"></i> Estadísticas</a>
-                </li>
-                <li>
-                    <a href="#" data-tab="configuracion"><i class="fas fa-cog"></i> Configuración</a>
-                </li>
-            </ul>
-
-            <div class="sidebar-footer">
-                <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button>
-            </div>
-        </nav>
-
-        <!-- Contenido principal -->
-        <div id="content">
-            <!-- Barra superior -->
-            <header class="top-bar">
-                <button id="sidebarCollapse" class="btn toggle-btn">
+                <button id="sidebar-toggle" class="sidebar-toggle">
                     <i class="fas fa-bars"></i>
                 </button>
-                <div class="search-container">
+            </div>
+            
+            <div class="sidebar-menu">
+                <ul>
+                    <li class="active">
+                        <a href="#" data-section="dashboard">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-section="users">
+                            <i class="fas fa-users"></i>
+                            <span>Usuarios</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-section="products">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Productos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-section="locations">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Ubicaciones</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-section="reports">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>Reportes</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-section="payments">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Pagos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-section="analytics">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Estadísticas</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-section="settings">
+                            <i class="fas fa-cog"></i>
+                            <span>Configuración</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-footer">
+                <a href="#" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                    <span>Modo Oscuro</span>
+                </a>
+                <a href="#" id="logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+        </aside>
+        
+        <!-- Contenido principal -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="search-bar">
                     <i class="fas fa-search"></i>
-                    <input type="text" id="search-input" placeholder="Buscar...">
+                    <input type="text" placeholder="Buscar...">
                 </div>
-                <div class="top-bar-actions">
-                    <a href="#" class="notification-icon">
+                
+                <div class="header-actions">
+                    <button class="notification-btn">
                         <i class="fas fa-bell"></i>
-                        <span class="badge">3</span>
-                    </a>
-                    <a href="#" class="notification-icon">
-                        <i class="fas fa-envelope"></i>
-                        <span class="badge">5</span>
-                    </a>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    
+                    <div class="user-profile">
+                        <img src="/api/placeholder/40/40" alt="Perfil">
+                        <div class="user-info">
+                            <h4>Admin</h4>
+                            <p>Administrador</p>
+                        </div>
+                    </div>
                 </div>
             </header>
-
-            <!-- Contenido del dashboard -->
-            <div class="main-content">
-                <!-- Sección Dashboard Principal -->
-                <section id="dashboard-tab" class="content-tab active">
+            
+            <!-- Sección Dashboard -->
+            <section id="dashboard-section" class="content-section active">
+                <div class="section-header">
                     <h2>Panel de Control</h2>
-                    <div class="dashboard-stats">
-                        <div class="stat-card">
-                            <div class="stat-icon active">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div class="stat-info">
-                                <h3>Clientes</h3>
-                                <p class="count" id="clientes-count">0</p>
-                                <p class="trend"><i class="fas fa-arrow-up"></i> 5% este mes</p>
-                            </div>
+                    <p>Bienvenido al sistema de administración de Seguridad 24/7</p>
+                </div>
+                
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-icon pending">
-                                <i class="fas fa-exclamation-circle"></i>
-                            </div>
-                            <div class="stat-info">
-                                <h3>Reportes</h3>
-                                <p class="count" id="reportes-count">0</p>
-                                <p class="trend"><i class="fas fa-arrow-down"></i> 2% este mes</p>
-                            </div>
+                        <div class="stat-info">
+                            <h3>Clientes Activos</h3>
+                            <p class="stat-number">128</p>
+                            <p class="stat-growth positive">+12% este mes</p>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-icon success">
-                                <i class="fas fa-dollar-sign"></i>
-                            </div>
-                            <div class="stat-info">
-                                <h3>Ingresos</h3>
-                                <p class="count" id="ingresos-count">$0</p>
-                                <p class="trend"><i class="fas fa-arrow-up"></i> 8% este mes</p>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon error">
-                                <i class="fas fa-bell"></i>
-                            </div>
-                            <div class="stat-info">
-                                <h3>Alertas</h3>
-                                <p class="count" id="alertas-count">0</p>
-                                <p class="trend"><i class="fas fa-arrow-up"></i> 3% este mes</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="dashboard-row">
-                        <div class="dashboard-card chart-card">
-                            <div class="card-header">
-                                <h3>Clientes activos</h3>
-                                <div class="card-actions">
-                                    <select id="clientes-chart-period">
-                                        <option value="week">Última semana</option>
-                                        <option value="month" selected>Último mes</option>
-                                        <option value="year">Último año</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="clientes-chart"></canvas>
-                            </div>
-                        </div>
-                        <div class="dashboard-card recent-activities">
-                            <div class="card-header">
-                                <h3>Actividad reciente</h3>
-                                <div class="card-actions">
-                                    <a href="#" class="btn-action">Ver todas</a>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <ul class="activity-list" id="activity-list">
-                                    <!-- La lista de actividades se cargará dinámicamente -->
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="dashboard-row">
-                        <div class="dashboard-card map-preview">
-                            <div class="card-header">
-                                <h3>Mapa de ubicaciones</h3>
-                                <div class="card-actions">
-                                    <a href="#" data-tab="ubicaciones" class="btn-action">Ver completo</a>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div id="map-preview-container"></div>
-                            </div>
-                        </div>
-                        <div class="dashboard-card pending-tasks">
-                            <div class="card-header">
-                                <h3>Tareas pendientes</h3>
-                                <div class="card-actions">
-                                    <a href="#" class="btn-action">Ver todas</a>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <ul class="task-list" id="task-list">
-                                    <!-- La lista de tareas se cargará dinámicamente -->
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Sección Usuarios -->
-                <section id="usuarios-tab" class="content-tab">
-                    <div class="section-header">
-                        <h2>Gestión de Usuarios</h2>
-                        <button class="btn-primary" id="crear-usuario-btn">
-                            <i class="fas fa-plus"></i> Nuevo Usuario
-                        </button>
                     </div>
                     
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="filter-container">
-                                <div class="search-box">
-                                    <i class="fas fa-search"></i>
-                                    <input type="text" id="buscar-usuario" placeholder="Buscar usuario...">
-                                </div>
-                                <div class="filter-options">
-                                    <select id="filtro-rol">
-                                        <option value="todos">Todos los roles</option>
-                                        <option value="admin">Administrador</option>
-                                        <option value="usuario">Usuario</option>
-                                    </select>
-                                    <select id="filtro-estado">
-                                        <option value="todos">Todos los estados</option>
-                                        <option value="activo">Activo</option>
-                                        <option value="inactivo">Inactivo</option>
-                                    </select>
-                                </div>
-                            </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="data-table" id="usuarios-table">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Nombre</th>
-                                            <th>Email</th>
-                                            <th>Rol</th>
-                                            <th>Estado</th>
-                                            <th>Último acceso</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="usuarios-table-body">
-                                        <!-- Los datos de usuarios se cargarán dinámicamente -->
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="pagination" id="usuarios-pagination">
-                                <!-- Paginación -->
-                            </div>
+                        <div class="stat-info">
+                            <h3>Reportes Pendientes</h3>
+                            <p class="stat-number">8</p>
+                            <p class="stat-growth negative">+3 desde ayer</p>
                         </div>
-                    </div>
-
-                    <!-- Modal para crear/editar usuario -->
-                    <div class="modal" id="usuario-modal">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h3 id="usuario-modal-title">Nuevo Usuario</h3>
-                                <button class="close-modal">&times;</button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="usuario-form">
-                                    <div class="form-group">
-                                        <label for="usuario-nombre">Nombre completo</label>
-                                        <input type="text" id="usuario-nombre" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="usuario-email">Email</label>
-                                        <input type="email" id="usuario-email" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="usuario-password">Contraseña</label>
-                                        <input type="password" id="usuario-password">
-                                        <small>Dejar en blanco para mantener la contraseña actual (en edición)</small>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="usuario-rol">Rol</label>
-                                        <select id="usuario-rol" required>
-                                            <option value="admin">Administrador</option>
-                                            <option value="usuario">Usuario</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="usuario-estado">Estado</label>
-                                        <select id="usuario-estado" required>
-                                            <option value="activo">Activo</option>
-                                            <option value="inactivo">Inactivo</option>
-                                        </select>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn-secondary" id="usuario-cancel-btn">Cancelar</button>
-                                <button class="btn-primary" id="usuario-save-btn">Guardar</button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Sección Productos -->
-                <section id="productos-tab" class="content-tab">
-                    <div class="section-header">
-                        <h2>Gestión de Productos</h2>
-                        <button class="btn-primary" id="crear-producto-btn">
-                            <i class="fas fa-plus"></i> Nuevo Producto
-                        </button>
                     </div>
                     
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="filter-container">
-                                <div class="search-box">
-                                    <i class="fas fa-search"></i>
-                                    <input type="text" id="buscar-producto" placeholder="Buscar producto...">
-                                </div>
-                                <div class="filter-options">
-                                    <select id="filtro-categoria">
-                                        <option value="todos">Todas las categorías</option>
-                                        <option value="camaras">Cámaras</option>
-                                        <option value="alarmas">Alarmas</option>
-                                        <option value="sensores">Sensores</option>
-                                        <option value="otros">Otros</option>
-                                    </select>
-                                    <select id="filtro-disponibilidad">
-                                        <option value="todos">Todas las disponibilidades</option>
-                                        <option value="disponible">Disponible</option>
-                                        <option value="agotado">Agotado</option>
-                                    </select>
-                                </div>
-                            </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-shield-alt"></i>
                         </div>
-                        <div class="card-body">
-                            <div class="products-grid" id="productos-grid">
-                                <!-- Los productos se cargarán dinámicamente -->
-                            </div>
-                            <div class="pagination" id="productos-pagination">
-                                <!-- Paginación -->
-                            </div>
+                        <div class="stat-info">
+                            <h3>Servicios Activos</h3>
+                            <p class="stat-number">96</p>
+                            <p class="stat-growth positive">+5% este mes</p>
                         </div>
-                    </div>
-
-                    <!-- Modal para crear/editar producto -->
-                    <div class="modal" id="producto-modal">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h3 id="producto-modal-title">Nuevo Producto</h3>
-                                <button class="close-modal">&times;</button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="producto-form">
-                                    <div class="form-group">
-                                        <label for="producto-nombre">Nombre del producto</label>
-                                        <input type="text" id="producto-nombre" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="producto-categoria">Categoría</label>
-                                        <select id="producto-categoria" required>
-                                            <option value="camaras">Cámaras</option>
-                                            <option value="alarmas">Alarmas</option>
-                                            <option value="sensores">Sensores</option>
-                                            <option value="otros">Otros</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="producto-precio">Precio ($)</label>
-                                        <input type="number" id="producto-precio" step="0.01" min="0" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="producto-descripcion">Descripción</label>
-                                        <textarea id="producto-descripcion" rows="4" required></textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="producto-imagen">Imagen</label>
-                                        <input type="file" id="producto-imagen" accept="image/*">
-                                        <div id="producto-preview-container" class="image-preview">
-                                            <img id="producto-preview" src="" alt="">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="producto-stock">Stock disponible</label>
-                                        <input type="number" id="producto-stock" min="0" required>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn-secondary" id="producto-cancel-btn">Cancelar</button>
-                                <button class="btn-primary" id="producto-save-btn">Guardar</button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Sección Ubicaciones -->
-                <section id="ubicaciones-tab" class="content-tab">
-                    <div class="section-header">
-                        <h2>Ubicaciones de Clientes</h2>
-                        <button class="btn-primary" id="crear-ubicacion-btn">
-                            <i class="fas fa-plus"></i> Nueva Ubicación
-                        </button>
                     </div>
                     
-                    <div class="location-container">
-                        <div class="location-sidebar">
-                            <div class="search-box">
-                                <i class="fas fa-search"></i>
-                                <input type="text" id="buscar-ubicacion" placeholder="Buscar cliente...">
-                            </div>
-                            <div class="filter-options">
-                                <select id="filtro-estado-ubicacion">
-                                    <option value="todos">Todos los estados</option>
-                                    <option value="activo">Activo</option>
-                                    <option value="pendiente">Pendiente</option>
-                                    <option value="error">Error</option>
-                                </select>
-                            </div>
-                            <div class="locations-list" id="ubicaciones-list">
-                                <!-- La lista de ubicaciones se cargará dinámicamente -->
-                            </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
                         </div>
-                        <div class="map-container">
-                            <div id="map"></div>
-                            <div class="location-details" id="location-details">
-                                <!-- Los detalles de la ubicación seleccionada se mostrarán aquí -->
-                            </div>
+                        <div class="stat-info">
+                            <h3>Ingresos Mensuales</h3>
+                            <p class="stat-number">$24,560</p>
+                            <p class="stat-growth positive">+8% vs mes anterior</p>
                         </div>
                     </div>
-
-                    <!-- Modal para crear/editar ubicación -->
-                    <div class="modal" id="ubicacion-modal">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h3 id="ubicacion-modal-title">Nueva Ubicación</h3>
-                                <button class="close-modal">&times;</button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="ubicacion-form">
-                                    <div class="form-group">
-                                        <label for="ubicacion-cliente">Cliente</label>
-                                        <select id="ubicacion-cliente" required>
-                                            <!-- Los clientes se cargarán dinámicamente -->
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="ubicacion-direccion">Dirección</label>
-                                        <input type="text" id="ubicacion-direccion" required>
-                                    </div>
-                                    <div class="form-group coordinates">
-                                        <div>
-                                            <label for="ubicacion-latitud">Latitud</label>
-                                            <input type="number" id="ubicacion-latitud" step="0.000001" required>
-                                        </div>
-                                        <div>
-                                            <label for="ubicacion-longitud">Longitud</label>
-                                            <input type="number" id="ubicacion-longitud" step="0.000001" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="ubicacion-estado">Estado</label>
-                                        <select id="ubicacion-estado" required>
-                                            <option value="activo">Activo</option>
-                                            <option value="pendiente">Pendiente</option>
-                                            <option value="error">Error</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="ubicacion-imagen">Imagen del lugar</label>
-                                        <input type="file" id="ubicacion-imagen" accept="image/*">
-                                        <div id="ubicacion-preview-container" class="image-preview">
-                                            <img id="ubicacion-preview" src="" alt="">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="ubicacion-notas">Notas adicionales</label>
-                                        <textarea id="ubicacion-notas" rows="3"></textarea>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn-secondary" id="ubicacion-cancel-btn">Cancelar</button>
-                                <button class="btn-primary" id="ubicacion-save-btn">Guardar</button>
+                </div>
+                
+                <div class="dashboard-charts">
+                    <div class="chart-container large">
+                        <div class="chart-header">
+                            <h3>Clientes Activos (Últimos 6 meses)</h3>
+                            <div class="chart-actions">
+                                <button class="chart-action">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="chart-action">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
                             </div>
                         </div>
-                    </div>
-                </section>
-
-                <!-- Sección Reportes -->
-                <section id="reportes-tab" class="content-tab">
-                    <div class="section-header">
-                        <h2>Gestión de Reportes</h2>
+                        <div class="chart-body">
+                            <canvas id="clientesChart"></canvas>
+                        </div>
                     </div>
                     
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="filter-container">
-                                <div class="search-box">
-                                    <i class="fas fa-search"></i>
-                                    <input type="text" id="buscar-reporte" placeholder="Buscar reporte...">
-                                </div>
-                                <div class="filter-options">
-                                    <select id="filtro-estado-reporte">
-                                        <option value="todos">Todos los estados</option>
-                                        <option value="pendiente">Pendiente</option>
-                                        <option value="en_proceso">En proceso</option>
-                                        <option value="resuelto">Resuelto</option>
-                                    </select>
-                                    <select id="filtro-prioridad">
-                                        <option value="todos">Todas las prioridades</option>
-                                        <option value="alta">Alta</option>
-                                        <option value="media">Media</option>
-                                        <option value="baja">Baja</option>
-                                    </select>
-                                </div>
+                    <div class="chart-container medium">
+                        <div class="chart-header">
+                            <h3>Reportes por Tipo</h3>
+                            <div class="chart-actions">
+                                <button class="chart-action">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="chart-action">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="data-table" id="reportes-table">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Cliente</th>
-                                            <th>Tipo</th>
-                                            <th>Descripción</th>
-                                            <th>Fecha</th>
-                                            <th>Prioridad</th>
-                                            <th>Estado</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="reportes-table-body">
-                                        <!-- Los datos de reportes se cargarán dinámicamente -->
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="pagination" id="reportes-pagination">
-                                <!-- Paginación -->
-                            </div>
+                        <div class="chart-body">
+                            <canvas id="reportesChart"></canvas>
                         </div>
-                    </div>
-
-                    <!-- Modal para ver/editar reporte -->
-                    <div class="modal" id="reporte-modal">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h3 id="reporte-modal-title">Detalles del Reporte</h3>
-                                <button class="close-modal">&times;</button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="reporte-details">
-                                    <div class="reporte-info">
-                                        <h4>Información del reporte</h4>
-                                        <p><strong>ID:</strong> <span id="reporte-id"></span></p>
-                                        <p><strong>Cliente:</strong> <span id="reporte-cliente"></span></p>
-                                        <p><strong>Tipo:</strong> <span id="reporte-tipo"></span></p>
-                                        <p><strong>Fecha:</strong> <span id="reporte-fecha"></span></p>
-                                        <p><strong>Descripción:</strong></p>
-                                        <p id="reporte-descripcion" class="reporte-descripcion"></p>
-                                    </div>
-                                    <div class="reporte-status">
-                                        <h4>Estado del reporte</h4>
-                                        <form id="reporte-form">
-                                            <div class="form-group">
-                                                <label for="reporte-estado">Estado actual</label>
-                                                <select id="reporte-estado">
-                                                    <option value="pendiente">Pendiente</option>
-                                                    <option value="en_proceso">En proceso</option>
-                                                    <option value="resuelto">Resuelto</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="reporte-prioridad">Prioridad</label>
-                                                <select id="reporte-prioridad">
-                                                    <option value="alta">Alta</option>
-                                                    <option value="media">Media</option>
-                                                    <option value="baja">Baja</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="reporte-comentario">Añadir comentario</label>
-                                                <textarea id="reporte-comentario" rows="3"></textarea>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                                <div class="reporte-timeline">
-                                    <h4>Historial de actividad</h4>
-                                    <ul class="timeline" id="reporte-timeline">
-                                        <!-- El historial se cargará dinámicamente -->
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn-secondary" id="reporte-cancel-btn">Cerrar</button>
-                                <button class="btn-primary" id="reporte-save-btn">Guardar cambios</button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Sección Pagos -->
-                <section id="pagos-tab" class="content-tab">
-                    <div class="section-header">
-                        <h2>Gestión de Pagos</h2>
-                        <button class="btn-primary" id="registrar-pago-btn">
-                            <i class="fas fa-plus"></i> Registrar Pago
-                        </button>
                     </div>
                     
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="filter-container">
-                                <div class="search-box">
-                                    <i class="fas fa-search"></i>
-                                    <input type="text" id="buscar-pago" placeholder="Buscar pago...">
+                    <div class="chart-container medium">
+                        <div class="chart-header">
+                            <h3>Pagos (Último Trimestre)</h3>
+                            <div class="chart-actions">
+                                <button class="chart-action">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="chart-action">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="pagosChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-recent">
+                    <div class="recent-container">
+                        <div class="recent-header">
+                            <h3>Reportes Recientes</h3>
+                            <a href="#" data-section="reports" class="view-all">Ver Todos</a>
+                        </div>
+                        <div class="recent-body">
+                            <div class="recent-item">
+                                <div class="recent-icon error">
+                                    <i class="fas fa-exclamation-circle"></i>
                                 </div>
-                                <div class="filter-options">
-                                    <select id="filtro-estado-pago">
-                                        <option value="todos">Todos los estados</option>
-                                        <option value="completado">Completado</option>
-                                        <option value="pendiente">Pendiente</option>
-                                        <option value="rechazado">Rechazado</option>
-                                    </select>
-                                    <select id="filtro-metodo-pago">
-                                        <option value="todos">Todos los métodos</option>
-                                        <option value="efectivo">Efectivo</option>
-                                        <option value="transferencia">Transferencia</option>
-                                        <option value="tarjeta">Tarjeta de crédito</option>
-                                    </select>
-                                    <div class="date-filter">
-                                        <label for="fecha-desde">Desde:</label>
-                                        <input type="date" id="fecha-desde">
-                                        <label for="fecha-hasta">Hasta:</label>
-                                        <input type="date" id="fecha-hasta">
-                                    </div>
+                                <div class="recent-details">
+                                    <h4>Alerta de Sensor</h4>
+                                    <p>Sensor de movimiento activado - Residencia Martínez</p>
+                                    <span class="recent-time">Hace 2 horas</span>
+                                </div>
+                                <div class="recent-status pending">
+                                    <span>Pendiente</span>
+                                </div>
+                            </div>
+                            
+                            <div class="recent-item">
+                                <div class="recent-icon warning">
+                                    <i class="fas fa-bell"></i>
+                                </div>
+                                <div class="recent-details">
+                                    <h4>Batería Baja</h4>
+                                    <p>Dispositivo con batería baja - Comercial Plaza Norte</p>
+                                    <span class="recent-time">Hace 5 horas</span>
+                                </div>
+                                <div class="recent-status in-progress">
+                                    <span>En Proceso</span>
+                                </div>
+                            </div>
+                            
+                            <div class="recent-item">
+                                <div class="recent-icon success">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="recent-details">
+                                    <h4>Mantenimiento Completado</h4>
+                                    <p>Mantenimiento preventivo - Edificio Central</p>
+                                    <span class="recent-time">Hace 1 día</span>
+                                </div>
+                                <div class="recent-status completed">
+                                    <span>Resuelto</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="data-table" id="pagos-table">
+                    </div>
+                    
+                    <div class="recent-container">
+                        <div class="recent-header">
+                            <h3>Últimos Pagos</h3>
+                            <a href="#" data-section="payments" class="view-all">Ver Todos</a>
+                        </div>
+                        <div class="recent-body">
+                            <div class="recent-item">
+                                <div class="recent-icon payment">
+                                    <i class="fas fa-credit-card"></i>
+                                </div>
+                                <div class="recent-details">
+                                    <h4>Plan Premium Anual</h4>
+                                    <p>Corporación ACME</p>
+                                    <span class="recent-time">28 Abril, 2025</span>
+                                </div>
+                                <div class="recent-amount">
+                                    <span>$3,600</span>
+                                </div>
+                            </div>
+                            
+                            <div class="recent-item">
+                                <div class="recent-icon payment">
+                                    <i class="fas fa-credit-card"></i>
+                                </div>
+                                <div class="recent-details">
+                                    <h4>Plan Básico Mensual</h4>
+                                    <p>Residencia Gómez</p>
+                                    <span class="recent-time">25 Abril, 2025</span>
+                                </div>
+                                <div class="recent-amount">
+                                    <span>$120</span>
+                                </div>
+                            </div>
+                            
+                            <div class="recent-item">
+                                <div class="recent-icon payment">
+                                    <i class="fas fa-credit-card"></i>
+                                </div>
+                                <div class="recent-details">
+                                    <h4>Plan Empresarial Trimestral</h4>
+                                    <p>Restaurante El Dorado</p>
+                                    <span class="recent-time">20 Abril, 2025</span>
+                                </div>
+                                <div class="recent-amount">
+                                    <span>$950</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Sección Usuarios -->
+            <section id="users-section" class="content-section">
+                <div class="section-header">
+                    <h2>Gestión de Usuarios</h2>
+                    <button class="add-button" id="add-user-btn">
+                        <i class="fas fa-plus"></i>
+                        <span>Nuevo Usuario</span>
+                    </button>
+                </div>
+                
+                <div class="users-filters">
+                    <div class="filter-group">
+                        <label>Filtrar por Rol:</label>
+                        <select id="role-filter">
+                            <option value="all">Todos</option>
+                            <option value="admin">Administradores</option>
+                            <option value="user">Clientes</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Estado:</label>
+                        <select id="status-filter">
+                            <option value="all">Todos</option>
+                            <option value="active">Activos</option>
+                            <option value="inactive">Inactivos</option>
+                        </select>
+                    </div>
+                    
+                    <div class="search-filter">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="user-search" placeholder="Buscar usuario...">
+                    </div>
+                </div>
+                
+                <div class="users-table-container">
+                    <table class="data-table users-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Rol</th>
+                                <th>Estado</th>
+                                <th>Fecha Registro</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            <!-- Los datos de usuarios se cargarán dinámicamente desde Firebase -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pagination">
+                    <button class="pagination-btn" id="prev-page-btn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="pagination-pages">
+                        <span class="current-page">1</span>
+                        <span>de</span>
+                        <span class="total-pages">5</span>
+                    </div>
+                    <button class="pagination-btn" id="next-page-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Sección Productos -->
+            <section id="products-section" class="content-section">
+                <div class="section-header">
+                    <h2>Gestión de Productos</h2>
+                    <button class="add-button" id="add-product-btn">
+                        <i class="fas fa-plus"></i>
+                        <span>Nuevo Producto</span>
+                    </button>
+                </div>
+                
+                <div class="products-grid">
+                    <!-- Los productos se cargarán dinámicamente desde Firebase -->
+                </div>
+                
+                <div class="pagination">
+                    <button class="pagination-btn" id="prev-product-page-btn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="pagination-pages">
+                        <span class="current-page">1</span>
+                        <span>de</span>
+                        <span class="total-pages">3</span>
+                    </div>
+                    <button class="pagination-btn" id="next-product-page-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Sección Ubicaciones -->
+            <section id="locations-section" class="content-section">
+                <div class="section-header">
+                    <h2>Ubicaciones de Clientes</h2>
+                    <button class="add-button" id="add-location-btn">
+                        <i class="fas fa-plus"></i>
+                        <span>Nueva Ubicación</span>
+                    </button>
+                </div>
+                
+                <div class="locations-filters">
+                    <div class="filter-group">
+                        <label>Cliente:</label>
+                        <select id="client-filter">
+                            <option value="all">Todos los clientes</option>
+                            <!-- Las opciones se cargarán dinámicamente desde Firebase -->
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Estado:</label>
+                        <select id="location-status-filter">
+                            <option value="all">Todos</option>
+                            <option value="active">Activos</option>
+                            <option value="pending">Pendientes</option>
+                            <option value="error">Con errores</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="map-container">
+                    <div id="client-map"></div>
+                </div>
+            </section>
+            
+            <!-- Sección Reportes -->
+            <section id="reports-section" class="content-section">
+                <div class="section-header">
+                    <h2>Reportes y Errores</h2>
+                </div>
+                
+                <div class="reports-filters">
+                    <div class="filter-group">
+                        <label>Filtrar por Estado:</label>
+                        <select id="report-status-filter">
+                            <option value="all">Todos</option>
+                            <option value="pending">Pendientes</option>
+                            <option value="in-progress">En Proceso</option>
+                            <option value="completed">Resueltos</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Tipo:</label>
+                        <select id="report-type-filter">
+                            <option value="all">Todos</option>
+                            <option value="alert">Alertas</option>
+                            <option value="error">Errores</option>
+                            <option value="maintenance">Mantenimiento</option>
+                        </select>
+                    </div>
+                    
+                    <div class="date-filter">
+                        <label>Fecha:</label>
+                        <input type="date" id="report-date-filter">
+                    </div>
+                </div>
+                
+                <div class="reports-container">
+                    <!-- Los reportes se cargarán dinámicamente desde Firebase -->
+                </div>
+                
+                <div class="pagination">
+                    <button class="pagination-btn" id="prev-report-page-btn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="pagination-pages">
+                        <span class="current-page">1</span>
+                        <span>de</span>
+                        <span class="total-pages">4</span>
+                    </div>
+                    <button class="pagination-btn" id="next-report-page-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Sección Pagos -->
+            <section id="payments-section" class="content-section">
+                <div class="section-header">
+                    <h2>Pagos y Facturación</h2>
+                    <button class="add-button" id="add-payment-btn">
+                        <i class="fas fa-plus"></i>
+                        <span>Registrar Pago</span>
+                    </button>
+                </div>
+                
+                <div class="payment-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Ingresos del Mes</h3>
+                            <p class="stat-number">$24,560</p>
+                            <p class="stat-growth positive">+8% vs mes anterior</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Facturas Pendientes</h3>
+                            <p class="stat-number">14</p>
+                            <p class="stat-growth negative">-2 desde ayer</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Pagos Completados</h3>
+                            <p class="stat-number">86</p>
+                            <p class="stat-growth positive">+12 este mes</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="payment-tabs">
+                    <div class="tab-header">
+                        <button class="tab-btn active" data-tab="recent-payments">Pagos Recientes</button>
+                        <button class="tab-btn" data-tab="pending-payments">Pagos Pendientes</button>
+                        <button class="tab-btn" data-tab="invoices">Facturas</button>
+                    </div>
+                    
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="recent-payments">
+                            <div class="payments-table-container">
+                                <table class="data-table payments-table">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
                                             <th>Cliente</th>
+                                            <th>Servicio</th>
                                             <th>Monto</th>
                                             <th>Fecha</th>
                                             <th>Método</th>
@@ -662,443 +577,713 @@
                                             <th>Acciones</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="pagos-table-body">
-                                        <!-- Los datos de pagos se cargarán dinámicamente -->
+                                    <tbody id="payments-table-body">
+                                        <!-- Los datos de pagos se cargarán dinámicamente desde Firebase -->
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="pagination" id="pagos-pagination">
-                                <!-- Paginación -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Modal para registrar/ver pago -->
-                    <div class="modal" id="pago-modal">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h3 id="pago-modal-title">Registrar Pago</h3>
-                                <button class="close-modal">&times;</button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="pago-form">
-                                    <div class="form-group">
-                                        <label for="pago-cliente">Cliente</label>
-                                        <select id="pago-cliente" required>
-                                            <!-- Los clientes se cargarán dinámicamente -->
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="pago-concepto">Concepto</label>
-                                        <input type="text" id="pago-concepto" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="pago-monto">Monto ($)</label>
-                                        <input type="number" id="pago-monto" step="0.01" min="0" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="pago-fecha">Fecha</label>
-                                        <input type="date" id="pago-fecha" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="pago-metodo">Método de pago</label>
-                                        <select id="pago-metodo" required>
-                                            <option value="efectivo">Efectivo</option>
-                                            <option value="transferencia">Transferencia</option>
-                                            <option value="tarjeta">Tarjeta de crédito</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="pago-comprobante">Comprobante (opcional)</label>
-                                        <input type="file" id="pago-comprobante" accept="image/*,application/pdf">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="pago-notas">Notas adicionales</label>
-                                        <textarea id="pago-notas" rows="3"></textarea>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn-secondary" id="pago-cancel-btn">Cancelar</button>
-                                <button class="btn-primary" id="pago-save-btn">Guardar</button>
-                                <button class="btn-success" id="pago-factura-btn">Generar Factura</button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Sección Estadísticas -->
-                <section id="estadisticas-tab" class="content-tab">
-                    <div class="section-header">
-                        <h2>Estadísticas</h2>
-                        <div class="period-selector">
-                            <button class="btn-small" data-period="week">Semana</button>
-                            <button class="btn-small active" data-period="month">Mes</button>
-                            <button class="btn-small" data-period="year">Año</button>
-                            <button class="btn-small" data-period="custom">Personalizado</button>
-                        </div>
-                    </div>
-                    
-                    <div class="stats-grid">
-                        <div class="dashboard-card">
-                            <div class="card-header">
-                                <h3>Clientes Activos</h3>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="clientes-activos-chart"></canvas>
-                            </div>
-                        </div>
-                        <div class="dashboard-card">
-                            <div class="card-header">
-                                <h3>Reportes por Mes</h3>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="reportes-mes-chart"></canvas>
-                            </div>
-                        </div>
-                        <div class="dashboard-card">
-                            <div class="card-header">
-                                <h3>Pagos Realizados vs Pendientes</h3>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="pagos-estado-chart"></canvas>
-                            </div>
-                        </div>
-                        <div class="dashboard-card">
-                            <div class="card-header">
-                                <h3>Distribución de Clientes</h3>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="clientes-ubicacion-chart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="dashboard-row">
-                        <div class="dashboard-card full-width">
-                            <div class="card-header">
-                                <h3>Tendencia de Ingresos</h3>
-                                <div class="card-actions">
-                                    <select id="ingresos-chart-view">
-                                        <option value="daily">Diario</option>
-                                        <option value="weekly">Semanal</option>
-                                        <option value="monthly" selected>Mensual</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="ingresos-trend-chart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="dashboard-row">
-                        <div class="dashboard-card">
-                            <div class="card-header">
-                                <h3>Top Productos</h3>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="top-productos-chart"></canvas>
-                            </div>
-                        </div>
-                        <div class="dashboard-card">
-                            <div class="card-header">
-                                <h3>Tipo de Reportes</h3>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="tipo-reportes-chart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Sección Configuración -->
-                <section id="configuracion-tab" class="content-tab">
-                    <div class="section-header">
-                        <h2>Configuración</h2>
-                    </div>
-                    
-                    <div class="config-tabs">
-                        <div class="config-tab-buttons">
-                            <button class="config-tab-btn active" data-tab="perfil">Perfil</button>
-                            <button class="config-tab-btn" data-tab="empresa">Empresa</button>
-                            <button class="config-tab-btn" data-tab="notificaciones">Notificaciones</button>
-                            <button class="config-tab-btn" data-tab="seguridad">Seguridad</button>
                         </div>
                         
-                        <div class="config-tab-content">
-                            <!-- Perfil -->
-                            <div class="config-tab-pane active" id="perfil-tab">
-                                <div class="profile-container">
-                                    <div class="profile-header">
-                                        <div class="profile-avatar">
-                                            <img src="assets/img/avatar.png" alt="Usuario" id="profile-avatar-img">
-                                            <button class="edit-avatar-btn"><i class="fas fa-camera"></i></button>
-                                            <input type="file" id="avatar-input" accept="image/*" style="display: none;">
-                                        </div>
-                                        <div class="profile-info">
-                                            <h3 id="profile-name">Nombre de Usuario</h3>
-                                            <p id="profile-role">Administrador</p>
-                                            <p id="profile-email">usuario@ejemplo.com</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="profile-form">
-                                        <h4>Información Personal</h4>
-                                        <form id="profile-form">
-                                            <div class="form-row">
-                                                <div class="form-group">
-                                                    <label for="profile-nombre">Nombre</label>
-                                                    <input type="text" id="profile-nombre">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="profile-apellido">Apellido</label>
-                                                    <input type="text" id="profile-apellido">
-                                                </div>
-                                            </div>
-                                            <div class="form-row">
-                                                <div class="form-group">
-                                                    <label for="profile-telefono">Teléfono</label>
-                                                    <input type="tel" id="profile-telefono">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="profile-email-edit">Email</label>
-                                                    <input type="email" id="profile-email-edit">
-                                                </div>
-                                            </div>
-                                            <button type="submit" class="btn-primary">Guardar Cambios</button>
-                                        </form>
-                                    </div>
+                        <div class="tab-pane" id="pending-payments">
+                            <div class="payments-table-container">
+                                <table class="data-table pending-payments-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Cliente</th>
+                                            <th>Servicio</th>
+                                            <th>Monto</th>
+                                            <th>Fecha Límite</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="pending-payments-table-body">
+                                        <!-- Los datos de pagos pendientes se cargarán dinámicamente desde Firebase -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="tab-pane" id="invoices">
+                            <div class="invoices-grid">
+                                <!-- Las facturas se cargarán dinámicamente desde Firebase -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Sección Estadísticas -->
+            <section id="analytics-section" class="content-section">
+                <div class="section-header">
+                    <h2>Estadísticas y Análisis</h2>
+                    <div class="date-range">
+                        <button class="date-btn active" data-range="month">Mes</button>
+                        <button class="date-btn" data-range="quarter">Trimestre</button>
+                        <button class="date-btn" data-range="year">Año</button>
+                        <button class="date-btn" data-range="custom">Personalizado</button>
+                    </div>
+                </div>
+                
+                <div class="analytics-charts">
+                    <div class="chart-container full">
+                        <div class="chart-header">
+                            <h3>Tendencia de Clientes Activos</h3>
+                            <div class="chart-actions">
+                                <button class="chart-action">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="chart-action">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="clientesTendenciaChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container large">
+                        <div class="chart-header">
+                            <h3>Reportes por Mes</h3>
+                            <div class="chart-actions">
+                                <button class="chart-action">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="chart-action">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="reportesMensualesChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container large">
+                        <div class="chart-header">
+                            <h3>Pagos Realizados vs Pendientes</h3>
+                            <div class="chart-actions">
+                                <button class="chart-action">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="chart-action">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="pagosTipoChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container medium">
+                        <div class="chart-header">
+                            <h3>Distribución de Servicios</h3>
+                            <div class="chart-actions">
+                                <button class="chart-action">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="chart-action">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="serviciosDistribucionChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container medium">
+                        <div class="chart-header">
+                            <h3>Crecimiento de Ingresos</h3>
+                            <div class="chart-actions">
+                                <button class="chart-action">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="chart-action">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="ingresosCrecimientoChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Sección Configuración -->
+            <section id="settings-section" class="content-section">
+                <div class="section-header">
+                    <h2>Configuración del Sistema</h2>
+                </div>
+                
+                <div class="settings-container">
+                    <div class="settings-sidebar">
+                        <ul>
+                            <li class="active" data-settings="general">General</li>
+                            <li data-settings="notifications">Notificaciones</li>
+                            <li data-settings="security">Seguridad</li>
+                            <li data-settings="appearance">Apariencia</li>
+                            <li data-settings="backup">Respaldos</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="settings-content">
+                        <div class="settings-pane active" id="general-settings">
+                            <h3>Configuración General</h3>
+                            <form id="general-settings-form">
+                                <div class="form-group">
+                                    <label for="company-name">Nombre de la Empresa</label>
+                                    <input type="text" id="company-name" value="Seguridad 24/7">
                                 </div>
-                            </div>
-                            
-                            <!-- Empresa -->
-                            <div class="config-tab-pane" id="empresa-tab">
-                                <form id="empresa-form">
-                                    <div class="form-group">
-                                        <label for="empresa-nombre">Nombre de la Empresa</label>
-                                        <input type="text" id="empresa-nombre" value="Seguridad 24/7">
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label for="empresa-ruc">RUC</label>
-                                            <input type="text" id="empresa-ruc">
+                                
+                                <div class="form-group">
+                                    <label for="admin-email">Email Administrador</label>
+                                    <input type="email" id="admin-email" value="admin@seguridad247.com">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="timezone">Zona Horaria</label>
+                                    <select id="timezone">
+                                        <option value="UTC-5">UTC-5 (Hora Este)</option>
+                                        <option value="UTC-6">UTC-6 (Hora Central)</option>
+                                        <option value="UTC-7">UTC-7 (Hora Montaña)</option>
+                                        <option value="UTC-8">UTC-8 (Hora Pacífico)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="language">Idioma</label>
+                                    <select id="language">
+                                        <option value="es">Español</option>
+                                        <option value="en">Inglés</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="currency">Moneda</label>
+                                    <select id="currency">
+                                        <option value="USD">USD ($)</option>
+                                        <option value="EUR">EUR (€)</option>
+                                        <option value="MXN">MXN ($)</option>
+                                    </select>
+                                </div>
+                                
+                                <button type="submit" class="btn-primary">Guardar Cambios</button>
+                            </form>
+                        </div>
+                        
+                        <div class="settings-pane" id="notifications-settings">
+                            <h3>Configuración de Notificaciones</h3>
+                            <form id="notifications-settings-form">
+                                <div class="switch-group">
+                                    <label for="email-notifications">Notificaciones por Email</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="email-notifications" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                
+                                <div class="switch-group">
+                                    <label for="sms-notifications">Notificaciones por SMS</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="sms-notifications">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                
+                                <div class="switch-group">
+                                    <label for="alert-notifications">Alertas de Emergencia</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="alert-notifications" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                
+                                <div class="switch-group">
+                                    <label for="report-notifications">Reportes Nuevos</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="report-notifications" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                
+                                <div class="switch-group">
+                                    <label for="payment-notifications">Pagos Recibidos</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="payment-notifications" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                
+                                <button type="submit" class="btn-primary">Guardar Cambios</button>
+                            </form>
+                        </div>
+                        
+                        <div class="settings-pane" id="security-settings">
+                            <h3>Configuración de Seguridad</h3>
+                            <form id="security-settings-form">
+                                <div class="form-group">
+                                    <label for="current-password">Contraseña Actual</label>
+                                    <input type="password" id="current-password">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="new-password">Nueva Contraseña</label>
+                                    <input type="password" id="new-password">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="confirm-password">Confirmar Contraseña</label>
+                                    <input type="password" id="confirm-password">
+                                </div>
+                                
+                                <div class="switch-group">
+                                    <label for="two-factor-auth">Autenticación de Dos Factores</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="two-factor-auth">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                
+                                <div class="switch-group">
+                                    <label for="session-timeout">Tiempo de Inactividad (30 min)</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="session-timeout" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                
+                                <button type="submit" class="btn-primary">Guardar Cambios</button>
+                            </form>
+                        </div>
+                        
+                        <div class="settings-pane" id="appearance-settings">
+                            <h3>Configuración de Apariencia</h3>
+                            <form id="appearance-settings-form">
+                                <div class="theme-options">
+                                    <label>Tema:</label>
+                                    <div class="theme-selector">
+                                        <div class="theme-option active" data-theme="light">
+                                            <div class="theme-preview light-theme"></div>
+                                            <span>Claro</span>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="empresa-telefono">Teléfono</label>
-                                            <input type="tel" id="empresa-telefono">
+                                        <div class="theme-option" data-theme="dark">
+                                            <div class="theme-preview dark-theme"></div>
+                                            <span>Oscuro</span>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="empresa-direccion">Dirección</label>
-                                        <input type="text" id="empresa-direccion">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="empresa-email">Email</label>
-                                        <input type="email" id="empresa-email">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="empresa-website">Sitio Web</label>
-                                        <input type="url" id="empresa-website">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="empresa-logo">Logo</label>
-                                        <input type="file" id="empresa-logo" accept="image/*">
-                                        <div class="logo-preview">
-                                            <img src="assets/img/logo.png" alt="Logo" id="logo-preview">
-                                        </div>
-                                    </div>
-                                    <button type="submit" class="btn-primary">Guardar Cambios</button>
-                                </form>
-                            </div>
-                            
-                            <!-- Notificaciones -->
-                            <div class="config-tab-pane" id="notificaciones-tab">
-                                <div class="notification-settings">
-                                    <h4>Preferencias de Notificaciones</h4>
-                                    <div class="notification-option">
-                                        <div class="option-info">
-                                            <h5>Nuevos Reportes</h5>
-                                            <p>Recibir notificaciones cuando se cree un nuevo reporte</p>
-                                        </div>
-                                        <div class="toggle-container">
-                                            <input type="checkbox" id="notif-nuevos-reportes" class="toggle-input" checked>
-                                            <label for="notif-nuevos-reportes" class="toggle-label"></label>
-                                        </div>
-                                    </div>
-                                    <div class="notification-option">
-                                        <div class="option-info">
-                                            <h5>Pagos Recibidos</h5>
-                                            <p>Recibir notificaciones cuando se registre un nuevo pago</p>
-                                        </div>
-                                        <div class="toggle-container">
-                                            <input type="checkbox" id="notif-pagos" class="toggle-input" checked>
-                                            <label for="notif-pagos" class="toggle-label"></label>
-                                        </div>
-                                    </div>
-                                    <div class="notification-option">
-                                        <div class="option-info">
-                                            <h5>Alertas de Seguridad</h5>
-                                            <p>Recibir notificaciones de alertas de seguridad en los clientes</p>
-                                        </div>
-                                        <div class="toggle-container">
-                                            <input type="checkbox" id="notif-alertas" class="toggle-input" checked>
-                                            <label for="notif-alertas" class="toggle-label"></label>
-                                        </div>
-                                    </div>
-                                    <div class="notification-option">
-                                        <div class="option-info">
-                                            <h5>Nuevos Usuarios</h5>
-                                            <p>Recibir notificaciones cuando se registre un nuevo usuario</p>
-                                        </div>
-                                        <div class="toggle-container">
-                                            <input type="checkbox" id="notif-usuarios" class="toggle-input">
-                                            <label for="notif-usuarios" class="toggle-label"></label>
+                                        <div class="theme-option" data-theme="auto">
+                                            <div class="theme-preview auto-theme"></div>
+                                            <span>Auto</span>
                                         </div>
                                     </div>
                                 </div>
                                 
-                                <div class="notification-delivery">
-                                    <h4>Métodos de Entrega</h4>
-                                    <div class="notification-option">
-                                        <div class="option-info">
-                                            <h5>Email</h5>
-                                            <p>Recibir notificaciones por correo electrónico</p>
-                                        </div>
-                                        <div class="toggle-container">
-                                            <input type="checkbox" id="entrega-email" class="toggle-input" checked>
-                                            <label for="entrega-email" class="toggle-label"></label>
-                                        </div>
-                                    </div>
-                                    <div class="notification-option">
-                                        <div class="option-info">
-                                            <h5>SMS</h5>
-                                            <p>Recibir notificaciones por mensaje de texto</p>
-                                        </div>
-                                        <div class="toggle-container">
-                                            <input type="checkbox" id="entrega-sms" class="toggle-input">
-                                            <label for="entrega-sms" class="toggle-label"></label>
-                                        </div>
-                                    </div>
-                                    <div class="notification-option">
-                                        <div class="option-info">
-                                            <h5>Push</h5>
-                                            <p>Recibir notificaciones push en el navegador</p>
-                                        </div>
-                                        <div class="toggle-container">
-                                            <input type="checkbox" id="entrega-push" class="toggle-input" checked>
-                                            <label for="entrega-push" class="toggle-label"></label>
-                                        </div>
-                                    </div>
+                                <div class="form-group">
+                                    <label for="sidebar-position">Posición de Barra Lateral</label>
+                                    <select id="sidebar-position">
+                                        <option value="left">Izquierda</option>
+                                        <option value="right">Derecha</option>
+                                    </select>
                                 </div>
                                 
-                                <button class="btn-primary">Guardar Preferencias</button>
-                            </div>
-                            
-                            <!-- Seguridad -->
-                            <div class="config-tab-pane" id="seguridad-tab">
-                                <div class="security-settings">
-                                    <h4>Cambiar Contraseña</h4>
-                                    <form id="password-form">
-                                        <div class="form-group">
-                                            <label for="current-password">Contraseña Actual</label>
-                                            <input type="password" id="current-password" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="new-password">Nueva Contraseña</label>
-                                            <input type="password" id="new-password" required>
-                                            <div class="password-strength">
-                                                <div class="strength-meter">
-                                                    <div class="meter-bar"></div>
-                                                </div>
-                                                <span class="strength-text">Débil</span>
+                                <div class="form-group">
+                                    <label for="font-size">Tamaño de Fuente</label>
+                                    <select id="font-size">
+                                        <option value="small">Pequeño</option>
+                                        <option value="medium" selected>Mediano</option>
+                                        <option value="large">Grande</option>
+                                    </select>
+                                </div>
+                                
+                                <button type="submit" class="btn-primary">Guardar Cambios</button>
+                            </form>
+                        </div>
+                        
+                        <div class="settings-pane" id="backup-settings">
+                            <h3>Respaldos y Restauración</h3>
+                            <div class="backup-options">
+                                <div class="backup-option">
+                                    <h4>Crear Respaldo</h4>
+                                    <p>Generar una copia de seguridad completa de todos los datos del sistema.</p>
+                                    <button class="btn-primary" id="create-backup">Crear Respaldo</button>
+                                </div>
+                                
+                                <div class="backup-option">
+                                    <h4>Restaurar Respaldo</h4>
+                                    <p>Restaurar el sistema desde una copia de seguridad anterior.</p>
+                                    <div class="file-upload">
+                                        <input type="file" id="restore-backup-file">
+                                        <label for="restore-backup-file">Seleccionar Archivo</label>
+                                    </div>
+                                    <button class="btn-secondary" id="restore-backup">Restaurar</button>
+                                </div>
+                                
+                                <div class="backup-history">
+                                    <h4>Historial de Respaldos</h4>
+                                    <div class="backup-list">
+                                        <div class="backup-item">
+                                            <div class="backup-info">
+                                                <span class="backup-date">01/05/2025 - 10:30 AM</span>
+                                                <span class="backup-size">24.5 MB</span>
+                                            </div>
+                                            <div class="backup-actions">
+                                                <button class="btn-icon" title="Descargar">
+                                                    <i class="fas fa-download"></i>
+                                                </button>
+                                                <button class="btn-icon" title="Restaurar">
+                                                    <i class="fas fa-undo"></i>
+                                                </button>
+                                                <button class="btn-icon danger" title="Eliminar">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="confirm-password">Confirmar Contraseña</label>
-                                            <input type="password" id="confirm-password" required>
-                                        </div>
-                                        <button type="submit" class="btn-primary">Actualizar Contraseña</button>
-                                    </form>
-                                    
-                                    <h4>Sesiones Activas</h4>
-                                    <div class="sessions-list">
-                                        <div class="session-item current">
-                                            <div class="session-info">
-                                                <i class="fas fa-laptop"></i>
-                                                <div>
-                                                    <h5>Este dispositivo</h5>
-                                                    <p>Windows 10 · Chrome · Quito, Ecuador</p>
-                                                    <span class="session-time">Activo ahora</span>
-                                                </div>
+                                        
+                                        <div class="backup-item">
+                                            <div class="backup-info">
+                                                <span class="backup-date">28/04/2025 - 08:15 AM</span>
+                                                <span class="backup-size">23.8 MB</span>
                                             </div>
-                                            <button class="btn-text">Está aquí</button>
-                                        </div>
-                                        <div class="session-item">
-                                            <div class="session-info">
-                                                <i class="fas fa-mobile-alt"></i>
-                                                <div>
-                                                    <h5>Dispositivo móvil</h5>
-                                                    <p>iOS 15 · Safari · Guayaquil, Ecuador</p>
-                                                    <span class="session-time">Hace 2 horas</span>
-                                                </div>
+                                            <div class="backup-actions">
+                                                <button class="btn-icon" title="Descargar">
+                                                    <i class="fas fa-download"></i>
+                                                </button>
+                                                <button class="btn-icon" title="Restaurar">
+                                                    <i class="fas fa-undo"></i>
+                                                </button>
+                                                <button class="btn-icon danger" title="Eliminar">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
                                             </div>
-                                            <button class="btn-danger">Cerrar sesión</button>
                                         </div>
                                     </div>
-                                    
-                                    <button class="btn-danger btn-outline">Cerrar todas las sesiones</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </section>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Modales -->
+    <!-- Modal Usuario -->
+    <div class="modal" id="user-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="user-modal-title">Nuevo Usuario</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="user-form">
+                    <div class="form-group">
+                        <label for="user-name">Nombre Completo</label>
+                        <input type="text" id="user-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="user-email">Correo Electrónico</label>
+                        <input type="email" id="user-email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="user-password">Contraseña</label>
+                        <input type="password" id="user-password" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="user-role">Rol</label>
+                        <select id="user-role" required>
+                            <option value="admin">Administrador</option>
+                            <option value="user" selected>Cliente</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="user-phone">Teléfono</label>
+                        <input type="tel" id="user-phone">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="user-address">Dirección</label>
+                        <textarea id="user-address"></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary cancel-btn">Cancelar</button>
+                        <button type="submit" class="btn-primary" id="save-user-btn">Guardar</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+    
+    <!-- Modal Producto -->
+    <div class="modal" id="product-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="product-modal-title">Nuevo Producto</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="product-form">
+                    <div class="form-columns">
+                        <div class="form-column">
+                            <div class="form-group">
+                                <label for="product-name">Nombre del Producto</label>
+                                <input type="text" id="product-name" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="product-description">Descripción</label>
+                                <textarea id="product-description" required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="product-price">Precio</label>
+                                <div class="price-input">
+                                    <span class="currency">$</span>
+                                    <input type="number" id="product-price" min="0" step="0.01" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="product-category">Categoría</label>
+                                <select id="product-category" required>
+                                    <option value="">Seleccionar categoría</option>
+                                    <option value="cameras">Cámaras de Seguridad</option>
+                                    <option value="alarms">Sistemas de Alarma</option>
+                                    <option value="sensors">Sensores</option>
+                                    <option value="control">Control de Acceso</option>
+                                    <option value="services">Servicios</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-column">
+                            <div class="form-group">
+                                <label>Imagen del Producto</label>
+                                <div class="product-image-upload">
+                                    <div class="image-preview">
+                                        <img id="product-image-preview" src="/api/placeholder/120/120" alt="Vista previa">
+                                    </div>
+                                    <div class="upload-actions">
+                                        <div class="file-upload">
+                                            <input type="file" id="product-image" accept="image/*">
+                                            <label for="product-image">Seleccionar Imagen</label>
+                                        </div>
+                                        <button type="button" class="btn-text" id="remove-image">Eliminar</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="product-stock">Stock Disponible</label>
+                                <input type="number" id="product-stock" min="0" required>
+                            </div>
+                            
+                            <div class="switch-group">
+                                <label for="product-featured">Destacado</label>
+                                <label class="switch">
+                                    <input type="checkbox" id="product-featured">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="switch-group">
+                                <label for="product-active">Activo</label>
+                                <label class="switch">
+                                    <input type="checkbox" id="product-active" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary cancel-btn">Cancelar</button>
+                        <button type="submit" class="btn-primary" id="save-product-btn">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Ubicación -->
+    <div class="modal" id="location-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="location-modal-title">Nueva Ubicación</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="location-form">
+                    <div class="form-group">
+                        <label for="location-client">Cliente</label>
+                        <select id="location-client" required>
+                            <option value="">Seleccionar cliente</option>
+                            <!-- Las opciones se cargarán dinámicamente desde Firebase -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location-name">Nombre de la Ubicación</label>
+                        <input type="text" id="location-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location-address">Dirección</label>
+                        <input type="text" id="location-address" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label for="location-lat">Latitud</label>
+                            <input type="text" id="location-lat" required>
+                        </div>
+                        <div class="form-group half">
+                            <label for="location-lng">Longitud</label>
+                            <input type="text" id="location-lng" required>
+                        </div>
+                    </div>
+                    
+                    <div class="location-map-container">
+                        <div id="location-preview-map"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location-status">Estado</label>
+                        <select id="location-status" required>
+                            <option value="active">Activo</option>
+                            <option value="pending">Pendiente</option>
+                            <option value="error">Error</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location-image">Imagen de la Ubicación</label>
+                        <div class="file-upload">
+                            <input type="file" id="location-image" accept="image/*">
+                            <label for="location-image">Seleccionar Imagen</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location-radius">Radio de Cobertura (metros)</label>
+                        <input type="number" id="location-radius" min="10" max="1000" value="100" required>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary cancel-btn">Cancelar</button>
+                        <button type="submit" class="btn-primary" id="save-location-btn">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Pago -->
+    <div class="modal" id="payment-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="payment-modal-title">Registrar Pago</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="payment-form">
+                    <div class="form-group">
+                        <label for="payment-client">Cliente</label>
+                        <select id="payment-client" required>
+                            <option value="">Seleccionar cliente</option>
+                            <!-- Las opciones se cargarán dinámicamente desde Firebase -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="payment-service">Servicio</label>
+                        <select id="payment-service" required>
+                            <option value="">Seleccionar servicio</option>
+                            <!-- Las opciones se cargarán dinámicamente desde Firebase -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="payment-amount">Monto</label>
+                        <div class="price-input">
+                            <span class="currency">$</span>
+                            <input type="number" id="payment-amount" min="0" step="0.01" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="payment-date">Fecha</label>
+                        <input type="date" id="payment-date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="payment-method">Método de Pago</label>
+                        <select id="payment-method" required>
+                            <option value="credit_card">Tarjeta de Crédito</option>
+                            <option value="debit_card">Tarjeta de Débito</option>
+                            <option value="bank_transfer">Transferencia Bancaria</option>
+                            <option value="cash">Efectivo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="payment-reference">Referencia</label>
+                        <input type="text" id="payment-reference">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="payment-notes">Notas</label>
+                        <textarea id="payment-notes"></textarea>
+                    </div>
+                    
+                    <div class="switch-group">
+                        <label for="generate-invoice">Generar Factura</label>
+                        <label class="switch">
+                            <input type="checkbox" id="generate-invoice" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary cancel-btn">Cancelar</button>
+                        <button type="submit" class="btn-primary" id="save-payment-btn">Registrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-app-compat.js"></script>
 
-    <!-- Scripts -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
+<!-- Agregar los productos de Firebase que usarás -->
+<script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-storage-compat.js"></script>
 
-<script>
-// Tu configuración Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyD_C3sJCghWpV1DHn4Qyxsa-exdcEJGst0",
-  authDomain: "seguridad-24-7.firebaseapp.com",
-  projectId: "seguridad-24-7",
-  storageBucket: "seguridad-24-7.firebasestorage.app",
-  messagingSenderId: "979899411271",
-  appId: "1:979899411271:web:4d8db498a9388054a7fa62",
-  measurementId: "G-XQG0KDMMX4"
-};
-
-// Inicializar Firebase
-firebase.initializeApp(firebaseConfig);
-</script>
-
+<!-- Script de configuración de Firebase -->
+<script src="firebase/firebase.js"></script>
+  
 
     
-    <script src="firebase/globals.js"></script>
-    <script src="dashboardsjs/estadisticas.js"></script>
-    <script src="dashboardsjs/navegacion.js"></script>
-
-    <script src="dashboardsjs/ubicaciones.js"></script>
+    <!-- JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/3.9.1/chart.min.js"></script>
+    <script src="dashboardsjs/sidebar.js"></script>
+    <script src="dashboardsjs/modales.js"></script>
     <script src="dashboardsjs/usuarios.js"></script>
-    <script src="firebase/config.js"></script>
-    <script src="firebase/2.js"></script>
-   
-    <script src="firebase/globals.js"></script>
-
+    <script src="dashboardsjs/productos.js"></script>
+    <script src="dashboardsjs/ubicaciones.js"></script>
+    <script src="dashboardsjs/graficos.js"></script>
+    <script src="dashboardsjs/reportes.js"></script>
+    <script src="dashboardsjs/pagos.js"></script>
+    <script src="dashboardsjs/authenticaion.js"></script>
     
-   
-    
-
-    
-    
+  
 </body>
 </html>

@@ -1,623 +1,1190 @@
-// Variables globales para la gestión de pagos
-let paymentsList = [];
-let currentPage = 1;
-let itemsPerPage = 10;
-let totalPages = 0;
-let editingPaymentId = null;
+// pagos.js - Módulo de pagos y facturación completo
+document.addEventListener('DOMContentLoaded', function() {
+    // Verificar si Firebase está disponible
+    if (typeof firebase === 'undefined') {
+        console.error('Firebase no está definido. Asegúrate de cargar los scripts de Firebase.');
+        return;
+    }
 
-// Cargar pagos desde Firestore
-function loadPayments(page = 1) {
-  currentPage = page;
-  
-  // Mostrar indicador de carga
-  document.getElementById('pagos-table-body').innerHTML = '<tr><td colspan="7" class="text-center">Cargando...</td></tr>';
-  
-  // Obtener filtros
-  const estadoFilter = document.getElementById('filtro-estado-pago').value;
-  const metodoFilter = document.getElementById('filtro-metodo-pago').value;
-  const fechaDesde = document.getElementById('fecha-desde').value;
-  const fechaHasta = document.getElementById('fecha-hasta').value;
-  const searchText = document.getElementById('buscar-pago').value.toLowerCase();
-  
-  // Referencia a la colección de pagos
-  let paymentsRef = firebase.firestore().collection('pagos');
-  
-  // Aplicar filtros de estado si no es "todos"
-  if (estadoFilter !== 'todos') {
-    paymentsRef = paymentsRef.where('estado', '==', estadoFilter);
-  }
-  
-  // Aplicar filtros de método si no es "todos"
-  if (metodoFilter !== 'todos') {
-    paymentsRef = paymentsRef.where('metodo', '==', metodoFilter);
-  }
-  
-  // Ordenar por fecha (más recientes primero)
-  paymentsRef = paymentsRef.orderBy('fecha', 'desc');
-  
-  // Obtener pagos
-  paymentsRef.get()
-    .then(snapshot => {
-      paymentsList = [];
-      
-      snapshot.forEach(doc => {
-        const paymentData = doc.data();
-        
-        // Filtrar por rango de fechas si se especificaron
-        if (fechaDesde || fechaHasta) {
-          let paymentDate = paymentData.fecha;
-          if (paymentDate) {
-            paymentDate = paymentDate.toDate ? paymentDate.toDate() : new Date(paymentDate);
-            
-            if (fechaDesde) {
-              const fromDate = new Date(fechaDesde);
-              if (paymentDate < fromDate) return;
-            }
-            
-            if (fechaHasta) {
-              const toDate = new Date(fechaHasta);
-              toDate.setHours(23, 59, 59, 999); // Final del día
-              if (paymentDate > toDate) return;
-            }
-          }
-        }
-        
-        // Filtrar por texto de búsqueda si existe
-        if (searchText) {
-          const matchesSearch = 
-            (paymentData.clientName && paymentData.clientName.toLowerCase().includes(searchText)) ||
-            (paymentData.concepto && paymentData.concepto.toLowerCase().includes(searchText));
-          
-          if (!matchesSearch) return;
-        }
-        
-        paymentsList.push({
-          id: doc.id,
-          ...paymentData
-        });
-      });
-      
-      // Calcular paginación
-      totalPages = Math.ceil(paymentsList.length / itemsPerPage);
-      
-      // Mostrar pagos en la tabla
-      displayPayments();
-      
-      // Actualizar paginación
-      updatePagination();
-    })
-    .catch(error => {
-      console.error("Error al cargar pagos:", error);
-      document.getElementById('pagos-table-body').innerHTML = 
-        '<tr><td colspan="7" class="text-center">Error al cargar pagos. Intente nuevamente.</td></tr>';
-    });
-}
-
-// Mostrar pagos en la tabla
-function displayPayments() {
-  const tableBody = document.getElementById('pagos-table-body');
-  tableBody.innerHTML = '';
-  
-  // Calcular índices para la paginación
-  const startIdx = (currentPage - 1) * itemsPerPage;
-  const endIdx = Math.min(startIdx + itemsPerPage, paymentsList.length);
-  
-  if (paymentsList.length === 0) {
-    tableBody.innerHTML = '<tr><td colspan="7" class="text-center">No se encontraron pagos.</td></tr>';
-    return;
-  }
-  
-  // Mostrar pagos para la página actual
-  for (let i = startIdx; i < endIdx; i++) {
-    const payment = paymentsList[i];
-    const row = document.createElement('tr');
+    // Elementos del DOM
+    const addPaymentBtn = document.getElementById('add-payment-btn');
+    const paymentModal = document.getElementById('payment-modal');
+    const paymentForm = document.getElementById('payment-form');
+    const paymentsTableBody = document.getElementById('payments-table-body');
+    const pendingPaymentsTableBody = document.getElementById('pending-payments-table-body');
+    const invoicesGrid = document.querySelector('.invoices-grid');
     
-    // Formatear fecha
-    let fechaPago = 'Fecha desconocida';
-    if (payment.fecha) {
-      const date = payment.fecha.toDate ? payment.fecha.toDate() : new Date(payment.fecha);
-      fechaPago = date.toLocaleDateString();
+    // Tabs de pagos
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+    
+    // Referencias a Firebase
+    const db = firebase.firestore();
+    const paymentsRef = db.collection('pagos');
+    const invoicesRef = db.collection('facturas');
+    const clientsRef = db.collection('usuarios').where('role', '==', 'user');
+    const servicesRef = db.collection('productos');
+    
+    // Variables de estado
+    let editingPaymentId = null;
+    
+    // Inicializar componentes
+    initPaymentTabs();
+    initPaymentListeners();
+    loadPayments();
+    loadPendingPayments();
+    loadInvoices();
+    loadClients();
+    loadServices();
+    updatePaymentStats();
+    
+    // Inicializar tabs de pagos
+    function initPaymentTabs() {
+        // Agregar listeners a los botones de tabs
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Obtener tab a mostrar
+                const tab = this.getAttribute('data-tab');
+                
+                // Cambiar tab activo
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Mostrar contenido del tab
+                tabPanes.forEach(pane => pane.classList.remove('active'));
+                document.getElementById(tab).classList.add('active');
+            });
+        });
     }
     
-    // Clases CSS para estado
-    const estadoClass = getPaymentStatusClass(payment.estado);
-    
-    row.innerHTML = `
-      <td>${payment.id.substring(0, 8)}...</td>
-      <td>${payment.clientName || 'Cliente desconocido'}</td>
-      <td>$${parseFloat(payment.monto).toFixed(2)}</td>
-      <td>${fechaPago}</td>
-      <td>${formatPaymentMethod(payment.metodo)}</td>
-      <td><span class="status-badge ${estadoClass}">${payment.estado || 'Pendiente'}</span></td>
-      <td class="actions">
-        <button class="btn-icon view-payment" data-id="${payment.id}"><i class="fas fa-eye"></i></button>
-        <button class="btn-icon edit-payment" data-id="${payment.id}"><i class="fas fa-edit"></i></button>
-        <button class="btn-icon delete-payment" data-id="${payment.id}"><i class="fas fa-trash"></i></button>
-        <button class="btn-icon generate-invoice" data-id="${payment.id}"><i class="fas fa-file-invoice"></i></button>
-      </td>
-    `;
-    
-    tableBody.appendChild(row);
-  }
-  
-  // Agregar event listeners a los botones de acción
-  document.querySelectorAll('.view-payment').forEach(btn => {
-    btn.addEventListener('click', () => openViewPaymentModal(btn.dataset.id));
-  });
-  
-  document.querySelectorAll('.edit-payment').forEach(btn => {
-    btn.addEventListener('click', () => openEditPaymentModal(btn.dataset.id));
-  });
-  
-  document.querySelectorAll('.delete-payment').forEach(btn => {
-    btn.addEventListener('click', () => confirmDeletePayment(btn.dataset.id));
-  });
-  
-  document.querySelectorAll('.generate-invoice').forEach(btn => {
-    btn.addEventListener('click', () => generateInvoice(btn.dataset.id));
-  });
-}
-
-// Formatear método de pago para mostrar
-function formatPaymentMethod(metodo) {
-  switch(metodo) {
-    case 'efectivo':
-      return '<i class="fas fa-money-bill-wave"></i> Efectivo';
-    case 'transferencia':
-      return '<i class="fas fa-university"></i> Transferencia';
-    case 'tarjeta':
-      return '<i class="fas fa-credit-card"></i> Tarjeta';
-    default:
-      return metodo || 'Desconocido';
-  }
-}
-
-// Obtener clase CSS según el estado del pago
-function getPaymentStatusClass(estado) {
-  switch(estado) {
-    case 'completado':
-      return 'status-active';
-    case 'pendiente':
-      return 'status-pending';
-    case 'rechazado':
-      return 'status-inactive';
-    default:
-      return 'status-pending';
-  }
-}
-
-// Actualizar paginación
-function updatePagination() {
-  const paginationElement = document.getElementById('pagos-pagination');
-  
-  if (totalPages <= 1) {
-    paginationElement.innerHTML = '';
-    return;
-  }
-  
-  let html = `
-    <button class="pagination-btn" onclick="loadPayments(1)" ${currentPage === 1 ? 'disabled' : ''}>
-      <i class="fas fa-angle-double-left"></i>
-    </button>
-    <button class="pagination-btn" onclick="loadPayments(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
-      <i class="fas fa-angle-left"></i>
-    </button>
-  `;
-  
-  // Mostrar números de página (hasta 5 páginas)
-  const startPage = Math.max(1, currentPage - 2);
-  const endPage = Math.min(startPage + 4, totalPages);
-  
-  for (let i = startPage; i <= endPage; i++) {
-    html += `
-      <button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="loadPayments(${i})">
-        ${i}
-      </button>
-    `;
-  }
-  
-  html += `
-    <button class="pagination-btn" onclick="loadPayments(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
-      <i class="fas fa-angle-right"></i>
-    </button>
-    <button class="pagination-btn" onclick="loadPayments(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''}>
-      <i class="fas fa-angle-double-right"></i>
-    </button>
-  `;
-  
-  paginationElement.innerHTML = html;
-}
-
-// Abrir modal para crear pago
-function openCreatePaymentModal() {
-  editingPaymentId = null;
-  document.getElementById('pago-modal-title').textContent = 'Registrar Pago';
-  document.getElementById('pago-form').reset();
-  document.getElementById('pago-fecha').valueAsDate = new Date(); // Establecer fecha actual
-  
-  // Mostrar/ocultar botones según sea nuevo o edición
-  document.getElementById('pago-factura-btn').style.display = 'none';
-  
-  // Cargar lista de clientes
-  loadClientsForSelect();
-  
-  // Mostrar modal
-  document.getElementById('pago-modal').classList.add('active');
-}
-
-// Abrir modal para ver/editar pago
-function openViewPaymentModal(paymentId) {
-  editingPaymentId = paymentId;
-  document.getElementById('pago-modal-title').textContent = 'Detalles del Pago';
-  document.getElementById('pago-form').reset();
-  
-  // Mostrar/ocultar botones según sea nuevo o edición
-  document.getElementById('pago-factura-btn').style.display = 'inline-block';
-  
-  // Cargar lista de clientes
-  loadClientsForSelect();
-  
-  // Obtener datos del pago
-  firebase.firestore().collection('pagos').doc(paymentId).get()
-    .then(doc => {
-      if (doc.exists) {
-        const paymentData = doc.data();
-        
-        // Esperar a que la lista de clientes se cargue
-        setTimeout(() => {
-          document.getElementById('pago-cliente').value = paymentData.clientId || '';
-          document.getElementById('pago-concepto').value = paymentData.concepto || '';
-          document.getElementById('pago-monto').value = paymentData.monto || '';
-          
-          // Formatear fecha para el input date
-          if (paymentData.fecha) {
-            const date = paymentData.fecha.toDate ? paymentData.fecha.toDate() : new Date(paymentData.fecha);
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            document.getElementById('pago-fecha').value = `${year}-${month}-${day}`;
-          }
-          
-          document.getElementById('pago-metodo').value = paymentData.metodo || 'efectivo';
-          document.getElementById('pago-notas').value = paymentData.notas || '';
-        }, 500);
-      }
-    })
-    .catch(error => {
-      console.error("Error al obtener datos del pago:", error);
-    });
-  
-  // Mostrar modal
-  document.getElementById('pago-modal').classList.add('active');
-}
-
-// Abrir modal para editar pago (mismo que ver pero con título diferente)
-function openEditPaymentModal(paymentId) {
-  openViewPaymentModal(paymentId);
-  document.getElementById('pago-modal-title').textContent = 'Editar Pago';
-}
-
-// Cargar lista de clientes para el select
-function loadClientsForSelect() {
-  const selectElement = document.getElementById('pago-cliente');
-  selectElement.innerHTML = '<option value="">Cargando clientes...</option>';
-  
-  firebase.firestore().collection('users')
-    .where('role', '==', 'usuario')
-    .get()
-    .then(snapshot => {
-      selectElement.innerHTML = '<option value="">Seleccione un cliente</option>';
-      
-      snapshot.forEach(doc => {
-        const userData = doc.data();
-        const option = document.createElement('option');
-        option.value = doc.id;
-        option.textContent = userData.nombre || userData.email;
-        selectElement.appendChild(option);
-      });
-    })
-    .catch(error => {
-      console.error("Error al cargar clientes:", error);
-      selectElement.innerHTML = '<option value="">Error al cargar clientes</option>';
-    });
-}
-
-// Guardar pago (crear o actualizar)
-function savePayment() {
-  const clientId = document.getElementById('pago-cliente').value;
-  const concepto = document.getElementById('pago-concepto').value;
-  const monto = parseFloat(document.getElementById('pago-monto').value);
-  const fechaStr = document.getElementById('pago-fecha').value;
-  const metodo = document.getElementById('pago-metodo').value;
-  const notas = document.getElementById('pago-notas').value;
-  const comprobanteFile = document.getElementById('pago-comprobante').files[0];
-  
-  if (!clientId || !concepto || isNaN(monto) || !fechaStr) {
-    alert('Por favor complete todos los campos obligatorios correctamente.');
-    return;
-  }
-  
-  // Convertir fecha string a objeto Date
-  const fecha = new Date(fechaStr);
-  
-  // Mostrar indicador de carga
-  const saveBtn = document.getElementById('pago-save-btn');
-  const originalText = saveBtn.textContent;
-  saveBtn.textContent = 'Guardando...';
-  saveBtn.disabled = true;
-  
-  // Obtener nombre del cliente
-  firebase.firestore().collection('users').doc(clientId).get()
-    .then(doc => {
-      let clientName = '';
-      if (doc.exists) {
-        const userData = doc.data();
-        clientName = userData.nombre || userData.email;
-      }
-      
-      // Función para guardar datos en Firestore
-      const savePaymentData = (comprobanteUrl = null) => {
-        const paymentData = {
-          clientId,
-          clientName,
-          concepto,
-          monto,
-          fecha: firebase.firestore.Timestamp.fromDate(fecha),
-          metodo,
-          notas,
-          estado: editingPaymentId ? document.getElementById('pago-estado').value || 'completado' : 'completado',
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        };
-        
-        // Agregar URL de comprobante si existe
-        if (comprobanteUrl) {
-          paymentData.comprobanteUrl = comprobanteUrl;
+    // Inicializar listeners
+    function initPaymentListeners() {
+        // Botón para añadir pago
+        if (addPaymentBtn) {
+            addPaymentBtn.addEventListener('click', function() {
+                openPaymentModal();
+            });
         }
         
+        // Formulario de pago
+        if (paymentForm) {
+            paymentForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                savePayment();
+            });
+        }
+        
+        // Listener para cambio de servicio (para actualizar monto)
+        const serviceSelect = document.getElementById('payment-service');
+        if (serviceSelect) {
+            serviceSelect.addEventListener('change', function() {
+                updatePaymentAmount(this.value);
+            });
+        }
+    }
+    
+    // Cargar pagos recientes
+    function loadPayments() {
+        if (!paymentsTableBody) return;
+        
+        // Mostrar mensaje de carga
+        paymentsTableBody.innerHTML = '<tr><td colspan="8">Cargando pagos...</td></tr>';
+        
+        // Consultar pagos ordenados por fecha (más recientes primero)
+        paymentsRef
+            .where('status', '==', 'completed')
+            .orderBy('date', 'desc')
+            .limit(10)
+            .get()
+            .then(snapshot => {
+                if (snapshot.empty) {
+                    paymentsTableBody.innerHTML = '<tr><td colspan="8">No hay pagos registrados</td></tr>';
+                    return;
+                }
+                
+                // Limpiar tabla
+                paymentsTableBody.innerHTML = '';
+                
+                // Mostrar cada pago
+                snapshot.forEach(doc => {
+                    const paymentData = doc.data();
+                    const paymentId = doc.id;
+                    
+                    renderPaymentRow(paymentId, paymentData);
+                });
+            })
+            .catch(error => {
+                console.error('Error al cargar pagos:', error);
+                paymentsTableBody.innerHTML = '<tr><td colspan="8">Error al cargar pagos: ' + error.message + '</td></tr>';
+            });
+    }
+    
+    // Cargar pagos pendientes
+    function loadPendingPayments() {
+        if (!pendingPaymentsTableBody) return;
+        
+        // Mostrar mensaje de carga
+        pendingPaymentsTableBody.innerHTML = '<tr><td colspan="7">Cargando pagos pendientes...</td></tr>';
+        
+        // Consultar pagos pendientes ordenados por fecha límite
+        paymentsRef
+            .where('status', '==', 'pending')
+            .orderBy('dueDate', 'asc')
+            .get()
+            .then(snapshot => {
+                if (snapshot.empty) {
+                    pendingPaymentsTableBody.innerHTML = '<tr><td colspan="7">No hay pagos pendientes</td></tr>';
+                    return;
+                }
+                
+                // Limpiar tabla
+                pendingPaymentsTableBody.innerHTML = '';
+                
+                // Mostrar cada pago pendiente
+                snapshot.forEach(doc => {
+                    const paymentData = doc.data();
+                    const paymentId = doc.id;
+                    
+                    renderPendingPaymentRow(paymentId, paymentData);
+                });
+            })
+            .catch(error => {
+                console.error('Error al cargar pagos pendientes:', error);
+                pendingPaymentsTableBody.innerHTML = '<tr><td colspan="7">Error al cargar pagos pendientes: ' + error.message + '</td></tr>';
+            });
+    }
+    
+    // Cargar facturas
+    function loadInvoices() {
+        if (!invoicesGrid) return;
+        
+        // Mostrar mensaje de carga
+        invoicesGrid.innerHTML = '<div class="loading-message">Cargando facturas...</div>';
+        
+        // Consultar facturas ordenadas por fecha (más recientes primero)
+        invoicesRef
+            .orderBy('date', 'desc')
+            .limit(12)
+            .get()
+            .then(snapshot => {
+                if (snapshot.empty) {
+                    invoicesGrid.innerHTML = '<div class="empty-message">No hay facturas generadas</div>';
+                    return;
+                }
+                
+                // Limpiar contenedor
+                invoicesGrid.innerHTML = '';
+                
+                // Mostrar cada factura
+                snapshot.forEach(doc => {
+                    const invoiceData = doc.data();
+                    const invoiceId = doc.id;
+                    
+                    renderInvoiceCard(invoiceId, invoiceData);
+                });
+            })
+            .catch(error => {
+                console.error('Error al cargar facturas:', error);
+                invoicesGrid.innerHTML = '<div class="error-message">Error al cargar facturas: ' + error.message + '</div>';
+            });
+    }
+    
+    // Cargar clientes para el selector
+    function loadClients() {
+        // Obtener clientes
+        clientsRef.get()
+            .then(snapshot => {
+                const clients = [];
+                
+                snapshot.forEach(doc => {
+                    const clientData = doc.data();
+                    const clientId = doc.id;
+                    
+                    clients.push({
+                        id: clientId,
+                        name: clientData.name || 'Cliente sin nombre',
+                        email: clientData.email
+                    });
+                });
+                
+                // Actualizar selector de clientes
+                updateClientSelector(clients);
+            })
+            .catch(error => {
+                console.error('Error al cargar clientes:', error);
+            });
+    }
+    
+    // Cargar servicios para el selector
+    function loadServices() {
+        // Obtener servicios
+        servicesRef.get()
+            .then(snapshot => {
+                const services = [];
+                
+                snapshot.forEach(doc => {
+                    const serviceData = doc.data();
+                    const serviceId = doc.id;
+                    
+                    services.push({
+                        id: serviceId,
+                        name: serviceData.name || 'Servicio sin nombre',
+                        price: serviceData.price || 0
+                    });
+                });
+                
+                // Actualizar selector de servicios
+                updateServiceSelector(services);
+            })
+            .catch(error => {
+                console.error('Error al cargar servicios:', error);
+            });
+    }
+    
+    // Actualizar estadísticas de pagos
+    function updatePaymentStats() {
+        // Estadísticas a calcular
+        const stats = {
+            monthlyIncome: 0,
+            pendingInvoices: 0,
+            completedPayments: 0
+        };
+        
+        // Obtener primer día del mes actual
+        const today = new Date();
+        const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        
+        // Calcular ingresos del mes
+        paymentsRef
+            .where('status', '==', 'completed')
+            .where('date', '>=', firstDayOfMonth)
+            .get()
+            .then(snapshot => {
+                snapshot.forEach(doc => {
+                    const payment = doc.data();
+                    stats.monthlyIncome += payment.amount || 0;
+                });
+                
+                // Actualizar UI
+                updateIncomeUI(stats.monthlyIncome);
+            })
+            .catch(error => {
+                console.error('Error al calcular ingresos mensuales:', error);
+            });
+        
+        // Calcular facturas pendientes
+        paymentsRef
+            .where('status', '==', 'pending')
+            .get()
+            .then(snapshot => {
+                stats.pendingInvoices = snapshot.size;
+                
+                // Actualizar UI
+                updatePendingInvoicesUI(stats.pendingInvoices);
+            })
+            .catch(error => {
+                console.error('Error al calcular facturas pendientes:', error);
+            });
+        
+        // Calcular pagos completados
+        paymentsRef
+            .where('status', '==', 'completed')
+            .get()
+            .then(snapshot => {
+                stats.completedPayments = snapshot.size;
+                
+                // Actualizar UI
+                updateCompletedPaymentsUI(stats.completedPayments);
+            })
+            .catch(error => {
+                console.error('Error al calcular pagos completados:', error);
+            });
+    }
+    
+    // Actualizar UI con ingresos mensuales
+    function updateIncomeUI(amount) {
+        const incomeElement = document.querySelector('.stat-card:nth-child(1) .stat-number');
+        if (incomeElement) {
+            incomeElement.textContent = '$' + amount.toFixed(2);
+        }
+    }
+    
+    // Actualizar UI con facturas pendientes
+    function updatePendingInvoicesUI(count) {
+        const pendingElement = document.querySelector('.stat-card:nth-child(2) .stat-number');
+        if (pendingElement) {
+            pendingElement.textContent = count;
+        }
+    }
+    
+    // Actualizar UI con pagos completados
+    function updateCompletedPaymentsUI(count) {
+        const completedElement = document.querySelector('.stat-card:nth-child(3) .stat-number');
+        if (completedElement) {
+            completedElement.textContent = count;
+        }
+    }
+    
+    // Actualizar selector de clientes
+    function updateClientSelector(clients) {
+        const clientSelect = document.getElementById('payment-client');
+        if (!clientSelect) return;
+        
+        // Opción vacía
+        clientSelect.innerHTML = '<option value="">Seleccionar cliente</option>';
+        
+        // Agregar opciones
+        clients.forEach(client => {
+            const option = document.createElement('option');
+            option.value = client.id;
+            option.textContent = client.name;
+            option.setAttribute('data-email', client.email || '');
+            clientSelect.appendChild(option);
+        });
+    }
+    
+    // Actualizar selector de servicios
+    function updateServiceSelector(services) {
+        const serviceSelect = document.getElementById('payment-service');
+        if (!serviceSelect) return;
+        
+        // Opción vacía
+        serviceSelect.innerHTML = '<option value="">Seleccionar servicio</option>';
+        
+        // Agregar opciones
+        services.forEach(service => {
+            const option = document.createElement('option');
+            option.value = service.id;
+            option.textContent = service.name;
+            option.setAttribute('data-price', service.price || 0);
+            serviceSelect.appendChild(option);
+        });
+    }
+    
+    // Actualizar monto de pago según servicio seleccionado
+    function updatePaymentAmount(serviceId) {
+        const serviceSelect = document.getElementById('payment-service');
+        const amountInput = document.getElementById('payment-amount');
+        
+        if (!serviceSelect || !amountInput) return;
+        
+        // Buscar opción seleccionada
+        const selectedOption = serviceSelect.querySelector(`option[value="${serviceId}"]`);
+        
+        if (selectedOption) {
+            // Obtener precio del servicio
+            const price = parseFloat(selectedOption.getAttribute('data-price') || 0);
+            
+            // Actualizar campo de monto
+            amountInput.value = price.toFixed(2);
+        }
+    }
+    
+    // Renderizar fila de pago completado
+    function renderPaymentRow(paymentId, paymentData) {
+        const row = document.createElement('tr');
+        
+        // Formatear fecha
+        const paymentDate = paymentData.date ? 
+                          new Date(paymentData.date.seconds * 1000).toLocaleDateString() : 
+                          'N/A';
+        
+        // Crear contenido de la fila
+        row.innerHTML = `
+            <td>${paymentId.substring(0, 8)}...</td>
+            <td>${paymentData.clientName || 'N/A'}</td>
+            <td>${paymentData.serviceName || 'N/A'}</td>
+            <td>$${parseFloat(paymentData.amount || 0).toFixed(2)}</td>
+            <td>${paymentDate}</td>
+            <td>${getPaymentMethodName(paymentData.method)}</td>
+            <td>
+                <span class="status-badge active">Completado</span>
+            </td>
+            <td>
+                <div class="table-actions">
+                    <button class="btn-icon info" title="Ver Detalles" data-id="${paymentId}">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
+                    <button class="btn-icon" title="Descargar Factura" data-id="${paymentId}">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                    </button>
+                </div>
+            </td>
+        `;
+        
+        // Agregar event listeners
+        const infoBtn = row.querySelector('.info');
+        const downloadBtn = row.querySelector('button[title="Descargar Factura"]');
+        
+        if (infoBtn) {
+            infoBtn.addEventListener('click', function() {
+                openPaymentDetails(paymentId, paymentData);
+            });
+        }
+        
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', function() {
+                downloadInvoice(paymentId);
+            });
+        }
+        
+        // Agregar a la tabla
+        paymentsTableBody.appendChild(row);
+    }
+    
+    // Renderizar fila de pago pendiente
+    function renderPendingPaymentRow(paymentId, paymentData) {
+        const row = document.createElement('tr');
+        
+        // Formatear fecha límite
+        const dueDate = paymentData.dueDate ? 
+                       new Date(paymentData.dueDate.seconds * 1000).toLocaleDateString() : 
+                       'N/A';
+        
+        // Verificar si está vencido
+        const isOverdue = paymentData.dueDate && 
+                         new Date(paymentData.dueDate.seconds * 1000) < new Date();
+        
+        // Crear contenido de la fila
+        row.innerHTML = `
+            <td>${paymentId.substring(0, 8)}...</td>
+            <td>${paymentData.clientName || 'N/A'}</td>
+            <td>${paymentData.serviceName || 'N/A'}</td>
+            <td>$${parseFloat(paymentData.amount || 0).toFixed(2)}</td>
+            <td>${dueDate}</td>
+            <td>
+                <span class="status-badge ${isOverdue ? 'inactive' : 'pending'}">${isOverdue ? 'Vencido' : 'Pendiente'}</span>
+            </td>
+            <td>
+                <div class="table-actions">
+                    <button class="btn-icon info" title="Ver Detalles" data-id="${paymentId}">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
+                    <button class="btn-icon edit" title="Registrar Pago" data-id="${paymentId}">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </button>
+                </div>
+            </td>
+        `;
+        
+        // Agregar event listeners
+        const infoBtn = row.querySelector('.info');
+        const payBtn = row.querySelector('.edit');
+        
+        if (infoBtn) {
+            infoBtn.addEventListener('click', function() {
+                openPaymentDetails(paymentId, paymentData);
+            });
+        }
+        
+        if (payBtn) {
+            payBtn.addEventListener('click', function() {
+                openPaymentModal(paymentId, paymentData);
+            });
+        }
+        
+        // Agregar a la tabla
+        pendingPaymentsTableBody.appendChild(row);
+    }
+    
+    // Renderizar tarjeta de factura
+    function renderInvoiceCard(invoiceId, invoiceData) {
+        const invoiceCard = document.createElement('div');
+        invoiceCard.className = 'invoice-card';
+        
+        // Formatear fecha
+        const invoiceDate = invoiceData.date ? 
+                          new Date(invoiceData.date.seconds * 1000).toLocaleDateString() : 
+                          'N/A';
+        
+        // Crear contenido de la tarjeta
+        invoiceCard.innerHTML = `
+            <div class="invoice-header">
+                <h4 class="invoice-id">#${invoiceId.substring(0, 8)}</h4>
+                <span class="invoice-status ${invoiceData.status === 'paid' ? 'active' : 'pending'}">${invoiceData.status === 'paid' ? 'Pagada' : 'Pendiente'}</span>
+            </div>
+            <div class="invoice-client">${invoiceData.clientName || 'Cliente sin nombre'}</div>
+            <div class="invoice-date">${invoiceDate}</div>
+            <div class="invoice-amount">$${parseFloat(invoiceData.amount || 0).toFixed(2)}</div>
+            <div class="invoice-actions">
+                <button class="invoice-action" data-id="${invoiceId}">
+                    <i class="fas fa-download"></i>
+                    <span>Descargar</span>
+                </button>
+                <button class="invoice-action" data-id="${invoiceId}">
+                    <i class="fas fa-envelope"></i>
+                    <span>Enviar</span>
+                </button>
+            </div>
+        `;
+        
+        // Agregar event listeners
+        const downloadBtn = invoiceCard.querySelector('.invoice-action:first-child');
+        const sendBtn = invoiceCard.querySelector('.invoice-action:last-child');
+        
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', function() {
+                downloadInvoice(invoiceId);
+            });
+        }
+        
+        if (sendBtn) {
+            sendBtn.addEventListener('click', function() {
+                sendInvoice(invoiceId, invoiceData);
+            });
+        }
+        
+        // Agregar al contenedor
+        invoicesGrid.appendChild(invoiceCard);
+    }
+    
+    // Abrir modal de pago
+    function openPaymentModal(paymentId = null, paymentData = null) {
+        if (!paymentModal || !paymentForm) return;
+        
+        // Limpiar formulario
+        paymentForm.reset();
+        
+        // Actualizar título del modal
+        const modalTitle = document.getElementById('payment-modal-title');
+        if (modalTitle) {
+            modalTitle.textContent = paymentId ? 'Registrar Pago Pendiente' : 'Registrar Nuevo Pago';
+        }
+        
+        // Si es un pago pendiente, rellenar con datos existentes
+        if (paymentId && paymentData) {
+            editingPaymentId = paymentId;
+            
+            // Rellenar formulario
+            document.getElementById('payment-client').value = paymentData.clientId || '';
+            document.getElementById('payment-service').value = paymentData.serviceId || '';
+            document.getElementById('payment-amount').value = paymentData.amount || '';
+            
+            // Establecer fecha actual
+            const today = new Date();
+            document.getElementById('payment-date').valueAsDate = today;
+            
+            // Otros campos
+            if (document.getElementById('payment-reference')) {
+                document.getElementById('payment-reference').value = '';
+            }
+            
+            if (document.getElementById('payment-notes')) {
+                document.getElementById('payment-notes').value = '';
+            }
+            
+            // Desactivar campos que no deben cambiarse
+            document.getElementById('payment-client').disabled = true;
+            document.getElementById('payment-service').disabled = true;
+            document.getElementById('payment-amount').disabled = true;
+        } else {
+            editingPaymentId = null;
+            
+            // Activar todos los campos
+            document.getElementById('payment-client').disabled = false;
+            document.getElementById('payment-service').disabled = false;
+            document.getElementById('payment-amount').disabled = false;
+            
+            // Establecer fecha actual
+            const today = new Date();
+            document.getElementById('payment-date').valueAsDate = today;
+        }
+        
+        // Mostrar modal
+        paymentModal.classList.add('active');
+    }
+    
+    // Abrir detalles de pago
+    function openPaymentDetails(paymentId, paymentData) {
+        // Crear modal dinámicamente
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.id = 'payment-details-modal';
+        
+        // Formatear fechas
+        const paymentDate = paymentData.date ? 
+                           new Date(paymentData.date.seconds * 1000).toLocaleDateString() : 
+                           'N/A';
+        
+        const dueDate = paymentData.dueDate ? 
+                       new Date(paymentData.dueDate.seconds * 1000).toLocaleDateString() : 
+                       'N/A';
+        
+        // Crear contenido del modal
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Detalles del Pago</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="payment-details-section">
+                        <h4>Información General</h4>
+                        <div class="detail-row">
+                            <div class="detail-label">ID:</div>
+                            <div class="detail-value">${paymentId}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Estado:</div>
+                            <div class="detail-value">${paymentData.status === 'completed' ? 'Completado' : 'Pendiente'}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Monto:</div>
+                            <div class="detail-value">$${parseFloat(paymentData.amount || 0).toFixed(2)}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Fecha:</div>
+                            <div class="detail-value">${paymentDate}</div>
+                        </div>
+                        ${paymentData.status === 'pending' ? `
+                            <div class="detail-row">
+                                <div class="detail-label">Fecha Límite:</div>
+                                <div class="detail-value">${dueDate}</div>
+                            </div>
+                        ` : ''}
+                        ${paymentData.method ? `
+                            <div class="detail-row">
+                                <div class="detail-label">Método:</div>
+                                <div class="detail-value">${getPaymentMethodName(paymentData.method)}</div>
+                            </div>
+                        ` : ''}
+                        ${paymentData.reference ? `
+                            <div class="detail-row">
+                                <div class="detail-label">Referencia:</div>
+                                <div class="detail-value">${paymentData.reference}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="payment-details-section">
+                        <h4>Cliente y Servicio</h4>
+                        <div class="detail-row">
+                            <div class="detail-label">Cliente:</div>
+                            <div class="detail-value">${paymentData.clientName || 'N/A'}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Email:</div>
+                            <div class="detail-value">${paymentData.clientEmail || 'N/A'}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Servicio:</div>
+                            <div class="detail-value">${paymentData.serviceName || 'N/A'}</div>
+                        </div>
+                    </div>
+                    
+                    ${paymentData.notes ? `
+                        <div class="payment-details-section">
+                            <h4>Notas</h4>
+                            <div class="payment-notes">
+                                ${paymentData.notes}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary close-details-btn">Cerrar</button>
+                    ${paymentData.status === 'pending' ? `
+                        <button class="btn-primary register-payment-btn" data-id="${paymentId}">Registrar Pago</button>
+                    ` : `
+                        <button class="btn-primary download-invoice-btn" data-id="${paymentId}">Descargar Factura</button>
+                    `}
+                </div>
+            </div>
+        `;
+        
+        // Agregar modal al body
+        document.body.appendChild(modal);
+        
+        // Mostrar modal
+        setTimeout(() => {
+            modal.classList.add('active');
+        }, 10);
+        
+        // Event listeners
+        const closeBtn = modal.querySelector('.modal-close');
+        const closeDetailsBtn = modal.querySelector('.close-details-btn');
+        const registerPaymentBtn = modal.querySelector('.register-payment-btn');
+        const downloadInvoiceBtn = modal.querySelector('.download-invoice-btn');
+        
+        // Cerrar modal
+        function closeModal() {
+            modal.classList.remove('active');
+            setTimeout(() => {
+                document.body.removeChild(modal);
+            }, 300);
+        }
+        
+        // Event listeners para cerrar
+        closeBtn.addEventListener('click', closeModal);
+        closeDetailsBtn.addEventListener('click', closeModal);
+        
+        // Click fuera del modal
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+        
+        // Registrar pago
+        if (registerPaymentBtn) {
+            registerPaymentBtn.addEventListener('click', function() {
+                closeModal();
+                openPaymentModal(paymentId, paymentData);
+            });
+        }
+        
+        // Descargar factura
+        if (downloadInvoiceBtn) {
+            downloadInvoiceBtn.addEventListener('click', function() {
+                closeModal();
+                downloadInvoice(paymentId);
+            });
+        }
+    }
+    
+    // Guardar pago
+    function savePayment() {
+        if (!paymentForm) return;
+        
+        // Obtener datos del formulario
+        const clientId = document.getElementById('payment-client').value.trim();
+        const serviceId = document.getElementById('payment-service').value.trim();
+        const amount = parseFloat(document.getElementById('payment-amount').value) || 0;
+        const dateInput = document.getElementById('payment-date').value;
+        const method = document.getElementById('payment-method').value;
+        const reference = document.getElementById('payment-reference').value.trim();
+        const notes = document.getElementById('payment-notes').value.trim();
+        const generateInvoice = document.getElementById('generate-invoice').checked;
+        
+        // Validaciones
+        if (!clientId) {
+            alert('Debe seleccionar un cliente');
+            return;
+        }
+        
+        if (!serviceId) {
+            alert('Debe seleccionar un servicio');
+            return;
+        }
+        
+        if (amount <= 0) {
+            alert('El monto debe ser mayor a cero');
+            return;
+        }
+        
+        if (!dateInput) {
+            alert('La fecha es obligatoria');
+            return;
+        }
+        
+        // Convertir fecha a objeto Date
+        const date = new Date(dateInput);
+        
+        // Mostrar estado de carga
+        const saveBtn = document.getElementById('save-payment-btn');
+        if (saveBtn) {
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+        }
+        
+        // Obtener nombres de cliente y servicio
+        const clientSelect = document.getElementById('payment-client');
+        const serviceSelect = document.getElementById('payment-service');
+        
+        let clientName = '';
+        let clientEmail = '';
+        let serviceName = '';
+        
+        if (clientSelect) {
+            const selectedOption = clientSelect.options[clientSelect.selectedIndex];
+            clientName = selectedOption.textContent || '';
+            clientEmail = selectedOption.getAttribute('data-email') || '';
+        }
+        
+        if (serviceSelect) {
+            serviceName = serviceSelect.options[serviceSelect.selectedIndex].textContent || '';
+        }
+        
+        // Datos del pago
+        const paymentData = {
+            clientId,
+            clientName,
+            clientEmail,
+            serviceId,
+            serviceName,
+            amount,
+            date: firebase.firestore.Timestamp.fromDate(date),
+            method,
+            reference,
+            notes,
+            status: 'completed',
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        // Si estamos editando un pago pendiente
         let savePromise;
         
         if (editingPaymentId) {
-          // Actualizar pago existente
-          savePromise = firebase.firestore().collection('pagos').doc(editingPaymentId).update(paymentData);
+            savePromise = paymentsRef.doc(editingPaymentId).update(paymentData);
         } else {
-          // Crear nuevo pago
-          paymentData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-          savePromise = firebase.firestore().collection('pagos').doc().set(paymentData);
+            // Nuevo pago
+            paymentData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+            savePromise = paymentsRef.add(paymentData);
         }
         
+        // Guardar en Firestore
         savePromise
-          .then(() => {
-            closePaymentModal();
-            loadPayments(currentPage);
-          })
-          .catch(error => {
-            console.error("Error al guardar pago:", error);
-            alert('Error al guardar pago: ' + error.message);
-          })
-          .finally(() => {
-            saveBtn.textContent = originalText;
-            saveBtn.disabled = false;
-          });
-      };
-      
-      // Si hay un comprobante para subir
-      if (comprobanteFile) {
-        const storageRef = firebase.storage().ref();
-        const comprobanteRef = storageRef.child(`comprobantes/${Date.now()}_${comprobanteFile.name}`);
-        
-        comprobanteRef.put(comprobanteFile)
-          .then(snapshot => snapshot.ref.getDownloadURL())
-          .then(comprobanteUrl => {
-            savePaymentData(comprobanteUrl);
-          })
-          .catch(error => {
-            console.error("Error al subir comprobante:", error);
-            alert('Error al subir comprobante. Intente nuevamente.');
-            saveBtn.textContent = originalText;
-            saveBtn.disabled = false;
-          });
-      } else {
-        // Si no hay comprobante nuevo, guardar sin cambiar el comprobante
-        savePaymentData();
-      }
-    })
-    .catch(error => {
-      console.error("Error al obtener información del cliente:", error);
-      saveBtn.textContent = originalText;
-      saveBtn.disabled = false;
-    });
-}
-
-// Confirmar eliminación de pago
-function confirmDeletePayment(paymentId) {
-  if (confirm('¿Está seguro de que desea eliminar este pago? Esta acción no se puede deshacer.')) {
-    deletePayment(paymentId);
-  }
-}
-
-// Eliminar pago
-function deletePayment(paymentId) {
-  // Obtener la URL del comprobante primero
-  firebase.firestore().collection('pagos').doc(paymentId).get()
-    .then(doc => {
-      if (doc.exists) {
-        const paymentData = doc.data();
-        
-        // Eliminar de Firestore primero
-        return firebase.firestore().collection('pagos').doc(paymentId).delete()
-          .then(() => {
-            // Si el pago tenía un comprobante, eliminarlo del storage
-            if (paymentData.comprobanteUrl) {
-              // Extraer el path del storage de la URL
-              const comprobanteRef = firebase.storage().refFromURL(paymentData.comprobanteUrl);
-              return comprobanteRef.delete();
-            }
-          });
-      }
-    })
-    .then(() => {
-      loadPayments(currentPage);
-    })
-    .catch(error => {
-      console.error("Error al eliminar pago:", error);
-      alert('Error al eliminar pago: ' + error.message);
-    });
-}
-
-// Generar factura en PDF
-function generateInvoice(paymentId) {
-  // Obtener datos del pago
-  firebase.firestore().collection('pagos').doc(paymentId).get()
-    .then(doc => {
-      if (!doc.exists) throw new Error('El pago no existe');
-      
-      const paymentData = doc.data();
-      
-      // Obtener información de la empresa
-      return firebase.firestore().collection('settings').doc('empresa').get()
-        .then(empresaDoc => {
-          let empresaData = {};
-          if (empresaDoc.exists) {
-            empresaData = empresaDoc.data();
-          } else {
-            empresaData = {
-              nombre: 'Seguridad 24/7',
-              direccion: 'Dirección de la empresa',
-              telefono: 'Teléfono de contacto',
-              email: 'info@seguridad247.com',
-              ruc: 'RUC de la empresa'
-            };
-          }
-          
-          return { payment: paymentData, empresa: empresaData };
-        });
-    })
-    .then(data => {
-      // Generar PDF con jsPDF
-      const { jsPDF } = window.jspdf;
-      const { autoTable } = window.jspdf.autoTable;
-      
-      const doc = new jsPDF();
-      
-      // Datos de la empresa
-      doc.setFontSize(18);
-      doc.text(data.empresa.nombre || 'Seguridad 24/7', 105, 20, { align: 'center' });
-      
-      doc.setFontSize(10);
-      doc.text('RUC: ' + (data.empresa.ruc || 'N/A'), 105, 27, { align: 'center' });
-      doc.text('Dirección: ' + (data.empresa.direccion || 'N/A'), 105, 32, { align: 'center' });
-      doc.text('Teléfono: ' + (data.empresa.telefono || 'N/A'), 105, 37, { align: 'center' });
-      doc.text('Email: ' + (data.empresa.email || 'N/A'), 105, 42, { align: 'center' });
-      
-      // Título de factura
-      doc.setFontSize(16);
-      doc.text('FACTURA', 105, 55, { align: 'center' });
-      
-      // Número de factura
-      doc.setFontSize(10);
-      doc.text('Nº: ' + paymentId.substring(0, 8), 105, 62, { align: 'center' });
-      
-      // Fecha
-      let fechaStr = 'Fecha desconocida';
-      if (data.payment.fecha) {
-        const date = data.payment.fecha.toDate ? data.payment.fecha.toDate() : new Date(data.payment.fecha);
-        fechaStr = date.toLocaleDateString();
-      }
-      doc.text('Fecha: ' + fechaStr, 105, 67, { align: 'center' });
-      
-      // Datos del cliente
-      doc.setFontSize(11);
-      doc.text('Datos del Cliente:', 20, 80);
-      doc.setFontSize(10);
-      doc.text('Nombre: ' + (data.payment.clientName || 'Cliente desconocido'), 25, 87);
-      doc.text('ID Cliente: ' + (data.payment.clientId || 'N/A'), 25, 93);
-      
-      // Tabla de detalles
-      autoTable(doc, {
-        startY: 100,
-        head: [['Concepto', 'Método de Pago', 'Monto']],
-        body: [
-          [
-            data.payment.concepto || 'Servicio de seguridad',
-            data.payment.metodo || 'Efectivo',
-            
-   + parseFloat(data.payment.monto).toFixed(2)
-          ]
-        ],
-        theme: 'grid',
-        headStyles: { fillColor: [66, 66, 66], textColor: [255, 255, 255] },
-        columnStyles: {
-          0: { cellWidth: 100 },
-          1: { cellWidth: 40 },
-          2: { cellWidth: 30, halign: 'right' }
-        }
-      });
-      
-      // Total
-      const finalY = doc.lastAutoTable.finalY || 120;
-      doc.setFontSize(12);
-      doc.text('Total:', 150, finalY + 20, { align: 'right' });
-      doc.setFont(undefined, 'bold');
-      doc.text(
-   + parseFloat(data.payment.monto).toFixed(2), 180, finalY + 20, { align: 'right' });
-      
-      // Notas
-      if (data.payment.notas) {
-        doc.setFont(undefined, 'normal');
-        doc.setFontSize(10);
-        doc.text('Notas:', 20, finalY + 35);
-        doc.text(data.payment.notas, 20, finalY + 42);
-      }
-      
-      // Pie de página
-      doc.setFontSize(8);
-      doc.text('Esta factura fue generada automáticamente y es válida sin firma.', 105, 280, { align: 'center' });
-      
-      // Guardar o abrir PDF
-      doc.save('Factura_' + paymentId.substring(0, 8) + '.pdf');
-    })
-    .catch(error => {
-      console.error("Error al generar factura:", error);
-      alert('Error al generar factura: ' + error.message);
-    });
-}
-
-// Cerrar modal de pago
-function closePaymentModal() {
-  document.getElementById('pago-modal').classList.remove('active');
-  document.getElementById('pago-form').reset();
-  editingPaymentId = null;
-}
-
-// Event listeners
-document.addEventListener('DOMContentLoaded', () => {
-  // Botón para registrar pago
-  document.getElementById('registrar-pago-btn').addEventListener('click', openCreatePaymentModal);
-  
-  // Botones del modal
-  document.getElementById('pago-save-btn').addEventListener('click', savePayment);
-  document.getElementById('pago-cancel-btn').addEventListener('click', closePaymentModal);
-  document.getElementById('pago-factura-btn').addEventListener('click', () => {
-    if (editingPaymentId) {
-      generateInvoice(editingPaymentId);
+            .then(docRef => {
+                // Si es un nuevo pago, obtener el ID
+                const newPaymentId = editingPaymentId || (docRef ? docRef.id : null);
+                
+                // Si se debe generar factura
+                if (generateInvoice && newPaymentId) {
+                    return generateInvoiceDocument(newPaymentId, paymentData);
+                }
+                
+                return Promise.resolve();
+            })
+            .then(() => {
+                alert(`Pago ${editingPaymentId ? 'actualizado' : 'registrado'} correctamente`);
+                paymentModal.classList.remove('active');
+                
+                // Recargar datos
+                loadPayments();
+                loadPendingPayments();
+                loadInvoices();
+                updatePaymentStats();
+            })
+            .catch(error => {
+                console.error('Error al guardar pago:', error);
+                alert('Error al guardar pago: ' + error.message);
+            })
+            .finally(() => {
+                // Restaurar botón
+                if (saveBtn) {
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = 'Registrar';
+                }
+            });
     }
-  });
-  document.querySelector('#pago-modal .close-modal').addEventListener('click', closePaymentModal);
-  
-  // Filtros
-  document.getElementById('filtro-estado-pago').addEventListener('change', () => loadPayments(1));
-  document.getElementById('filtro-metodo-pago').addEventListener('change', () => loadPayments(1));
-  
-  // Fechas
-  document.getElementById('fecha-desde').addEventListener('change', () => loadPayments(1));
-  document.getElementById('fecha-hasta').addEventListener('change', () => loadPayments(1));
-  
-  // Búsqueda
-  let searchTimeout;
-  document.getElementById('buscar-pago').addEventListener('input', (e) => {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(() => {
-      loadPayments(1);
-    }, 300);
-  });
+    
+    // Generar documento de factura
+    function generateInvoiceDocument(paymentId, paymentData) {
+        // Datos de la factura
+        const invoiceData = {
+            paymentId,
+            clientId: paymentData.clientId,
+            clientName: paymentData.clientName,
+            clientEmail: paymentData.clientEmail,
+            serviceId: paymentData.serviceId,
+            serviceName: paymentData.serviceName,
+            amount: paymentData.amount,
+            date: paymentData.date,
+            status: 'paid',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        // Guardar en Firestore
+        return invoicesRef.add(invoiceData);
+    }
+    
+    // Descargar factura
+    function downloadInvoice(invoiceId) {
+        // En un caso real, aquí se generaría el PDF y se descargaría
+        // Para este ejemplo, simplemente mostramos un mensaje
+        alert('La funcionalidad de descarga de facturas en PDF será implementada en una fase posterior.');
+        
+        // Aquí se podría implementar la generación de PDF con alguna librería como jsPDF
+        // Ejemplo (no implementado):
+        // generatePDF(invoiceId).then(pdfBlob => {
+        //     const url = URL.createObjectURL(pdfBlob);
+        //     const a = document.createElement('a');
+        //     a.href = url;
+        //     a.download = `Factura_${invoiceId}.pdf`;
+        //     a.click();
+        // });
+    }
+    // Modificación temporal para evitar el error de índices en las funciones de carga de pagos
+
+// Reemplaza estas funciones en tu archivo pagos.js
+
+// Cargar pagos recientes (sin índice compuesto)
+function loadPayments() {
+    if (!paymentsTableBody) return;
+    
+    // Mostrar mensaje de carga
+    paymentsTableBody.innerHTML = '<tr><td colspan="8">Cargando pagos...</td></tr>';
+    
+    // Consultar todos los pagos y filtrar en el cliente
+    paymentsRef
+        .orderBy('date', 'desc')  // Solo ordenar por fecha
+        .limit(50)  // Obtener más resultados para compensar el filtrado
+        .get()
+        .then(snapshot => {
+            // Filtrar pagos completados en el cliente
+            const completedPayments = [];
+            
+            snapshot.forEach(doc => {
+                const paymentData = doc.data();
+                if (paymentData.status === 'completed') {
+                    completedPayments.push({
+                        id: doc.id,
+                        data: paymentData
+                    });
+                }
+            });
+            
+            // Limitar a 10 pagos completados
+            const paymentsToShow = completedPayments.slice(0, 10);
+            
+            if (paymentsToShow.length === 0) {
+                paymentsTableBody.innerHTML = '<tr><td colspan="8">No hay pagos completados</td></tr>';
+                return;
+            }
+            
+            // Limpiar tabla
+            paymentsTableBody.innerHTML = '';
+            
+            // Mostrar cada pago
+            paymentsToShow.forEach(payment => {
+                renderPaymentRow(payment.id, payment.data);
+            });
+        })
+        .catch(error => {
+            console.error('Error al cargar pagos:', error);
+            paymentsTableBody.innerHTML = '<tr><td colspan="8">Error al cargar pagos: ' + error.message + '</td></tr>';
+        });
+}
+
+// Cargar pagos pendientes (sin índice compuesto)
+function loadPendingPayments() {
+    if (!pendingPaymentsTableBody) return;
+    
+    // Mostrar mensaje de carga
+    pendingPaymentsTableBody.innerHTML = '<tr><td colspan="7">Cargando pagos pendientes...</td></tr>';
+    
+    // Consultar solo por estado
+    paymentsRef
+        .where('status', '==', 'pending')
+        .get()
+        .then(snapshot => {
+            if (snapshot.empty) {
+                pendingPaymentsTableBody.innerHTML = '<tr><td colspan="7">No hay pagos pendientes</td></tr>';
+                return;
+            }
+            
+            // Ordenar manualmente por fecha
+            const pendingPayments = [];
+            
+            snapshot.forEach(doc => {
+                pendingPayments.push({
+                    id: doc.id,
+                    data: doc.data()
+                });
+            });
+            
+            // Ordenar por fecha límite
+            pendingPayments.sort((a, b) => {
+                const dateA = a.data.dueDate ? a.data.dueDate.seconds : 0;
+                const dateB = b.data.dueDate ? b.data.dueDate.seconds : 0;
+                return dateA - dateB; // Ascendente (más próximos primero)
+            });
+            
+            // Limpiar tabla
+            pendingPaymentsTableBody.innerHTML = '';
+            
+            // Mostrar cada pago pendiente
+            pendingPayments.forEach(payment => {
+                renderPendingPaymentRow(payment.id, payment.data);
+            });
+        })
+        .catch(error => {
+            console.error('Error al cargar pagos pendientes:', error);
+            pendingPaymentsTableBody.innerHTML = '<tr><td colspan="7">Error al cargar pagos pendientes: ' + error.message + '</td></tr>';
+        });
+}
+    
+    // Enviar factura por email
+    function sendInvoice(invoiceId, invoiceData) {
+        // En un caso real, aquí se enviaría el email con la factura
+        // Para este ejemplo, simplemente mostramos un mensaje
+        alert(`Se enviará la factura al cliente ${invoiceData.clientName} (${invoiceData.clientEmail})`);
+        
+        // En una implementación real, se usaría una Cloud Function para enviar el email
+        // Ejemplo (no implementado):
+        // const sendData = {
+        //     invoiceId,
+        //     clientEmail: invoiceData.clientEmail,
+        //     clientName: invoiceData.clientName
+        // };
+        // 
+        // // Llamar a Cloud Function
+        // const sendEmailFunction = firebase.functions().httpsCallable('sendInvoiceEmail');
+        // sendEmailFunction(sendData)
+        //     .then(() => {
+        //         alert('Factura enviada correctamente');
+        //     })
+        //     .catch(error => {
+        //         console.error('Error al enviar factura:', error);
+        //         alert('Error al enviar factura: ' + error.message);
+        //     });
+    }
+    
+    // Obtener nombre de método de pago
+    function getPaymentMethodName(method) {
+        const methods = {
+            'credit_card': 'Tarjeta de Crédito',
+            'debit_card': 'Tarjeta de Débito',
+            'bank_transfer': 'Transferencia Bancaria',
+            'cash': 'Efectivo'
+        };
+        
+        return methods[method] || 'Desconocido';
+    }
+    
+    // Crear pagos de prueba (solo para desarrollo)
+    function createSamplePayments() {
+        // Verificar si ya existen pagos
+        paymentsRef.limit(1).get()
+            .then(snapshot => {
+                if (!snapshot.empty) {
+                    console.log('Ya existen pagos en la base de datos');
+                    
+                    // Preguntar si se desean crear más
+                    if (!confirm('Ya existen pagos en la base de datos. ¿Desea crear más pagos de prueba?')) {
+                        return;
+                    }
+                }
+                
+                // Obtener clientes
+                clientsRef.limit(3).get()
+                    .then(clientsSnapshot => {
+                        if (clientsSnapshot.empty) {
+                            alert('No hay clientes registrados. Primero debe crear algunos clientes.');
+                            return;
+                        }
+                        
+                        const clients = [];
+                        clientsSnapshot.forEach(doc => {
+                            const clientData = doc.data();
+                            clients.push({
+                                id: doc.id,
+                                name: clientData.name || 'Cliente sin nombre',
+                                email: clientData.email || 'email@example.com'
+                            });
+                        });
+                        
+                        // Obtener servicios
+                        servicesRef.limit(3).get()
+                            .then(servicesSnapshot => {
+                                if (servicesSnapshot.empty) {
+                                    alert('No hay servicios registrados. Primero debe crear algunos productos.');
+                                    return;
+                                }
+                                
+                                const services = [];
+                                servicesSnapshot.forEach(doc => {
+                                    const serviceData = doc.data();
+                                    services.push({
+                                        id: doc.id,
+                                        name: serviceData.name || 'Servicio sin nombre',
+                                        price: serviceData.price || Math.floor(Math.random() * 1000) + 100
+                                    });
+                                });
+                                
+                                // Crear pagos de prueba
+                                const batch = db.batch();
+                                
+                                // Pagos completados
+                                for (let i = 0; i < 5; i++) {
+                                    const client = clients[Math.floor(Math.random() * clients.length)];
+                                    const service = services[Math.floor(Math.random() * services.length)];
+                                    
+                                    const paymentDate = new Date();
+                                    paymentDate.setDate(paymentDate.getDate() - Math.floor(Math.random() * 30));
+                                    
+                                    const paymentData = {
+                                        clientId: client.id,
+                                        clientName: client.name,
+                                        clientEmail: client.email,
+                                        serviceId: service.id,
+                                        serviceName: service.name,
+                                        amount: service.price,
+                                        date: firebase.firestore.Timestamp.fromDate(paymentDate),
+                                        method: ['credit_card', 'debit_card', 'bank_transfer', 'cash'][Math.floor(Math.random() * 4)],
+                                        reference: `REF-${Math.floor(Math.random() * 10000)}`,
+                                        status: 'completed',
+                                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                                    };
+                                    
+                                    const newPaymentRef = paymentsRef.doc();
+                                    batch.set(newPaymentRef, paymentData);
+                                    
+                                    // Generar factura
+                                    const invoiceData = {
+                                        paymentId: newPaymentRef.id,
+                                        clientId: client.id,
+                                        clientName: client.name,
+                                        clientEmail: client.email,
+                                        serviceId: service.id,
+                                        serviceName: service.name,
+                                        amount: service.price,
+                                        date: paymentData.date,
+                                        status: 'paid',
+                                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                                    };
+                                    
+                                    const newInvoiceRef = invoicesRef.doc();
+                                    batch.set(newInvoiceRef, invoiceData);
+                                }
+                                
+                                // Pagos pendientes
+                                for (let i = 0; i < 3; i++) {
+                                    const client = clients[Math.floor(Math.random() * clients.length)];
+                                    const service = services[Math.floor(Math.random() * services.length)];
+                                    
+                                    const dueDate = new Date();
+                                    dueDate.setDate(dueDate.getDate() + Math.floor(Math.random() * 30) + 1);
+                                    
+                                    const paymentData = {
+                                        clientId: client.id,
+                                        clientName: client.name,
+                                        clientEmail: client.email,
+                                        serviceId: service.id,
+                                        serviceName: service.name,
+                                        amount: service.price,
+                                        dueDate: firebase.firestore.Timestamp.fromDate(dueDate),
+                                        status: 'pending',
+                                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                                    };
+                                    
+                                    const newPaymentRef = paymentsRef.doc();
+                                    batch.set(newPaymentRef, paymentData);
+                                }
+                                
+                                // Ejecutar batch
+                                return batch.commit();
+                            })
+                            .then(() => {
+                                alert('Pagos de prueba creados correctamente');
+                                
+                                // Recargar datos
+                                loadPayments();
+                                loadPendingPayments();
+                                loadInvoices();
+                                updatePaymentStats();
+                            })
+                            .catch(error => {
+                                console.error('Error al crear pagos de prueba:', error);
+                                alert('Error al crear pagos de prueba: ' + error.message);
+                            });
+                    });
+            });
+    }
+    
+    // Botón para crear pagos de prueba (solo para desarrollo)
+    const createSamplePaymentsBtn = document.getElementById('create-sample-payments');
+    if (createSamplePaymentsBtn) {
+        createSamplePaymentsBtn.addEventListener('click', createSamplePayments);
+    }
 });

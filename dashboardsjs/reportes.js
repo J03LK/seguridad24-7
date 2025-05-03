@@ -1,394 +1,649 @@
-// Variables globales para la gestión de reportes
-let reportsList = [];
-let currentPage = 1;
-let itemsPerPage = 10;
-let totalPages = 0;
-let editingReportId = null;
+// Módulo de reportes y errores
+document.addEventListener('DOMContentLoaded', function() {
+    // Verificar si Firebase está disponible
+    if (typeof firebase === 'undefined') {
+        console.error('Firebase no está definido. Asegúrate de cargar los scripts de Firebase.');
+        return;
+    }
 
-// Cargar reportes desde Firestore
-function loadReports(page = 1) {
-  currentPage = page;
-  
-  // Mostrar indicador de carga
-  document.getElementById('reportes-table-body').innerHTML = '<tr><td colspan="8" class="text-center">Cargando...</td></tr>';
-  
-  // Obtener filtros
-  const estadoFilter = document.getElementById('filtro-estado-reporte').value;
-  const prioridadFilter = document.getElementById('filtro-prioridad').value;
-  const searchText = document.getElementById('buscar-reporte').value.toLowerCase();
-  
-  // Referencia a la colección de reportes
-  let reportsRef = firebase.firestore().collection('reportes');
-  
-  // Aplicar filtros de estado si no es "todos"
-  if (estadoFilter !== 'todos') {
-    reportsRef = reportsRef.where('estado', '==', estadoFilter);
-  }
-  
-  // Aplicar filtros de prioridad si no es "todos"
-  if (prioridadFilter !== 'todos') {
-    reportsRef = reportsRef.where('prioridad', '==', prioridadFilter);
-  }
-  
-  // Ordenar por fecha (más recientes primero)
-  reportsRef = reportsRef.orderBy('createdAt', 'desc');
-  
-  // Obtener reportes
-  reportsRef.get()
-    .then(snapshot => {
-      reportsList = [];
-      
-      snapshot.forEach(doc => {
-        const reportData = doc.data();
-        
-        // Filtrar por texto de búsqueda si existe
-        if (searchText) {
-          const matchesSearch = 
-            (reportData.clientName && reportData.clientName.toLowerCase().includes(searchText)) ||
-            (reportData.descripcion && reportData.descripcion.toLowerCase().includes(searchText)) ||
-            (reportData.tipo && reportData.tipo.toLowerCase().includes(searchText));
-          
-          if (!matchesSearch) return;
+    // Elementos del DOM
+    const reportsContainer = document.querySelector('.reports-container');
+    const reportStatusFilter = document.getElementById('report-status-filter');
+    const reportTypeFilter = document.getElementById('report-type-filter');
+    const reportDateFilter = document.getElementById('report-date-filter');
+    
+    // Referencias a Firebase
+    const db = firebase.firestore();
+    const reportsRef = db.collection('reportes');
+    
+    // Variables de estado
+    let currentPage = 1;
+    const reportsPerPage = 9;
+    
+    // Inicializar componentes
+    initReportFilters();
+    loadReports();
+    
+    // Inicializar filtros de reportes
+    function initReportFilters() {
+        if (reportStatusFilter) {
+            reportStatusFilter.addEventListener('change', function() {
+                currentPage = 1;
+                loadReports();
+            });
         }
         
-        reportsList.push({
-          id: doc.id,
-          ...reportData
-        });
-      });
-      
-      // Calcular paginación
-      totalPages = Math.ceil(reportsList.length / itemsPerPage);
-      
-      // Mostrar reportes en la tabla
-      displayReports();
-      
-      // Actualizar paginación
-      updatePagination();
-    })
-    .catch(error => {
-      console.error("Error al cargar reportes:", error);
-      document.getElementById('reportes-table-body').innerHTML = 
-        '<tr><td colspan="8" class="text-center">Error al cargar reportes. Intente nuevamente.</td></tr>';
-    });
-}
-
-// Mostrar reportes en la tabla
-function displayReports() {
-  const tableBody = document.getElementById('reportes-table-body');
-  tableBody.innerHTML = '';
-  
-  // Calcular índices para la paginación
-  const startIdx = (currentPage - 1) * itemsPerPage;
-  const endIdx = Math.min(startIdx + itemsPerPage, reportsList.length);
-  
-  if (reportsList.length === 0) {
-    tableBody.innerHTML = '<tr><td colspan="8" class="text-center">No se encontraron reportes.</td></tr>';
-    return;
-  }
-  
-  // Mostrar reportes para la página actual
-  for (let i = startIdx; i < endIdx; i++) {
-    const report = reportsList[i];
-    const row = document.createElement('tr');
-    
-    // Formatear fecha
-    let fechaReporte = 'Fecha desconocida';
-    if (report.createdAt) {
-      const date = report.createdAt.toDate ? report.createdAt.toDate() : new Date(report.createdAt);
-      fechaReporte = date.toLocaleDateString();
+        if (reportTypeFilter) {
+            reportTypeFilter.addEventListener('change', function() {
+                currentPage = 1;
+                loadReports();
+            });
+        }
+        
+        if (reportDateFilter) {
+            reportDateFilter.addEventListener('change', function() {
+                currentPage = 1;
+                loadReports();
+            });
+        }
+        
+        // Paginación
+        const prevPageBtn = document.getElementById('prev-report-page-btn');
+        const nextPageBtn = document.getElementById('next-report-page-btn');
+        
+        if (prevPageBtn) {
+            prevPageBtn.addEventListener('click', function() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadReports();
+                }
+            });
+        }
+        
+        if (nextPageBtn) {
+            nextPageBtn.addEventListener('click', function() {
+                currentPage++;
+                loadReports();
+            });
+        }
+        
+        // Establecer fecha por defecto (mes actual)
+        if (reportDateFilter) {
+            const today = new Date();
+            const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            const formattedDate = firstDayOfMonth.toISOString().split('T')[0];
+            reportDateFilter.value = formattedDate;
+        }
     }
     
-    // Clases CSS para estado y prioridad
-    const estadoClass = getStatusClass(report.estado);
-    const prioridadClass = getPriorityClass(report.prioridad);
-    
-    // Truncar descripción larga
-    const descripcionCorta = report.descripcion 
-      ? (report.descripcion.length > 50 ? report.descripcion.substring(0, 50) + '...' : report.descripcion)
-      : 'Sin descripción';
-    
-    row.innerHTML = `
-      <td>${report.id.substring(0, 8)}...</td>
-      <td>${report.clientName || 'Cliente desconocido'}</td>
-      <td>${report.tipo || 'Sin categoría'}</td>
-      <td title="${report.descripcion || ''}">${descripcionCorta}</td>
-      <td>${fechaReporte}</td>
-      <td><span class="priority-badge ${prioridadClass}">${report.prioridad || 'Media'}</span></td>
-      <td><span class="status-badge ${estadoClass}">${report.estado || 'Pendiente'}</span></td>
-      <td class="actions">
-        <button class="btn-icon view-report" data-id="${report.id}"><i class="fas fa-eye"></i></button>
-        <button class="btn-icon edit-report" data-id="${report.id}"><i class="fas fa-edit"></i></button>
-        <button class="btn-icon delete-report" data-id="${report.id}"><i class="fas fa-trash"></i></button>
-      </td>
-    `;
-    
-    tableBody.appendChild(row);
-  }
-  
-  // Agregar event listeners a los botones de acción
-  document.querySelectorAll('.view-report').forEach(btn => {
-    btn.addEventListener('click', () => openViewReportModal(btn.dataset.id));
-  });
-  
-  document.querySelectorAll('.edit-report').forEach(btn => {
-    btn.addEventListener('click', () => openEditReportModal(btn.dataset.id));
-  });
-  
-  document.querySelectorAll('.delete-report').forEach(btn => {
-    btn.addEventListener('click', () => confirmDeleteReport(btn.dataset.id));
-  });
-}
-
-// Obtener clase CSS según el estado
-function getStatusClass(estado) {
-  switch(estado) {
-    case 'pendiente':
-      return 'status-pending';
-    case 'en_proceso':
-      return 'status-in-progress';
-    case 'resuelto':
-      return 'status-resolved';
-    default:
-      return 'status-pending';
-  }
-}
-
-// Obtener clase CSS según la prioridad
-function getPriorityClass(prioridad) {
-  switch(prioridad) {
-    case 'alta':
-      return 'priority-high';
-    case 'media':
-      return 'priority-medium';
-    case 'baja':
-      return 'priority-low';
-    default:
-      return 'priority-medium';
-  }
-}
-
-// Actualizar paginación
-function updatePagination() {
-  const paginationElement = document.getElementById('reportes-pagination');
-  
-  if (totalPages <= 1) {
-    paginationElement.innerHTML = '';
-    return;
-  }
-  
-  let html = `
-    <button class="pagination-btn" onclick="loadReports(1)" ${currentPage === 1 ? 'disabled' : ''}>
-      <i class="fas fa-angle-double-left"></i>
-    </button>
-    <button class="pagination-btn" onclick="loadReports(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
-      <i class="fas fa-angle-left"></i>
-    </button>
-  `;
-  
-  // Mostrar números de página (hasta 5 páginas)
-  const startPage = Math.max(1, currentPage - 2);
-  const endPage = Math.min(startPage + 4, totalPages);
-  
-  for (let i = startPage; i <= endPage; i++) {
-    html += `
-      <button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="loadReports(${i})">
-        ${i}
-      </button>
-    `;
-  }
-  
-  html += `
-    <button class="pagination-btn" onclick="loadReports(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
-      <i class="fas fa-angle-right"></i>
-    </button>
-    <button class="pagination-btn" onclick="loadReports(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''}>
-      <i class="fas fa-angle-double-right"></i>
-    </button>
-  `;
-  
-  paginationElement.innerHTML = html;
-}
-
-// Abrir modal para ver el reporte
-function openViewReportModal(reportId) {
-  editingReportId = reportId;
-  
-  // Limpiar el modal
-  document.getElementById('reporte-timeline').innerHTML = '';
-  
-  // Obtener datos del reporte
-  firebase.firestore().collection('reportes').doc(reportId).get()
-    .then(doc => {
-      if (doc.exists) {
-        const reportData = doc.data();
+    // Cargar reportes desde Firestore
+    function loadReports() {
+        if (!reportsContainer) return;
         
-        // Llenar información básica
-        document.getElementById('reporte-modal-title').textContent = 'Detalles del Reporte';
-        document.getElementById('reporte-id').textContent = reportId;
-        document.getElementById('reporte-cliente').textContent = reportData.clientName || 'Cliente desconocido';
-        document.getElementById('reporte-tipo').textContent = reportData.tipo || 'Sin categoría';
+        // Mostrar mensaje de carga
+        reportsContainer.innerHTML = '<div class="loading-message">Cargando reportes...</div>';
         
-        // Formatear fecha
-        let fechaReporte = 'Fecha desconocida';
-        if (reportData.createdAt) {
-          const date = reportData.createdAt.toDate ? reportData.createdAt.toDate() : new Date(reportData.createdAt);
-          fechaReporte = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        // Obtener valores de filtros
+        const statusFilter = reportStatusFilter ? reportStatusFilter.value : 'all';
+        const typeFilter = reportTypeFilter ? reportTypeFilter.value : 'all';
+        const dateFilter = reportDateFilter ? reportDateFilter.value : '';
+        
+        // Construir consulta
+        let query = reportsRef.orderBy('createdAt', 'desc');
+        
+        if (statusFilter !== 'all') {
+            query = query.where('status', '==', statusFilter);
         }
-        document.getElementById('reporte-fecha').textContent = fechaReporte;
         
-        // Descripción
-        document.getElementById('reporte-descripcion').textContent = reportData.descripcion || 'Sin descripción';
+        if (typeFilter !== 'all') {
+            query = query.where('type', '==', typeFilter);
+        }
         
-        // Estado y prioridad actuales
-        document.getElementById('reporte-estado').value = reportData.estado || 'pendiente';
-        document.getElementById('reporte-prioridad').value = reportData.prioridad || 'media';
-        
-        // Cargar historial si existe
-        if (reportData.historial && reportData.historial.length > 0) {
-          const timelineElement = document.getElementById('reporte-timeline');
-          
-          reportData.historial.forEach(item => {
-            const itemElement = document.createElement('li');
+        if (dateFilter) {
+            const startDate = new Date(dateFilter);
+            const endDate = new Date(dateFilter);
+            endDate.setMonth(endDate.getMonth() + 1);
             
-            // Formatear fecha
-            let fechaHistorial = 'Fecha desconocida';
-            if (item.fecha) {
-              const date = item.fecha.toDate ? item.fecha.toDate() : new Date(item.fecha);
-              fechaHistorial = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+            query = query.where('createdAt', '>=', startDate)
+                         .where('createdAt', '<', endDate);
+        }
+        
+        // Ejecutar consulta
+        query.get()
+            .then(snapshot => {
+                if (snapshot.empty) {
+                    reportsContainer.innerHTML = '<div class="empty-message">No se encontraron reportes</div>';
+                    updatePagination(0);
+                    return;
+                }
+                
+                // Procesar reportes
+                const reports = [];
+                snapshot.forEach(doc => {
+                    const reportData = doc.data();
+                    reports.push({
+                        id: doc.id,
+                        ...reportData
+                    });
+                });
+                
+                // Paginación
+                const startIndex = (currentPage - 1) * reportsPerPage;
+                const endIndex = Math.min(startIndex + reportsPerPage, reports.length);
+                const reportsToShow = reports.slice(startIndex, endIndex);
+                
+                // Actualizar paginación
+                updatePagination(reports.length);
+                
+                // Limpiar contenedor
+                reportsContainer.innerHTML = '';
+                
+                // Mostrar reportes
+                reportsToShow.forEach(report => {
+                    createReportCard(report);
+                });
+            })
+            .catch(error => {
+                console.error('Error al cargar reportes:', error);
+                reportsContainer.innerHTML = '<div class="error-message">Error al cargar reportes: ' + error.message + '</div>';
+            });
+    }
+    
+    // Crear tarjeta de reporte
+    function createReportCard(report) {
+        const reportCard = document.createElement('div');
+        reportCard.className = 'report-card';
+        
+        // Convertir timestamp a fecha legible
+        const createdDate = report.createdAt ? new Date(report.createdAt.seconds * 1000) : new Date();
+        const formattedDate = createdDate.toLocaleDateString() + ' ' + createdDate.toLocaleTimeString();
+        
+        // Título del reporte
+        const reportTitle = report.title || 'Reporte sin título';
+        
+        // Tipo de reporte
+        const reportTypes = {
+            'alert': { name: 'Alerta', icon: 'fa-exclamation-circle', class: 'error' },
+            'error': { name: 'Error', icon: 'fa-exclamation-triangle', class: 'error' },
+            'maintenance': { name: 'Mantenimiento', icon: 'fa-tools', class: 'warning' },
+            'info': { name: 'Información', icon: 'fa-info-circle', class: 'info' }
+        };
+        
+        const reportType = reportTypes[report.type] || reportTypes.info;
+        
+        // Estado del reporte
+        const reportStatuses = {
+            'pending': { name: 'Pendiente', class: 'pending' },
+            'in-progress': { name: 'En Proceso', class: 'in-progress' },
+            'completed': { name: 'Resuelto', class: 'completed' }
+        };
+        
+        const reportStatus = reportStatuses[report.status] || reportStatuses.pending;
+        
+        // Construir HTML de la tarjeta
+        reportCard.innerHTML = `
+            <div class="report-header">
+                <div class="report-type">
+                    <div class="report-icon ${reportType.class}">
+                        <i class="fas ${reportType.icon}"></i>
+                    </div>
+                    <span class="report-type-name">${reportType.name}</span>
+                </div>
+                <div class="report-status ${reportStatus.class}">
+                    <span>${reportStatus.name}</span>
+                </div>
+            </div>
+            <div class="report-body">
+                <h3 class="report-title">${reportTitle}</h3>
+                <div class="report-details">
+                    <div class="report-detail">
+                        <span class="report-detail-label">Cliente:</span>
+                        <span class="report-detail-value">${report.clientName || 'Desconocido'}</span>
+                    </div>
+                    <div class="report-detail">
+                        <span class="report-detail-label">Ubicación:</span>
+                        <span class="report-detail-value">${report.locationName || 'N/A'}</span>
+                    </div>
+                    <div class="report-detail">
+                        <span class="report-detail-label">Dispositivo:</span>
+                        <span class="report-detail-value">${report.deviceId || 'N/A'}</span>
+                    </div>
+                </div>
+                <p class="report-description">${report.description || 'Sin descripción'}</p>
+                <div class="report-footer">
+                    <span class="report-date">${formattedDate}</span>
+                    <div class="report-actions">
+                        <button class="btn-icon edit-status" title="Cambiar Estado" data-id="${report.id}">
+                            <i class="fas fa-exchange-alt"></i>
+                        </button>
+                        <button class="btn-icon info" title="Ver Detalles" data-id="${report.id}">
+                            <i class="fas fa-info-circle"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Agregar event listeners a los botones
+        const editStatusBtn = reportCard.querySelector('.edit-status');
+        const infoBtn = reportCard.querySelector('.info');
+        
+        if (editStatusBtn) {
+            editStatusBtn.addEventListener('click', function() {
+                openStatusModal(report);
+            });
+        }
+        
+        if (infoBtn) {
+            infoBtn.addEventListener('click', function() {
+                openReportDetails(report);
+            });
+        }
+        
+        // Agregar tarjeta al contenedor
+        reportsContainer.appendChild(reportCard);
+    }
+    
+    // Actualizar paginación
+    function updatePagination(totalReports) {
+        const totalPages = Math.ceil(totalReports / reportsPerPage);
+        const currentPageEl = document.querySelector('.current-page');
+        const totalPagesEl = document.querySelector('.total-pages');
+        const prevPageBtn = document.getElementById('prev-report-page-btn');
+        const nextPageBtn = document.getElementById('next-report-page-btn');
+        
+        if (currentPageEl) {
+            currentPageEl.textContent = currentPage;
+        }
+        
+        if (totalPagesEl) {
+            totalPagesEl.textContent = totalPages || 1;
+        }
+        
+        if (prevPageBtn) {
+            prevPageBtn.disabled = currentPage <= 1;
+        }
+        
+        if (nextPageBtn) {
+            nextPageBtn.disabled = currentPage >= totalPages;
+        }
+    }
+    
+    // Abrir modal para cambiar estado
+    function openStatusModal(report) {
+        // Crear modal dinámicamente
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.id = 'status-modal';
+        
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Cambiar Estado del Reporte</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Reporte:</strong> ${report.title}</p>
+                    <p><strong>Estado actual:</strong> ${getStatusName(report.status)}</p>
+                    
+                    <div class="form-group">
+                        <label for="new-status">Nuevo Estado:</label>
+                        <select id="new-status">
+                            <option value="pending" ${report.status === 'pending' ? 'selected' : ''}>Pendiente</option>
+                            <option value="in-progress" ${report.status === 'in-progress' ? 'selected' : ''}>En Proceso</option>
+                            <option value="completed" ${report.status === 'completed' ? 'selected' : ''}>Resuelto</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="status-note">Nota (opcional):</label>
+                        <textarea id="status-note"></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary cancel-status-btn">Cancelar</button>
+                        <button type="button" class="btn-primary save-status-btn" data-id="${report.id}">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Agregar modal al body
+        document.body.appendChild(modal);
+        
+        // Mostrar modal
+        setTimeout(() => {
+            modal.classList.add('active');
+        }, 10);
+        
+        // Event listeners
+        const closeBtn = modal.querySelector('.modal-close');
+        const cancelBtn = modal.querySelector('.cancel-status-btn');
+        const saveBtn = modal.querySelector('.save-status-btn');
+        
+        // Cerrar modal
+        function closeModal() {
+            modal.classList.remove('active');
+            setTimeout(() => {
+                document.body.removeChild(modal);
+            }, 300);
+        }
+        
+        // Event listeners para cerrar
+        closeBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+        
+        // Click fuera del modal
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
             }
+        });
+        
+        // Guardar nuevo estado
+        saveBtn.addEventListener('click', function() {
+            const newStatus = document.getElementById('new-status').value;
+            const note = document.getElementById('status-note').value.trim();
             
-            itemElement.innerHTML = `
-              <div class="timeline-time">${fechaHistorial}</div>
-              <div class="timeline-content">
-                <p><strong>${item.accion}</strong></p>
-                <p>${item.comentario || ''}</p>
-                <small>${item.usuario || 'Usuario del sistema'}</small>
-              </div>
-            `;
+            // Actualizar en Firestore
+            updateReportStatus(report.id, newStatus, note)
+                .then(() => {
+                    closeModal();
+                    loadReports(); // Recargar reportes
+                })
+                .catch(error => {
+                    console.error('Error al actualizar estado:', error);
+                    alert('Error al actualizar estado: ' + error.message);
+                });
+        });
+    }
+    
+    // Abrir detalles del reporte
+    function openReportDetails(report) {
+        // Crear modal dinámicamente
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.id = 'report-details-modal';
+        
+        // Convertir timestamp a fecha legible
+        const createdDate = report.createdAt ? new Date(report.createdAt.seconds * 1000) : new Date();
+        const formattedDate = createdDate.toLocaleDateString() + ' ' + createdDate.toLocaleTimeString();
+        
+        // Historial de estado
+        let statusHistoryHtml = '<p>No hay historial de estados</p>';
+        
+        if (report.statusHistory && report.statusHistory.length > 0) {
+            statusHistoryHtml = '<ul class="status-history">';
             
-            timelineElement.appendChild(itemElement);
-          });
-        } else {
-          document.getElementById('reporte-timeline').innerHTML = '<li>No hay actividad registrada.</li>';
+            report.statusHistory.forEach(item => {
+                const itemDate = item.date ? new Date(item.date.seconds * 1000) : new Date();
+                const itemFormattedDate = itemDate.toLocaleDateString() + ' ' + itemDate.toLocaleTimeString();
+                
+                statusHistoryHtml += `
+                    <li>
+                        <span class="status-history-status">${getStatusName(item.status)}</span>
+                        <span class="status-history-date">${itemFormattedDate}</span>
+                        ${item.note ? `<p class="status-history-note">${item.note}</p>` : ''}
+                    </li>
+                `;
+            });
+            
+            statusHistoryHtml += '</ul>';
         }
-      }
-    })
-    .catch(error => {
-      console.error("Error al obtener datos del reporte:", error);
-    });
-  
-  // Mostrar modal
-  document.getElementById('reporte-modal').classList.add('active');
-}
-
-// Abrir modal para editar reporte (mismo que ver pero con título diferente)
-function openEditReportModal(reportId) {
-  openViewReportModal(reportId);
-  document.getElementById('reporte-modal-title').textContent = 'Editar Reporte';
-}
-
-// Guardar cambios en el reporte
-function saveReportChanges() {
-  if (!editingReportId) return;
-  
-  const estado = document.getElementById('reporte-estado').value;
-  const prioridad = document.getElementById('reporte-prioridad').value;
-  const comentario = document.getElementById('reporte-comentario').value;
-  
-  // Mostrar indicador de carga
-  const saveBtn = document.getElementById('reporte-save-btn');
-  const originalText = saveBtn.textContent;
-  saveBtn.textContent = 'Guardando...';
-  saveBtn.disabled = true;
-  
-  // Referencia al reporte
-  const reportRef = firebase.firestore().collection('reportes').doc(editingReportId);
-  
-  // Obtener usuario actual
-  const userName = currentUser ? (currentUser.displayName || currentUser.email) : 'Administrador';
-  
-  // Obtener reporte actual para agregar al historial
-  reportRef.get()
-    .then(doc => {
-      if (!doc.exists) throw new Error('El reporte no existe');
-      
-      const reportData = doc.data();
-      const historial = reportData.historial || [];
-      
-      // Crear nuevo registro en el historial
-      historial.push({
-        fecha: firebase.firestore.FieldValue.serverTimestamp(),
-        accion: `Cambio de estado: ${reportData.estado || 'pendiente'} → ${estado}`,
-        comentario: comentario,
-        usuario: userName
-      });
-      
-      // Actualizar reporte
-      return reportRef.update({
-        estado,
-        prioridad,
-        historial,
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-    })
-    .then(() => {
-      closeReportModal();
-      loadReports(currentPage);
-    })
-    .catch(error => {
-      console.error("Error al actualizar reporte:", error);
-      alert('Error al actualizar reporte: ' + error.message);
-    })
-    .finally(() => {
-      saveBtn.textContent = originalText;
-      saveBtn.disabled = false;
-    });
-}
-
-// Confirmar eliminación de reporte
-function confirmDeleteReport(reportId) {
-  if (confirm('¿Está seguro de que desea eliminar este reporte? Esta acción no se puede deshacer.')) {
-    deleteReport(reportId);
-  }
-}
-
-// Eliminar reporte
-function deleteReport(reportId) {
-  firebase.firestore().collection('reportes').doc(reportId).delete()
-    .then(() => {
-      loadReports(currentPage);
-    })
-    .catch(error => {
-      console.error("Error al eliminar reporte:", error);
-      alert('Error al eliminar reporte: ' + error.message);
-    });
-}
-
-// Cerrar modal de reporte
-function closeReportModal() {
-  document.getElementById('reporte-modal').classList.remove('active');
-  document.getElementById('reporte-form').reset();
-  editingReportId = null;
-}
-
-// Event listeners
-document.addEventListener('DOMContentLoaded', () => {
-  // Botones del modal
-  document.getElementById('reporte-save-btn').addEventListener('click', saveReportChanges);
-  document.getElementById('reporte-cancel-btn').addEventListener('click', closeReportModal);
-  document.querySelector('#reporte-modal .close-modal').addEventListener('click', closeReportModal);
-  
-  // Filtros
-  document.getElementById('filtro-estado-reporte').addEventListener('change', () => loadReports(1));
-  document.getElementById('filtro-prioridad').addEventListener('change', () => loadReports(1));
-  
-  // Búsqueda
-  let searchTimeout;
-  document.getElementById('buscar-reporte').addEventListener('input', (e) => {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(() => {
-      loadReports(1);
-    }, 300);
-  });
+        
+        // HTML del modal
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Detalles del Reporte</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="report-details-section">
+                        <h4>Información General</h4>
+                        <div class="detail-row">
+                            <div class="detail-label">Título:</div>
+                            <div class="detail-value">${report.title || 'Sin título'}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Tipo:</div>
+                            <div class="detail-value">${getTypeName(report.type)}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Estado:</div>
+                            <div class="detail-value">${getStatusName(report.status)}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Fecha:</div>
+                            <div class="detail-value">${formattedDate}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="report-details-section">
+                        <h4>Cliente y Ubicación</h4>
+                        <div class="detail-row">
+                            <div class="detail-label">Cliente:</div>
+                            <div class="detail-value">${report.clientName || 'Desconocido'}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Email:</div>
+                            <div class="detail-value">${report.clientEmail || 'N/A'}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Ubicación:</div>
+                            <div class="detail-value">${report.locationName || 'N/A'}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Dispositivo:</div>
+                            <div class="detail-value">${report.deviceId || 'N/A'}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="report-details-section">
+                        <h4>Descripción</h4>
+                        <div class="report-full-description">
+                            ${report.description || 'Sin descripción'}
+                        </div>
+                    </div>
+                    
+                    <div class="report-details-section">
+                        <h4>Historial de Estados</h4>
+                        ${statusHistoryHtml}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary close-details-btn">Cerrar</button>
+                    <button class="btn-primary edit-status-btn" data-id="${report.id}">Cambiar Estado</button>
+                </div>
+            </div>
+        `;
+        
+        // Agregar modal al body
+        document.body.appendChild(modal);
+        
+        // Mostrar modal
+        setTimeout(() => {
+            modal.classList.add('active');
+        }, 10);
+        
+        // Event listeners
+        const closeBtn = modal.querySelector('.modal-close');
+        const closeDetailsBtn = modal.querySelector('.close-details-btn');
+        const editStatusBtn = modal.querySelector('.edit-status-btn');
+        
+        // Cerrar modal
+        function closeModal() {
+            modal.classList.remove('active');
+            setTimeout(() => {
+                document.body.removeChild(modal);
+            }, 300);
+        }
+        
+        // Event listeners para cerrar
+        closeBtn.addEventListener('click', closeModal);
+        closeDetailsBtn.addEventListener('click', closeModal);
+        
+        // Click fuera del modal
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+        
+        // Botón para cambiar estado
+        editStatusBtn.addEventListener('click', function() {
+            closeModal();
+            openStatusModal(report);
+        });
+    }
+    
+    // Actualizar estado de un reporte
+    function updateReportStatus(reportId, newStatus, note) {
+        // Obtener reporte actual
+        return reportsRef.doc(reportId).get()
+            .then(doc => {
+                if (!doc.exists) {
+                    throw new Error('El reporte no existe');
+                }
+                
+                const reportData = doc.data();
+                
+                // Crear entrada para historial
+                const statusEntry = {
+                    status: newStatus,
+                    date: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                if (note) {
+                    statusEntry.note = note;
+                }
+                
+                // Actualizar historial
+                let statusHistory = reportData.statusHistory || [];
+                statusHistory.push(statusEntry);
+                
+                // Actualizar reporte
+                return reportsRef.doc(reportId).update({
+                    status: newStatus,
+                    statusHistory: statusHistory,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            });
+    }
+    
+    // Obtener nombre de estado
+    function getStatusName(status) {
+        const statuses = {
+            'pending': 'Pendiente',
+            'in-progress': 'En Proceso',
+            'completed': 'Resuelto'
+        };
+        
+        return statuses[status] || 'Desconocido';
+    }
+    
+    // Obtener nombre de tipo
+    function getTypeName(type) {
+        const types = {
+            'alert': 'Alerta',
+            'error': 'Error',
+            'maintenance': 'Mantenimiento',
+            'info': 'Información'
+        };
+        
+        return types[type] || 'Desconocido';
+    }
+    
+    // Crear reportes de prueba (solo para desarrollo)
+    function createSampleReports() {
+        // Solo ejecutar si no hay reportes
+        reportsRef.limit(1).get()
+            .then(snapshot => {
+                if (!snapshot.empty) {
+                    console.log('Ya existen reportes en la base de datos');
+                    return;
+                }
+                
+                // Crear 10 reportes de ejemplo
+                const sampleReports = [
+                    {
+                        title: 'Alarma disparada',
+                        type: 'alert',
+                        status: 'pending',
+                        description: 'La alarma se ha disparado sin causa aparente.',
+                        clientId: 'client1',
+                        clientName: 'Juan Pérez',
+                        clientEmail: 'juan@example.com',
+                        locationName: 'Residencia Principal',
+                        deviceId: 'ALARM-001',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    },
+                    {
+                        title: 'Cámara fuera de línea',
+                        type: 'error',
+                        status: 'in-progress',
+                        description: 'La cámara del jardín trasero no está respondiendo.',
+                        clientId: 'client2',
+                        clientName: 'María López',
+                        clientEmail: 'maria@example.com',
+                        locationName: 'Casa de Playa',
+                        deviceId: 'CAM-007',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    },
+                    {
+                        title: 'Solicitud de mantenimiento',
+                        type: 'maintenance',
+                        status: 'completed',
+                        description: 'Se requiere mantenimiento preventivo del sistema.',
+                        clientId: 'client3',
+                        clientName: 'Carlos Ruiz',
+                        clientEmail: 'carlos@example.com',
+                        locationName: 'Oficina Central',
+                        deviceId: 'SYS-123',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        statusHistory: [
+                            {
+                                status: 'pending',
+                                date: new Date(Date.now() - 48 * 60 * 60 * 1000)
+                            },
+                            {
+                                status: 'in-progress',
+                                date: new Date(Date.now() - 24 * 60 * 60 * 1000),
+                                note: 'Programada visita técnica'
+                            },
+                            {
+                                status: 'completed',
+                                date: new Date(),
+                                note: 'Mantenimiento realizado correctamente'
+                            }
+                        ]
+                    }
+                ];
+                
+                // Crear batch para procesamiento por lotes
+                const batch = db.batch();
+                
+                // Añadir reportes al batch
+                sampleReports.forEach(report => {
+                    const newReportRef = reportsRef.doc();
+                    batch.set(newReportRef, report);
+                });
+                
+                // Ejecutar batch
+                return batch.commit();
+            })
+            .then(() => {
+                console.log('Reportes de ejemplo creados correctamente');
+                loadReports(); // Recargar reportes
+            })
+            .catch(error => {
+                console.error('Error al crear reportes de ejemplo:', error);
+            });
+    }
+    
+    // Botón para crear reportes de prueba (solo para desarrollo)
+    const createSamplesBtn = document.getElementById('create-sample-reports');
+    if (createSamplesBtn) {
+        createSamplesBtn.addEventListener('click', createSampleReports);
+    }
 });
