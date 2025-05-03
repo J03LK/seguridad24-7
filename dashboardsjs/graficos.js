@@ -818,9 +818,8 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // ========== Funciones para obtener datos ==========
       
-      // Obtener datos de clientes (últimos 6 meses)
+      // Obtener datos de clientes (últimos 6 meses) - ACTUALIZADO
       async function fetchClientsData() {
-          // En una implementación real, aquí se consultaría a Firestore
           const labels = [];
           const values = [];
           
@@ -829,55 +828,45 @@ document.addEventListener('DOMContentLoaded', function() {
           for (let i = 5; i >= 0; i--) {
               const month = new Date(today.getFullYear(), today.getMonth() - i, 1);
               labels.push(month.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' }));
-              
-              // Datos de prueba
-              values.push(Math.floor(Math.random() * 30) + 90);
           }
           
           try {
-              // Obtener clientes por mes desde Firestore
-              const sixMonthsAgo = new Date();
-              sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-              
+              // Obtener TODOS los clientes para contar mes por mes
               const snapshot = await db.collection('usuarios')
                   .where('role', '==', 'user')
-                  .where('createdAt', '>=', sixMonthsAgo)
                   .get();
               
-              // Procesar datos por mes
-              const clientsByMonth = {};
-              
-              snapshot.forEach(doc => {
-                  const data = doc.data();
-                  if (data.createdAt) {
-                      const date = data.createdAt.toDate();
-                      const monthKey = date.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' });
-                      
-                      if (!clientsByMonth[monthKey]) {
-                          clientsByMonth[monthKey] = 0;
-                      }
-                      clientsByMonth[monthKey]++;
-                  }
-              });
-              
-              // Llenar datos para los últimos 6 meses
-              const realValues = [];
-              for (let i = 5; i >= 0; i--) {
-                  const month = new Date(today.getFullYear(), today.getMonth() - i, 1);
-                  const monthKey = month.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' });
+              // Contar clientes ACTIVOS acumulados hasta cada mes
+              for (let i = 0; i < labels.length; i++) {
+                  const monthDate = new Date(today.getFullYear(), today.getMonth() - (5 - i), 1);
+                  const monthEndDate = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0);
                   
-                  realValues.push(clientsByMonth[monthKey] || 0);
+                  let activeCount = 0;
+                  
+                  snapshot.forEach(doc => {
+                      const data = doc.data();
+                      if (data.createdAt) {
+                          const createdDate = data.createdAt.toDate();
+                          
+                          // Si el cliente fue creado antes o durante este mes y está activo
+                          if (createdDate <= monthEndDate && (!data.status || data.status === 'active')) {
+                              activeCount++;
+                          }
+                      }
+                  });
+                  
+                  values.push(activeCount);
               }
               
-              return { labels, values: realValues };
+              return { labels, values };
           } catch (error) {
               console.error('Error al obtener datos de clientes:', error);
-              // Retornar datos de prueba en caso de error
-              return { labels, values };
+              // Retornar datos vacíos en caso de error
+              return { labels, values: new Array(6).fill(0) };
           }
       }
       
-      // Obtener datos de reportes por tipo
+      // Obtener datos de reportes por tipo - ACTUALIZADO
       async function fetchReportsData() {
           try {
               const snapshot = await db.collection('reportes').get();
@@ -907,15 +896,15 @@ document.addEventListener('DOMContentLoaded', function() {
               };
           } catch (error) {
               console.error('Error al obtener datos de reportes:', error);
-              // Datos de prueba en caso de error
+              // Retornar datos vacíos en caso de error
               return {
                   labels: ['Alertas', 'Errores', 'Mantenimiento', 'Info'],
-                  values: [12, 8, 5, 3]
+                  values: [0, 0, 0, 0]
               };
           }
       }
       
-      // Obtener datos de pagos (último trimestre)
+      // Obtener datos de pagos (último trimestre) - ACTUALIZADO
       async function fetchPaymentsData() {
           try {
               const threeMonthsAgo = new Date();
@@ -966,24 +955,16 @@ document.addEventListener('DOMContentLoaded', function() {
               return { labels, values, pendingValues };
           } catch (error) {
               console.error('Error al obtener datos de pagos:', error);
-              // Datos de prueba en caso de error
-              const labels = [];
-              const values = [];
-              const pendingValues = [];
-              
-              const today = new Date();
-              for (let i = 2; i >= 0; i--) {
-                  const month = new Date(today.getFullYear(), today.getMonth() - i, 1);
-                  labels.push(month.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' }));
-                  values.push(Math.floor(Math.random() * 5000) + 5000);
-                  pendingValues.push(Math.floor(Math.random() * 2000) + 1000);
-              }
-              
-              return { labels, values, pendingValues };
+              // Retornar datos vacíos en caso de error
+              return { 
+                  labels: ['Mes 1', 'Mes 2', 'Mes 3'], 
+                  values: [0, 0, 0], 
+                  pendingValues: [0, 0, 0] 
+              };
           }
       }
       
-      // Obtener datos de tendencia de clientes
+      // Obtener datos de tendencia de clientes - ACTUALIZADO
       async function fetchClientsTrendData(dateRange, customRange) {
           const { labels, startDate, endDate } = getDateRangeData(dateRange, customRange);
           
@@ -997,43 +978,55 @@ document.addEventListener('DOMContentLoaded', function() {
               const activos = new Array(labels.length).fill(0);
               const nuevos = new Array(labels.length).fill(0);
               
-              // Contar clientes por período
+              // Procesar cada cliente
               snapshot.forEach(doc => {
                   const data = doc.data();
                   if (data.createdAt) {
                       const createdDate = data.createdAt.toDate();
                       
-                      // Determinar en qué período cae el cliente
-                      if (createdDate >= startDate && createdDate <= endDate) {
-                          // Encontrar el índice correspondiente
-                          let index = -1;
+                      // Para cada punto en el tiempo, contar clientes activos hasta ese momento
+                      for (let i = 0; i < labels.length; i++) {
+                          let checkDate;
                           
-                          if (dateRange === 'month' || dateRange === 'custom' && labels.length <= 31) {
+                          if (dateRange === 'month' || (dateRange === 'custom' && labels.length <= 31)) {
                               // Por día
-                              const daysDiff = Math.floor((createdDate - startDate) / (1000 * 60 * 60 * 24));
-                              index = daysDiff;
-                          } else if (dateRange === 'quarter' || dateRange === 'custom' && labels.length <= 90) {
+                              checkDate = new Date(startDate);
+                              checkDate.setDate(checkDate.getDate() + i);
+                          } else if (dateRange === 'quarter' || (dateRange === 'custom' && labels.length <= 90)) {
                               // Por semana
-                              const weeksDiff = Math.floor((createdDate - startDate) / (1000 * 60 * 60 * 24 * 7));
-                              index = weeksDiff;
+                              checkDate = new Date(startDate);
+                              checkDate.setDate(checkDate.getDate() + (i * 7));
                           } else {
                               // Por mes
-                              const monthsDiff = (createdDate.getFullYear() - startDate.getFullYear()) * 12 + 
-                                                 (createdDate.getMonth() - startDate.getMonth());
-                              index = monthsDiff;
+                              checkDate = new Date(startDate);
+                              checkDate.setMonth(checkDate.getMonth() + i);
                           }
                           
-                          if (index >= 0 && index < labels.length) {
-                              nuevos[index]++;
-                              // Todos los clientes creados hasta este punto están activos
-                              for (let i = index; i < labels.length; i++) {
-                                  activos[i]++;
+                          // Si el cliente fue creado antes o en esta fecha y está activo
+                          if (createdDate <= checkDate && (!data.status || data.status === 'active')) {
+                              activos[i]++;
+                          }
+                          
+                          // Si el cliente fue creado en este período específico
+                          let prevCheckDate;
+                          if (i === 0) {
+                              prevCheckDate = new Date(startDate);
+                              prevCheckDate.setDate(prevCheckDate.getDate() - 1);
+                          } else {
+                              if (dateRange === 'month' || (dateRange === 'custom' && labels.length <= 31)) {
+                                  prevCheckDate = new Date(startDate);
+                                  prevCheckDate.setDate(prevCheckDate.getDate() + i - 1);
+                              } else if (dateRange === 'quarter' || (dateRange === 'custom' && labels.length <= 90)) {
+                                  prevCheckDate = new Date(startDate);
+                                  prevCheckDate.setDate(prevCheckDate.getDate() + ((i - 1) * 7));
+                              } else {
+                                  prevCheckDate = new Date(startDate);
+                                  prevCheckDate.setMonth(prevCheckDate.getMonth() + i - 1);
                               }
                           }
-                      } else if (createdDate < startDate) {
-                          // Cliente creado antes del período, está activo todo el tiempo
-                          for (let i = 0; i < labels.length; i++) {
-                              activos[i]++;
+                          
+                          if (createdDate > prevCheckDate && createdDate <= checkDate) {
+                              nuevos[i]++;
                           }
                       }
                   }
@@ -1042,20 +1035,15 @@ document.addEventListener('DOMContentLoaded', function() {
               return { activos, nuevos };
           } catch (error) {
               console.error('Error al obtener tendencia de clientes:', error);
-              // Datos de prueba en caso de error
-              const activos = [];
-              const nuevos = [];
-              
-              for (let i = 0; i < labels.length; i++) {
-                  activos.push(Math.floor(Math.random() * 10) + 100 + i);
-                  nuevos.push(Math.floor(Math.random() * 5) + 1);
-              }
-              
-              return { activos, nuevos };
+              // Retornar datos vacíos en caso de error
+              return { 
+                  activos: new Array(labels.length).fill(0), 
+                  nuevos: new Array(labels.length).fill(0) 
+              };
           }
       }
       
-      // Obtener datos de reportes mensuales
+      // Obtener datos de reportes mensuales - ACTUALIZADO
       async function fetchMonthlyReportsData(dateRange, customRange) {
           const { labels, startDate, endDate } = getDateRangeData(dateRange, customRange);
           
@@ -1077,10 +1065,10 @@ document.addEventListener('DOMContentLoaded', function() {
                       // Determinar el índice correspondiente
                       let index = -1;
                       
-                      if (dateRange === 'month' || dateRange === 'custom' && labels.length <= 31) {
+                      if (dateRange === 'month' || (dateRange === 'custom' && labels.length <= 31)) {
                           const daysDiff = Math.floor((reportDate - startDate) / (1000 * 60 * 60 * 24));
                           index = daysDiff;
-                      } else if (dateRange === 'quarter' || dateRange === 'custom' && labels.length <= 90) {
+                      } else if (dateRange === 'quarter' || (dateRange === 'custom' && labels.length <= 90)) {
                           const weeksDiff = Math.floor((reportDate - startDate) / (1000 * 60 * 60 * 24 * 7));
                           index = weeksDiff;
                       } else {
@@ -1108,22 +1096,16 @@ document.addEventListener('DOMContentLoaded', function() {
               return { alerts, errors, maintenance };
           } catch (error) {
               console.error('Error al obtener reportes mensuales:', error);
-              // Datos de prueba en caso de error
-              const alerts = [];
-              const errors = [];
-              const maintenance = [];
-              
-              for (let i = 0; i < labels.length; i++) {
-                  alerts.push(Math.floor(Math.random() * 5) + 1);
-                  errors.push(Math.floor(Math.random() * 3) + 1);
-                  maintenance.push(Math.floor(Math.random() * 2) + 1);
-              }
-              
-              return { alerts, errors, maintenance };
+              // Retornar datos vacíos en caso de error
+              return { 
+                  alerts: new Array(labels.length).fill(0), 
+                  errors: new Array(labels.length).fill(0), 
+                  maintenance: new Array(labels.length).fill(0) 
+              };
           }
       }
       
-      // Obtener datos de tipos de pagos
+      // Obtener datos de tipos de pagos - ACTUALIZADO
       async function fetchPaymentTypesData(dateRange, customRange) {
           const { labels, startDate, endDate } = getDateRangeData(dateRange, customRange);
           
@@ -1144,10 +1126,10 @@ document.addEventListener('DOMContentLoaded', function() {
                       // Determinar el índice correspondiente
                       let index = -1;
                       
-                      if (dateRange === 'month' || dateRange === 'custom' && labels.length <= 31) {
+                      if (dateRange === 'month' || (dateRange === 'custom' && labels.length <= 31)) {
                           const daysDiff = Math.floor((paymentDate - startDate) / (1000 * 60 * 60 * 24));
                           index = daysDiff;
-                      } else if (dateRange === 'quarter' || dateRange === 'custom' && labels.length <= 90) {
+                      } else if (dateRange === 'quarter' || (dateRange === 'custom' && labels.length <= 90)) {
                           const weeksDiff = Math.floor((paymentDate - startDate) / (1000 * 60 * 60 * 24 * 7));
                           index = weeksDiff;
                       } else {
@@ -1169,20 +1151,15 @@ document.addEventListener('DOMContentLoaded', function() {
               return { completed, pending };
           } catch (error) {
               console.error('Error al obtener tipos de pagos:', error);
-              // Datos de prueba en caso de error
-              const completed = [];
-              const pending = [];
-              
-              for (let i = 0; i < labels.length; i++) {
-                  completed.push(Math.floor(Math.random() * 7) + 5);
-                  pending.push(Math.floor(Math.random() * 3) + 1);
-              }
-              
-              return { completed, pending };
+              // Retornar datos vacíos en caso de error
+              return { 
+                  completed: new Array(labels.length).fill(0), 
+                  pending: new Array(labels.length).fill(0) 
+              };
           }
       }
       
-      // Obtener datos de distribución de servicios
+      // Obtener datos de distribución de servicios - ACTUALIZADO
       async function fetchServicesDistributionData(dateRange, customRange) {
           try {
               const { startDate, endDate } = getDateRangeData(dateRange, customRange);
@@ -1211,26 +1188,41 @@ document.addEventListener('DOMContentLoaded', function() {
               const labels = Object.keys(serviceDistribution);
               const values = Object.values(serviceDistribution);
               
-              // Si no hay datos, mostrar datos de ejemplo
+              // Si no hay datos, intentar obtener servicios disponibles
+              if (labels.length === 0) {
+                  const servicesSnapshot = await db.collection('productos')
+                      .where('active', '==', true)
+                      .get();
+                  
+                  servicesSnapshot.forEach(doc => {
+                      const data = doc.data();
+                      if (data.name) {
+                          labels.push(data.name);
+                          values.push(0); // No hay ventas de este servicio en el período
+                      }
+                  });
+              }
+              
+              // Si aún no hay datos, retornar estructura vacía
               if (labels.length === 0) {
                   return {
-                      labels: ['Monitoreo Básico', 'Monitoreo Avanzado', 'Alarma Residencial', 'Alarma Comercial', 'CCTV', 'Guardia'],
-                      values: [30, 25, 15, 10, 15, 5]
+                      labels: ['Sin servicios'],
+                      values: [0]
                   };
               }
               
               return { labels, values };
           } catch (error) {
               console.error('Error al obtener distribución de servicios:', error);
-              // Datos de prueba en caso de error
+              // Retornar datos vacíos en caso de error
               return {
-                  labels: ['Monitoreo Básico', 'Monitoreo Avanzado', 'Alarma Residencial', 'Alarma Comercial', 'CCTV', 'Guardia'],
-                  values: [30, 25, 15, 10, 15, 5]
+                  labels: ['Error al cargar'],
+                  values: [0]
               };
           }
       }
       
-      // Obtener datos de crecimiento de ingresos
+      // Obtener datos de crecimiento de ingresos - ACTUALIZADO
       async function fetchIncomeGrowthData(dateRange, customRange) {
           const { labels, startDate, endDate } = getDateRangeData(dateRange, customRange);
           
@@ -1251,10 +1243,10 @@ document.addEventListener('DOMContentLoaded', function() {
                       // Determinar el índice correspondiente
                       let index = -1;
                       
-                      if (dateRange === 'month' || dateRange === 'custom' && labels.length <= 31) {
+                      if (dateRange === 'month' || (dateRange === 'custom' && labels.length <= 31)) {
                           const daysDiff = Math.floor((paymentDate - startDate) / (1000 * 60 * 60 * 24));
                           index = daysDiff;
-                      } else if (dateRange === 'quarter' || dateRange === 'custom' && labels.length <= 90) {
+                      } else if (dateRange === 'quarter' || (dateRange === 'custom' && labels.length <= 90)) {
                           const weeksDiff = Math.floor((paymentDate - startDate) / (1000 * 60 * 60 * 24 * 7));
                           index = weeksDiff;
                       } else {
@@ -1263,7 +1255,7 @@ document.addEventListener('DOMContentLoaded', function() {
                           index = monthsDiff;
                       }
                       
-                      if (index >= 0 && index < labels.length) {
+                      if (index >= 0 && index < values.length) {
                           values[index] += data.amount;
                       }
                   }
@@ -1288,30 +1280,11 @@ document.addEventListener('DOMContentLoaded', function() {
               return { values, trend };
           } catch (error) {
               console.error('Error al obtener crecimiento de ingresos:', error);
-              // Datos de prueba en caso de error
-              const values = [];
-              
-              for (let i = 0; i < labels.length; i++) {
-                  values.push(Math.floor(Math.random() * 1000) + 5000 + (i * 100));
-              }
-              
-              // Calcular línea de tendencia
-              const trend = [];
-              const windowSize = 3;
-              
-              for (let i = 0; i < values.length; i++) {
-                  if (i < windowSize - 1) {
-                      trend.push(null);
-                  } else {
-                      let sum = 0;
-                      for (let j = 0; j < windowSize; j++) {
-                          sum += values[i - j];
-                      }
-                      trend.push(sum / windowSize);
-                  }
-              }
-              
-              return { values, trend };
+              // Retornar datos vacíos en caso de error
+              return { 
+                  values: new Array(labels.length).fill(0), 
+                  trend: new Array(labels.length).fill(null) 
+              };
           }
       }
       
@@ -1342,7 +1315,7 @@ document.addEventListener('DOMContentLoaded', function() {
           }
           
           // Descargar archivo
-          const blob = new Blob([csv], { type: 'text/csv' });
+          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
@@ -1361,9 +1334,12 @@ document.addEventListener('DOMContentLoaded', function() {
               const chartActions = container.querySelector('.chart-actions');
               if (!chartActions) return;
               
+              // Verificar si ya existe un botón de exportar
+              if (chartActions.querySelector('.export-btn')) return;
+              
               // Agregar botón de exportar
               const exportBtn = document.createElement('button');
-              exportBtn.className = 'chart-action';
+              exportBtn.className = 'chart-action export-btn';
               exportBtn.title = 'Exportar datos';
               exportBtn.innerHTML = '<i class="fas fa-file-export"></i>';
               
