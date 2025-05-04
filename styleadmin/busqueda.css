@@ -1,0 +1,232 @@
+/* search.css - Estilos para el sistema de búsqueda global */
+
+.search-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 100px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.search-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.search-modal-content {
+    background: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.search-modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.search-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #6b7280;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.search-modal-close:hover {
+    background-color: #f3f4f6;
+    color: #374151;
+}
+
+.search-modal-body {
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.search-section {
+    margin-bottom: 24px;
+}
+
+.search-section:last-child {
+    margin-bottom: 0;
+}
+
+.search-section h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.search-results-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid #e5e7eb;
+}
+
+.search-result-item:hover {
+    background-color: #f9fafb;
+    border-color: #d1d5db;
+}
+
+.search-result-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    font-size: 18px;
+}
+
+.search-result-icon.users {
+    background-color: #dbeafe;
+    color: #2563eb;
+}
+
+.search-result-icon.products {
+    background-color: #dcfce7;
+    color: #16a34a;
+}
+
+.search-result-icon.reports {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+.search-result-icon.payments {
+    background-color: #fef3c7;
+    color: #d97706;
+}
+
+.search-result-icon.locations {
+    background-color: #ede9fe;
+    color: #7c3aed;
+}
+
+.search-result-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.search-result-title {
+    font-weight: 500;
+    color: #1f2937;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-result-subtitle {
+    font-size: 14px;
+    color: #6b7280;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-result-action {
+    margin-left: 12px;
+    color: #9ca3af;
+}
+
+.search-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    color: #6b7280;
+}
+
+.search-loading i {
+    font-size: 24px;
+    margin-bottom: 12px;
+    color: #3b82f6;
+}
+
+.search-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    color: #dc2626;
+    text-align: center;
+}
+
+.search-error i {
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.no-results {
+    text-align: center;
+    color: #6b7280;
+    padding: 40px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .search-modal {
+        padding-top: 60px;
+    }
+    
+    .search-modal-content {
+        width: 95%;
+    }
+    
+    .search-result-item {
+        padding: 10px;
+    }
+    
+    .search-result-icon {
+        width: 36px;
+        height: 36px;
+    }
+}
