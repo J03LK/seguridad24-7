@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Cliente - Seguridad 24/7</title>
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- CSS principal -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/sidebar.css">
+    <link rel="stylesheet" href="styles/reportes.css">
+    <link rel="stylesheet" href="styles/pagos.css">
+    <link rel="stylesheet" href="styles/notificaciones.css">
+    <link rel="stylesheet" href="styles/cuenta.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <img src="assets/Logo2.png" alt="Logo">
+                    <h2>Seguridad 24/7</h2>
+                </div>
+                <button id="sidebar-toggle" class="sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <div class="sidebar-menu">
+                <ul>
+                    <li class="active">
+                        <a href="#" data-section="dashboard">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-section="reportes">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>Reportes</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-section="pagos">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Pagos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-section="facturas">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                            <span>Facturas</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-section="dispositivos">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Mis Dispositivos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-section="cuenta">
+                            <i class="fas fa-user-cog"></i>
+                            <span>Mi Cuenta</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-footer">
+                <a href="#" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                    <span>Modo Oscuro</span>
+                </a>
+                <a href="#" id="logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+        </aside>
+        
+        <!-- Contenido principal -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-actions">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">0</span>
+                    </button>
+                    
+                    <div class="user-profile">
+                        <img src="assets/avatar-placeholder.png" alt="Perfil" id="user-avatar">
+                        <div class="user-info">
+                            <h4 id="user-name">Usuario</h4>
+                            <p>Cliente</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Sección Dashboard -->
+            <section id="dashboard-section" class="content-section active">
+                <div class="section-header">
+                    <h2>Mi Dashboard</h2>
+                    <p id="welcome-message">Bienvenido a tu panel de control</p>
+                </div>
+                
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Reportes Activos</h3>
+                            <p class="stat-number" id="reportes-activos">0</p>
+                            <p class="stat-description">Reportes pendientes o en proceso</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Facturas Pendientes</h3>
+                            <p class="stat-number" id="facturas-pendientes">0</p>
+                            <p class="stat-description">Facturas por pagar</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Dispositivos</h3>
+                            <p class="stat-number" id="total-dispositivos">0</p>
+                            <p class="stat-description">Dispositivos registrados</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-recent">
+                    <div class="recent-container">
+                        <div class="recent-header">
+                            <h3>Reportes Recientes</h3>
+                            <a href="#" data-section="reportes" class="view-all">Ver Todos</a>
+                        </div>
+                        <div class="recent-body" id="recent-reports">
+                            <!-- Los reportes se cargarán dinámicamente desde Firebase -->
+                            <div class="loading-message">Cargando reportes recientes...</div>
+                        </div>
+                    </div>
+                    
+                    <div class="recent-container">
+                        <div class="recent-header">
+                            <h3>Últimos Pagos</h3>
+                            <a href="#" data-section="pagos" class="view-all">Ver Todos</a>
+                        </div>
+                        <div class="recent-body" id="recent-payments">
+                            <!-- Los pagos se cargarán dinámicamente desde Firebase -->
+                            <div class="loading-message">Cargando pagos recientes...</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Sección Reportes -->
+            <section id="reportes-section" class="content-section">
+                <div class="section-header">
+                    <h2>Mis Reportes</h2>
+                    <button class="add-button" id="add-report-btn">
+                        <i class="fas fa-plus"></i>
+                        <span>Nuevo Reporte</span>
+                    </button>
+                </div>
+                
+                <div class="reportes-filters">
+                    <div class="filter-group">
+                        <label>Filtrar por Estado:</label>
+                        <select id="report-status-filter">
+                            <option value="all">Todos</option>
+                            <option value="pending">Pendientes</option>
+                            <option value="in-progress">En Proceso</option>
+                            <option value="completed">Resueltos</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Tipo:</label>
+                        <select id="report-type-filter">
+                            <option value="all">Todos</option>
+                            <option value="alert">Alertas</option>
+                            <option value="error">Errores</option>
+                            <option value="maintenance">Mantenimiento</option>
+                            <option value="info">Información</option>
+                        </select>
+                    </div>
+                    
+                    <div class="date-filter">
+                        <label>Fecha:</label>
+                        <input type="date" id="report-date-filter">
+                    </div>
+                </div>
+                
+                <div class="reports-container" id="reports-container">
+                    <!-- Los reportes se cargarán dinámicamente desde Firebase -->
+                    <div class="loading-message">Cargando reportes...</div>
+                </div>
+                
+                <div class="pagination">
+                    <button class="pagination-btn" id="prev-report-page-btn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="pagination-pages">
+                        <span class="current-page">1</span>
+                        <span>de</span>
+                        <span class="total-pages">1</span>
+                    </div>
+                    <button class="pagination-btn" id="next-report-page-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Sección Pagos -->
+            <section id="pagos-section" class="content-section">
+                <div class="section-header">
+                    <h2>Mis Pagos</h2>
+                </div>
+                
+                <div class="payment-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Facturas Pendientes</h3>
+                            <p class="stat-number" id="pagos-facturas-pendientes">0</p>
+                            <p class="stat-description">Total pendiente: <span id="total-pendiente">$0.00</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Pagos Completados</h3>
+                            <p class="stat-number" id="pagos-completados">0</p>
+                            <p class="stat-description">Último: <span id="ultimo-pago">N/A</span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="payment-tabs">
+                    <div class="tab-header">
+                        <button class="tab-btn active" data-tab="pending-payments">Pagos Pendientes</button>
+                        <button class="tab-btn" data-tab="payment-history">Historial de Pagos</button>
+                    </div>
+                    
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="pending-payments">
+                            <div class="pending-payments-list" id="pending-payments-list">
+                                <!-- Los pagos pendientes se cargarán dinámicamente desde Firebase -->
+                                <div class="loading-message">Cargando pagos pendientes...</div>
+                            </div>
+                        </div>
+                        
+                        <div class="tab-pane" id="payment-history">
+                            <div class="payments-history-list" id="payments-history-list">
+                                <!-- El historial de pagos se cargará dinámicamente desde Firebase -->
+                                <div class="loading-message">Cargando historial de pagos...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Sección Facturas -->
+            <section id="facturas-section" class="content-section">
+                <div class="section-header">
+                    <h2>Mis Facturas</h2>
+                </div>
+                
+                <div class="facturas-filters">
+                    <div class="filter-group">
+                        <label>Estado:</label>
+                        <select id="facturas-status-filter">
+                            <option value="all">Todas</option>
+                            <option value="paid">Pagadas</option>
+                            <option value="pending">Pendientes</option>
+                        </select>
+                    </div>
+                    
+                    <div class="date-filter">
+                        <label>Fecha desde:</label>
+                        <input type="date" id="facturas-date-filter">
+                    </div>
+                </div>
+                
+                <div class="facturas-grid" id="facturas-grid">
+                    <!-- Las facturas se cargarán dinámicamente desde Firebase -->
+                    <div class="loading-message">Cargando facturas...</div>
+                </div>
+            </section>
+            
+            <!-- Sección Dispositivos -->
+            <section id="dispositivos-section" class="content-section">
+                <div class="section-header">
+                    <h2>Mis Dispositivos</h2>
+                </div>
+                
+                <div class="dispositivos-grid" id="dispositivos-grid">
+                    <!-- Los dispositivos se cargarán dinámicamente desde Firebase -->
+                    <div class="loading-message">Cargando dispositivos...</div>
+                </div>
+            </section>
+            
+            <!-- Sección Mi Cuenta -->
+            <section id="cuenta-section" class="content-section">
+                <div class="section-header">
+                    <h2>Mi Cuenta</h2>
+                </div>
+                
+                <div class="account-container">
+                    <div class="account-sidebar">
+                        <ul>
+                            <li class="active" data-account="profile">Perfil</li>
+                            <li data-account="security">Seguridad</li>
+                            <li data-account="addresses">Direcciones</li>
+                            <li data-account="notifications">Notificaciones</li>
+                            <li data-account="history">Historial de Actividad</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="account-content">
+                        <div class="account-pane active" id="profile-pane">
+                            <h3>Información Personal</h3>
+                            <form id="profile-form">
+                                <div class="profile-avatar">
+                                    <img src="assets/avatar-placeholder.png" alt="Avatar" id="profile-avatar-img">
+                                    <div class="avatar-options">
+                                        <button type="button" id="change-avatar-btn">Cambiar foto</button>
+                                        <button type="button" id="remove-avatar-btn">Eliminar</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="profile-name">Nombre completo</label>
+                                    <input type="text" id="profile-name" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="profile-email">Correo electrónico</label>
+                                    <input type="email" id="profile-email" disabled>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="profile-phone">Teléfono</label>
+                                    <input type="tel" id="profile-phone">
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn-primary">Guardar Cambios</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div class="account-pane" id="security-pane">
+                            <h3>Cambiar Contraseña</h3>
+                            <form id="password-form">
+                                <div class="form-group">
+                                    <label for="current-password">Contraseña actual</label>
+                                    <input type="password" id="current-password" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="new-password">Nueva contraseña</label>
+                                    <input type="password" id="new-password" required>
+                                    <div class="password-strength" id="password-strength">
+                                        <div class="strength-bar"></div>
+                                        <span class="strength-text">Fuerza: Débil</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="confirm-password">Confirmar contraseña</label>
+                                    <input type="password" id="confirm-password" required>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn-primary">Cambiar Contraseña</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div class="account-pane" id="addresses-pane">
+                            <h3>Mis Direcciones</h3>
+                            <div class="addresses-list" id="addresses-list">
+                                <!-- Las direcciones se cargarán dinámicamente desde Firebase -->
+                                <div class="loading-message">Cargando direcciones...</div>
+                            </div>
+                            
+                            <button id="add-address-btn" class="btn-primary">Agregar Dirección</button>
+                        </div>
+                        
+                        <div class="account-pane" id="notifications-pane">
+                            <h3>Preferencias de Notificaciones</h3>
+                            <form id="notifications-form">
+                                <div class="switch-group">
+                                    <label for="email-reports">Reportes por Email</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="email-reports" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                
+                                <div class="switch-group">
+                                    <label for="email-payments">Pagos por Email</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="email-payments" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                
+                                <div class="switch-group">
+                                    <label for="email-invoices">Facturas por Email</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="email-invoices" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                
+                                <div class="switch-group">
+                                    <label for="browser-notifications">Notificaciones en el navegador</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="browser-notifications" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn-primary">Guardar Preferencias</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div class="account-pane" id="history-pane">
+                            <h3>Historial de Actividad</h3>
+                            <div class="history-list" id="activity-history-list">
+                                <!-- El historial se cargará dinámicamente desde Firebase -->
+                                <div class="loading-message">Cargando historial de actividad...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Modales -->
+    <!-- Modal Reporte -->
+    <div class="modal" id="report-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="report-modal-title">Nuevo Reporte</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="report-form">
+                    <div class="form-group">
+                        <label for="report-title">Título</label>
+                        <input type="text" id="report-title" placeholder="Describe brevemente el problema" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="report-type">Tipo</label>
+                        <select id="report-type" required>
+                            <option value="">Seleccionar tipo</option>
+                            <option value="alert">Alerta</option>
+                            <option value="error">Error</option>
+                            <option value="maintenance">Mantenimiento</option>
+                            <option value="info">Información</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="report-device">Dispositivo</label>
+                        <select id="report-device" required>
+                            <option value="">Seleccionar dispositivo</option>
+                            <!-- Las opciones se cargarán dinámicamente desde Firebase -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="report-description">Descripción</label>
+                        <textarea id="report-description" rows="5" placeholder="Describe detalladamente el problema" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="report-image">Imagen (opcional)</label>
+                        <div class="file-upload">
+                            <input type="file" id="report-image" accept="image/*">
+                            <label for="report-image">Seleccionar Imagen</label>
+                        </div>
+                        <div class="image-preview" id="report-image-preview">
+                            <img src="#" alt="Vista previa" style="display: none;">
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary cancel-btn">Cancelar</button>
+                        <button type="submit" class="btn-primary" id="save-report-btn">Enviar Reporte</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Dirección -->
+    <div class="modal" id="address-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="address-modal-title">Nueva Dirección</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="address-form">
+                    <div class="form-group">
+                        <label for="address-name">Nombre de la dirección</label>
+                        <input type="text" id="address-name" placeholder="Ej: Casa, Oficina, etc." required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address-line">Dirección</label>
+                        <input type="text" id="address-line" placeholder="Calle, número, etc." required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label for="address-city">Ciudad</label>
+                            <input type="text" id="address-city" required>
+                        </div>
+                        <div class="form-group half">
+                            <label for="address-postal">Código Postal</label>
+                            <input type="text" id="address-postal">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address-phone">Teléfono de contacto</label>
+                        <input type="tel" id="address-phone">
+                    </div>
+                    
+                    <div class="switch-group">
+                        <label for="address-default">Dirección predeterminada</label>
+                        <label class="switch">
+                            <input type="checkbox" id="address-default">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary cancel-btn">Cancelar</button>
+                        <button type="submit" class="btn-primary" id="save-address-btn">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Realizar Pago -->
+    <div class="modal" id="payment-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="payment-modal-title">Realizar Pago</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="payment-details">
+                    <div class="payment-detail">
+                        <span class="detail-label">Factura:</span>
+                        <span class="detail-value" id="payment-invoice-id">FAC-001</span>
+                    </div>
+                    <div class="payment-detail">
+                        <span class="detail-label">Servicio:</span>
+                        <span class="detail-value" id="payment-service">Plan Premium Mensual</span>
+                    </div>
+                    <div class="payment-detail">
+                        <span class="detail-label">Monto:</span>
+                        <span class="detail-value" id="payment-amount">$120.00</span>
+                    </div>
+                    <div class="payment-detail">
+                        <span class="detail-label">Fecha límite:</span>
+                        <span class="detail-value" id="payment-due-date">25/06/2025</span>
+                    </div>
+                </div>
+                
+                <form id="payment-form">
+                    <div class="form-group">
+                        <label for="payment-method">Método de Pago</label>
+                        <select id="payment-method" required>
+                            <option value="">Seleccionar método</option>
+                            <option value="credit_card">Tarjeta de Crédito</option>
+                            <option value="debit_card">Tarjeta de Débito</option>
+                            <option value="bank_transfer">Transferencia Bancaria</option>
+                        </select>
+                    </div>
+                    
+                    <div id="card-payment-fields" style="display: none;">
+                        <div class="form-group">
+                            <label for="card-number">Número de Tarjeta</label>
+                            <input type="text" id="card-number" placeholder="0000 0000 0000 0000">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group half">
+                                <label for="card-expiry">Fecha de Expiración</label>
+                                <input type="text" id="card-expiry" placeholder="MM/AA">
+                            </div>
+                            <div class="form-group half">
+                                <label for="card-cvc">CVC</label>
+                                <input type="text" id="card-cvc" placeholder="123">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="card-name">Nombre en la Tarjeta</label>
+                            <input type="text" id="card-name">
+                        </div>
+                    </div>
+                    
+                    <div id="bank-transfer-fields" style="display: none;">
+                        <div class="bank-info">
+                            <h4>Datos para Transferencia</h4>
+                            <p><strong>Banco:</strong> Banco Nacional</p>
+                            <p><strong>Cuenta:</strong> 1234567890</p>
+                            <p><strong>Titular:</strong> Seguridad 24/7 S.A.</p>
+                            <p><strong>Referencia:</strong> <span id="payment-reference">FAC-001</span></p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="transfer-proof">Comprobante de pago</label>
+                            <div class="file-upload">
+                                <input type="file" id="transfer-proof" accept="image/*,application/pdf">
+                                <label for="transfer-proof">Subir Comprobante</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary cancel-btn">Cancelar</button>
+                        <button type="submit" class="btn-primary" id="confirm-payment-btn">Confirmar Pago</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Panel de Notificaciones -->
+    <div class="notification-panel">
+        <div class="notification-panel-header">
+            <h3>Notificaciones</h3>
+            <button class="mark-all-read-btn">Marcar todas como leídas</button>
+        </div>
+        <div class="notification-panel-body" id="notifications-list">
+            <!-- Las notificaciones se cargarán dinámicamente desde Firebase -->
+            <div class="loading-message">Cargando notificaciones...</div>
+        </div>
+        <div class="notification-panel-footer">
+            <button class="clear-all-btn">Borrar todas</button>
+        </div>
+    </div>
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-storage-compat.js"></script>
+    
+    <!-- JavaScript -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/reportes.js"></script>
+    <script src="js/pagos.js"></script>
+    <script src="js/facturas.js"></script>
+    <script src="js/dispositivos.js"></script>
+    <script src="js/cuenta.js"></script>
+    <script src="js/notificaciones.js"></script>
+</body>
+</html>

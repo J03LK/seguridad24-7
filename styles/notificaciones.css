@@ -1,0 +1,312 @@
+/* notificaciones.css - Estilos para el sistema de notificaciones */
+
+/* Panel de Notificaciones */
+.notification-panel {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    width: 350px;
+    background-color: var(--card-bg-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    transform: translateY(-20px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.notification-panel.active {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+}
+
+.notification-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.notification-panel-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.mark-all-read-btn {
+    font-size: 0.8rem;
+    font-weight: 500;
+    background: transparent;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+}
+
+.mark-all-read-btn:hover {
+    text-decoration: underline;
+}
+
+.notification-panel-body {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    display: flex;
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.notification-item:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.notification-item.read {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.notification-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    margin-right: 15px;
+    font-size: 1rem;
+}
+
+.notification-icon.success {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--success-color);
+}
+
+.notification-icon.error,
+.notification-icon.alert {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--danger-color);
+}
+
+.notification-icon.warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--warning-color);
+}
+
+.notification-icon.info {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: var(--info-color);
+}
+
+.notification-icon.payment {
+    background-color: rgba(139, 92, 246, 0.1);
+    color: #8B5CF6;
+}
+
+.notification-icon.report {
+    background-color: rgba(236, 72, 153, 0.1);
+    color: #EC4899;
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--text-color);
+}
+
+.notification-item.read .notification-title {
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.notification-text {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+}
+
+.notification-time {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.notification-panel-footer {
+    padding: 10px 15px;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.clear-all-btn {
+    font-size: 0.8rem;
+    font-weight: 500;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.clear-all-btn:hover {
+    color: var(--danger-color);
+}
+
+/* Toast Notifications */
+.notification-toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 350px;
+    background-color: var(--card-bg-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 1001;
+}
+
+.notification-toast.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.toast-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    margin-right: 15px;
+    font-size: 1rem;
+}
+
+.notification-toast.success .toast-icon {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--success-color);
+}
+
+.notification-toast.error .toast-icon,
+.notification-toast.alert .toast-icon {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--danger-color);
+}
+
+.notification-toast.warning .toast-icon {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--warning-color);
+}
+
+.notification-toast.info .toast-icon {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: var(--info-color);
+}
+
+.notification-toast.payment .toast-icon {
+    background-color: rgba(139, 92, 246, 0.1);
+    color: #8B5CF6;
+}
+
+.notification-toast.report .toast-icon {
+    background-color: rgba(236, 72, 153, 0.1);
+    color: #EC4899;
+}
+
+.toast-content {
+    flex: 1;
+}
+
+.toast-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 3px;
+    color: var(--text-color);
+}
+
+.toast-message {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.toast-close {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.toast-close:hover {
+    color: var(--danger-color);
+}
+
+/* Multiple toasts */
+.notification-toast:nth-child(2) {
+    bottom: 90px;
+}
+
+.notification-toast:nth-child(3) {
+    bottom: 160px;
+}
+
+.notification-toast:nth-child(4) {
+    bottom: 230px;
+}
+
+/* No notifications */
+.no-notifications {
+    padding: 20px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* Empty state */
+.empty-notifications {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.empty-notifications i {
+    font-size: 3rem;
+    color: #E5E7EB;
+    margin-bottom: 15px;
+}
+
+.empty-notifications p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .notification-panel {
+        top: 60px;
+        right: 10px;
+        left: 10px;
+        width: auto;
+    }
+    
+    .notification-toast {
+        left: 10px;
+        right: 10px;
+        width: auto;
+    }
+}
