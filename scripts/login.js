@@ -1,46 +1,86 @@
-// Elementos del DOM
+// Configuración de Firebase
+const firebaseConfig = {
+    apiKey: "AIzaSyD_C3sJCghWpV1DHn4Qyxsa-exdcEJGst0",
+    authDomain: "seguridad-24-7.firebaseapp.com",
+    projectId: "seguridad-24-7",
+    storageBucket: "seguridad-24-7.firebasestorage.app",
+    messagingSenderId: "979899411271",
+    appId: "1:979899411271:web:4d8db498a9388054a7fa62",
+    measurementId: "G-XQG0KDMMX4"
+};
+
+// Inicializar Firebase si no está inicializado
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Referencias a Firebase
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    
     // Selectores principales
     const signInBtn = document.getElementById('sign-in-btn');
     const signInBtnPanel = document.getElementById('sign-in-btn-panel');
     const signUpBtn = document.getElementById('sign-up-btn');
     const container = document.getElementById('container');
-    const loginForm = document.getElementById('loginForm');
     
-    // Selectores para inputs y botones
-    const inputFields = document.querySelectorAll('.input-field input');
-    const passwordToggles = document.querySelectorAll('.password-toggle');
-    const loginButton = document.getElementById('login-button');
-    const loader = loginButton.querySelector('.loader');
+    // Selectores para formulario de login
+    const loginForm = document.getElementById('loginForm');
     const emailInput = document.getElementById('email-login');
     const passwordInput = document.getElementById('password-login');
     const emailError = document.getElementById('email-login-error');
     const passwordError = document.getElementById('password-login-error');
+    const loginButton = document.getElementById('login-button');
     
-    // Configuración de Firebase
-    const firebaseConfig = {
-        apiKey: "AIzaSyD_C3sJCghWpV1DHn4Qyxsa-exdcEJGst0",
-        authDomain: "seguridad-24-7.firebaseapp.com",
-        projectId: "seguridad-24-7",
-        storageBucket: "seguridad-24-7.firebasestorage.app",
-        messagingSenderId: "979899411271",
-        appId: "1:979899411271:web:4d8db498a9388054a7fa62",
-        measurementId: "G-XQG0KDMMX4"
-    };
-
-    // Inicializar Firebase
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
+    // Selectores para inputs y botones
+    const inputFields = document.querySelectorAll('.input-field input');
+    const passwordToggles = document.querySelectorAll('.password-toggle');
+    const toggleUsername = document.getElementById('toggle-login-username');
+    const togglePassword = document.getElementById('toggle-login-password');
+    
     // Verificar si el usuario ya está autenticado
-    auth.onAuthStateChanged((user) => {
+    auth.onAuthStateChanged(async (user) => {
         if (user) {
-            // Usuario autenticado, verificar rol
-            checkUserRole(user);
+            try {
+                // Obtener datos del usuario desde Firestore
+                const userDoc = await db.collection('usuarios').doc(user.uid).get();
+                
+                if (!userDoc.exists) {
+                    console.log('No se encontró el documento del usuario');
+                    return;
+                }
+                
+                const userData = userDoc.data();
+                
+                // Redirigir según el rol
+                if (userData.role === 'admin') {
+                    // Guardar información para el dashboard admin
+                    localStorage.setItem('adminUser', JSON.stringify({
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: userData.name || user.email.split('@')[0],
+                        photoURL: userData.photoURL || null,
+                        role: 'admin'
+                    }));
+                    
+                    window.location.href = 'dashboardAdmin.html';
+                } else if (userData.role === 'user') {
+                    // Guardar información para el dashboard usuario
+                    localStorage.setItem('userData', JSON.stringify({
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: userData.name || user.email.split('@')[0],
+                        photoURL: userData.photoURL || null,
+                        phone: userData.phone || '',
+                        role: 'user'
+                    }));
+                    
+                    window.location.href = 'dashboardUsuario.html';
+                }
+            } catch (error) {
+                console.error('Error verificando usuario:', error);
+            }
         }
     });
 
@@ -203,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Mostrar/ocultar contraseña
+    // Mostrar/ocultar contraseña y manejo de toggles
     passwordToggles.forEach(toggle => {
         if (toggle.id.includes("password")) {
             toggle.addEventListener("click", () => {
@@ -255,96 +295,102 @@ document.addEventListener('DOMContentLoaded', function() {
     // ==================== AUTENTICACIÓN MEJORADA ====================
     
     // Manejar envío del formulario de login
-    loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        // Limpiar mensajes de error previos
-        clearErrors();
-        
-        // Obtener valores
-        const email = emailInput.value.trim();
-        const password = passwordInput.value.trim();
-        
-        // Validar campos
-        if (!email) {
-            showError('email-login-error', 'El correo electrónico es requerido');
-            return;
-        }
-        
-        if (!password) {
-            showError('password-login-error', 'La contraseña es requerida');
-            return;
-        }
-        
-        // Mostrar loader
-        showLoader();
-        
-        try {
-            // Intentar iniciar sesión
-            const userCredential = await auth.signInWithEmailAndPassword(email, password);
-            const user = userCredential.user;
+    if (loginForm) {
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
             
-            // Animación de éxito
-            loginForm.classList.add("success-animation");
+            // Limpiar mensajes de error previos
+            clearErrors();
             
-            // Efecto adicional en la burbuja ondulante
-            const waveBubble = document.querySelector(".wave-bubble");
-            if (waveBubble) {
-                waveBubble.style.filter = "hue-rotate(30deg) brightness(1.05)";
-                
-                setTimeout(() => {
-                    waveBubble.style.filter = "none";
-                }, 800);
+            // Obtener valores del formulario
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+            
+            // Validaciones básicas
+            if (!email) {
+                showError('email-login-error', 'El correo electrónico es requerido');
+                return;
             }
             
-            // Verificar rol del usuario
-            await checkUserRole(user);
-            
-        } catch (error) {
-            hideLoader();
-            handleAuthError(error);
-        }
-    });
-
-    // Verificar el rol del usuario
-    async function checkUserRole(user) {
-        try {
-            // Obtener datos del usuario desde Firestore
-            const userDoc = await db.collection('usuarios').doc(user.uid).get();
-            
-            if (!userDoc.exists) {
-                throw new Error('No se encontró información del usuario');
+            if (!password) {
+                showError('password-login-error', 'La contraseña es requerida');
+                return;
             }
             
-            const userData = userDoc.data();
-            const userRole = userData.role || 'user';
+            // Mostrar loader
+            showLoader();
             
-            // Solo permitir acceso a administradores
-            if (userRole === 'admin') {
-                // Guardar información del usuario en localStorage para usar en el dashboard
-                localStorage.setItem('adminUser', JSON.stringify({
-                    uid: user.uid,
-                    email: user.email,
-                    displayName: userData.name || user.email.split('@')[0],
-                    photoURL: userData.photoURL || null,
-                    role: userRole
-                }));
+            try {
+                // Intentar iniciar sesión con Firebase Auth
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                const user = userCredential.user;
                 
-                // Redirigir al dashboard administrativo
-                window.location.href = 'dashboardAdmin.html';
-            } else {
-                // Si no es administrador, cerrar sesión y mostrar error
-                await auth.signOut();
+                if (!user) {
+                    throw new Error('No se pudo obtener la información del usuario');
+                }
+                
+                // Animación de éxito
+                loginForm.classList.add("success-animation");
+                
+                // Efecto adicional en la burbuja ondulante
+                const waveBubble = document.querySelector(".wave-bubble");
+                if (waveBubble) {
+                    waveBubble.style.filter = "hue-rotate(30deg) brightness(1.05)";
+                    
+                    setTimeout(() => {
+                        waveBubble.style.filter = "none";
+                    }, 800);
+                }
+                
+                // Obtener datos adicionales del usuario desde Firestore
+                const userDoc = await db.collection('usuarios').doc(user.uid).get();
+                
+                if (!userDoc.exists) {
+                    throw new Error('No se encontró el documento del usuario');
+                }
+                
+                const userData = userDoc.data();
+                
+                // Verificar el rol del usuario y redirigir al dashboard correspondiente
+                if (userData.role === 'admin') {
+                    // Es un administrador, guardar datos en localStorage
+                    const adminUser = {
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: userData.name || user.email.split('@')[0],
+                        photoURL: userData.photoURL || null,
+                        role: 'admin'
+                    };
+                    
+                    localStorage.setItem('adminUser', JSON.stringify(adminUser));
+                    
+                    // Redirigir al dashboard de administrador
+                    window.location.href = 'dashboardAdmin.html';
+                } else if (userData.role === 'user') {
+                    // Es un cliente/usuario normal, guardar datos en localStorage
+                    const clientUser = {
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: userData.name || user.email.split('@')[0],
+                        photoURL: userData.photoURL || null,
+                        phone: userData.phone || '',
+                        role: 'user'
+                    };
+                    
+                    localStorage.setItem('userData', JSON.stringify(clientUser));
+                    
+                    // Redirigir al dashboard de usuario
+                    window.location.href = 'dashboardUsuario.html';
+                } else {
+                    // Rol desconocido o no es admin ni usuario
+                    throw new Error('Rol de usuario no reconocido o no tiene permisos suficientes');
+                }
+                
+            } catch (error) {
                 hideLoader();
-                showError('password-login-error', 'Acceso denegado. Solo los administradores pueden ingresar a este panel.');
+                handleAuthError(error);
             }
-            
-        } catch (error) {
-            console.error('Error verificando rol:', error);
-            hideLoader();
-            showError('password-login-error', 'Error al verificar permisos de usuario');
-            await auth.signOut();
-        }
+        });
     }
 
     // Manejar errores de autenticación
@@ -394,19 +440,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Mostrar loader
     function showLoader() {
-        loginButton.disabled = true;
-        loginButton.classList.add("loading");
-        if (loader) {
-            loader.style.display = 'inline-block';
+        if (loginButton) {
+            loginButton.disabled = true;
+            loginButton.classList.add("loading");
+            const loader = loginButton.querySelector('.loader');
+            if (loader) {
+                loader.style.display = 'inline-block';
+            }
         }
     }
 
     // Ocultar loader
     function hideLoader() {
-        loginButton.disabled = false;
-        loginButton.classList.remove("loading");
-        if (loader) {
-            loader.style.display = 'none';
+        if (loginButton) {
+            loginButton.disabled = false;
+            loginButton.classList.remove("loading");
+            const loader = loginButton.querySelector('.loader');
+            if (loader) {
+                loader.style.display = 'none';
+            }
         }
     }
 
@@ -479,6 +531,25 @@ document.addEventListener('DOMContentLoaded', function() {
     if (signInBtn) {
         signInBtn.addEventListener("click", () => {
             localStorage.setItem("formState", "signin");
+        });
+    }
+
+    // Función para alternar el menú en móviles
+    const menuToggle = document.getElementById('menu-toggle');
+    const menu = document.getElementById('menu');
+    const overlay = document.getElementById('overlay');
+    
+    if (menuToggle && menu && overlay) {
+        menuToggle.addEventListener('click', function() {
+            this.classList.toggle('active');
+            menu.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+        
+        overlay.addEventListener('click', function() {
+            menuToggle.classList.remove('active');
+            menu.classList.remove('active');
+            this.classList.remove('active');
         });
     }
 

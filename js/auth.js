@@ -1,4 +1,4 @@
-// auth.js - Manejo de autenticación en el dashboard de cliente
+// auth.js - Manejo de autenticación en el dashboard de cliente (versión mejorada)
 
 document.addEventListener('DOMContentLoaded', function() {
     // Referencias a elementos del DOM
@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         logActivityEvent('login', 'Inicio de sesión exitoso');
                     } else {
                         // No es cliente, cerrar sesión y redirigir
+                        console.log('El usuario no tiene rol de cliente. Redirigiendo al login...');
                         await auth.signOut();
                         localStorage.removeItem('userData');
                         redirectToLogin();
@@ -64,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         logActivityEvent('login', 'Sesión restaurada');
                     } else {
                         // No es cliente, cerrar sesión y redirigir
+                        console.log('El usuario actual no tiene rol de cliente. Redirigiendo al login...');
                         await auth.signOut();
                         localStorage.removeItem('userData');
                         redirectToLogin();
@@ -71,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             } else {
                 // No autenticado, limpiar localStorage y redirigir
+                console.log('No hay usuario autenticado. Redirigiendo al login...');
                 localStorage.removeItem('userData');
                 redirectToLogin();
             }
@@ -83,11 +86,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const userDoc = await db.collection('usuarios').doc(userId).get();
             
             if (!userDoc.exists) {
+                console.log('No se encontró el documento del usuario');
                 return false;
             }
             
             const userData = userDoc.data();
-            return userData.role === 'user'; // El rol "user" representa a los clientes
+            // El rol "user" representa a los clientes
+            const isClient = userData.role === 'user';
+            console.log('Rol del usuario:', userData.role, '- Es cliente:', isClient);
+            return isClient;
         } catch (error) {
             console.error('Error verificando rol de cliente:', error);
             return false;
@@ -138,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 redirectToLogin();
             } catch (error) {
                 console.error('Error al cerrar sesión:', error);
-                showToast('Error', 'No se pudo cerrar sesión. Intente nuevamente.', 'error');
+                alert('Error al cerrar sesión. Intente nuevamente.');
             }
         });
     }

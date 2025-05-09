@@ -12,12 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initTheme();
     
     // Agregar tooltips a los enlaces del menú
-    function addMenuTooltips() {
-        menuLinks.forEach(link => {
-            const tooltipText = link.querySelector('span').textContent;
-            link.setAttribute('data-title', tooltipText);
-        });
-    }
+    addMenuTooltips();
     
     // Evento para alternar la barra lateral
     if (sidebarToggle) {
@@ -104,7 +99,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const sidebarMenu = document.querySelector('.sidebar-menu');
             const sidebarFooter = document.querySelector('.sidebar-footer');
             
-            sidebarToggle.addEventListener('click', function() {
+            // Limpiamos los event listeners existentes para evitar duplicados
+            const newSidebarToggle = sidebarToggle.cloneNode(true);
+            sidebarToggle.parentNode.replaceChild(newSidebarToggle, sidebarToggle);
+            
+            newSidebarToggle.addEventListener('click', function() {
                 sidebarMenu.classList.toggle('active');
                 if (sidebarFooter) {
                     sidebarFooter.classList.toggle('active');
@@ -113,10 +112,41 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Ejecutar una vez al cargar
-    handleResize();
-});
-    addMenuTooltips();
+    // Agregar tooltips a los enlaces del menú
+    function addMenuTooltips() {
+        menuLinks.forEach(link => {
+            const span = link.querySelector('span');
+            if (span) {
+                const tooltipText = span.textContent;
+                link.setAttribute('data-title', tooltipText);
+                
+                // Agregar evento para mostrar/ocultar tooltip en hover
+                link.addEventListener('mouseenter', function() {
+                    if (dashboardContainer.classList.contains('sidebar-collapsed')) {
+                        const tooltip = document.createElement('div');
+                        tooltip.className = 'menu-tooltip';
+                        tooltip.textContent = tooltipText;
+                        
+                        // Posicionar tooltip
+                        const rect = this.getBoundingClientRect();
+                        tooltip.style.top = `${rect.top + rect.height/2 - 10}px`;
+                        tooltip.style.left = `${rect.right + 10}px`;
+                        
+                        document.body.appendChild(tooltip);
+                        this.setAttribute('data-tooltip-active', 'true');
+                    }
+                });
+                
+                link.addEventListener('mouseleave', function() {
+                    const tooltip = document.querySelector('.menu-tooltip');
+                    if (tooltip) {
+                        tooltip.remove();
+                    }
+                    this.removeAttribute('data-tooltip-active');
+                });
+            }
+        });
+    }
     
     // Detectar si el usuario tiene preferencia por el modo oscuro
     function detectPreferredColorScheme() {
@@ -153,4 +183,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Agregar tooltips a los enlaces del menú
+    // Escuchar cambios en las preferencias del sistema
+    if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+            // Solo cambiar automáticamente si el usuario no ha establecido preferencia
+            if (!localStorage.getItem('theme')) {
+                const isDarkTheme = e.matches;
+                document.body.classList.toggle('dark-theme', isDarkTheme);
+                updateThemeToggleUI(isDarkTheme);
+            }
+        });
+    }
+    
+    // Ejecutar una vez al cargar
+    handleResize();
+});
