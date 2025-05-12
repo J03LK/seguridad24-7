@@ -275,11 +275,11 @@ function configurarBotonesCarrito() {
                     mostrarToastConfirmacion(producto);
                 } else {
                     // Si la función no está disponible, redirigimos a la página del carrito
-                    window.location.href = 'carrito.html';
+                    window.location.href = 'productos.html';
                 }
             } else {
                 // Si no encontramos el producto, redirigimos a la página del carrito
-                window.location.href = 'carrito.html';
+                window.location.href = 'productos.html';
             }
         });
     });

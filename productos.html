@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos - Seguridad 24/7</title>
+    <!-- Meta tag para Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.gstatic.com https://*.firebaseio.com https://*.googleapis.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://cdnjs.cloudflare.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://via.placeholder.com https://*.googleapis.com; connect-src 'self' https://*.firebaseio.com wss://*.firebaseio.com https://*.googleapis.com;">
+    
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- CSS principal -->
+    <link rel="stylesheet" href="estilos/Paquetes.css">
+    <link rel="stylesheet" href="estilos/productos.css">
+    <link rel="stylesheet" href="/estilos/navbar.css">
+    <!-- CSS específico para el carrito -->
+    <link rel="stylesheet" href="estilos/carrito.css">
+        <link rel="stylesheet" href="/estilos/footer.css">
+</head>
+<body>
+      <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/Logo.png" alt="Detecta365 Logo" />
+                </a>
+            </div>
+            <ul class="menu" id="menu">
+                <li><a href="#inicio" class="active">Inicio</a></li>
+                <li><a href="servicios.html">Servicios</a></li>
+                <li><a href="Paquetes.html">Paquetes</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="#contacto" class="btn-contacto">Contacto</a></li>
+                <li class="auth-buttons-mobile">
+                    <a href="login.html" class="btn-login">
+                        <i class="fas fa-user"></i>
+                        <span>Ingresar</span>
+                    </a>
+                    <a href="#registro" class="btn-registro">
+                        <span>Registrarse</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </li>
+            </ul>
+            <button id="menu-toggle" class="menu-toggle" aria-label="Menú" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="auth-buttons">
+                <a href="login.html" class="btn-login">
+                    <i class="fas fa-user"></i>
+                    <span>Ingresar</span>
+                </a>
+                <a href="#registro" class="btn-registro">
+                    <span>Registrarse</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </nav>
+        <div class="overlay" id="overlay"></div>
+    </header>
+    
+    <!-- Elementos de fondo -->
+    <div class="background-container">
+        <div class="floating-logo"></div>
+        <div class="bg-glow bg-glow-1"></div>
+        <div class="bg-glow bg-glow-2"></div>
+    </div>
+    
+    <!-- Sección de imagen principal -->
+    <section class="image-section">
+        <img src="/assets/ImagenesCarrito/IMAGENPRINCIPAL.png" alt="Productos de Seguridad">
+        <div class="image-overlay"></div>
+        <h1>Nuestros Productos</h1>
+    </section>
+    
+    <!-- Filtros de productos -->
+    <section class="filtros-productos">
+        <div class="container">
+            <div class="filtro-grupo">
+                <label for="categoria-filtro">Categoría:</label>
+                <select id="categoria-filtro">
+                    <option value="all">Todas las categorías</option>
+                    <option value="cameras">Cámaras de Seguridad</option>
+                    <option value="alarms">Sistemas de Alarma</option>
+                    <option value="sensors">Sensores</option>
+                    <option value="control">Control de Acceso</option>
+                    <option value="services">Servicios</option>
+                </select>
+            </div>
+            
+            <div class="filtro-grupo">
+                <label for="orden-filtro">Ordenar por:</label>
+                <select id="orden-filtro">
+                    <option value="featured">Destacados</option>
+                    <option value="price-asc">Precio: Menor a Mayor</option>
+                    <option value="price-desc">Precio: Mayor a Menor</option>
+                    <option value="newest">Más Recientes</option>
+                </select>
+            </div>
+            
+            <div class="busqueda-grupo">
+                <input type="text" id="busqueda-input" placeholder="Buscar productos...">
+                <button id="busqueda-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Lista de productos -->
+    <section class="productos-grid" id="productos-container">
+        <!-- Los productos se cargarán dinámicamente -->
+        <div class="cargando">
+            <div class="loader"></div>
+            <p>Cargando productos...</p>
+        </div>
+    </section>
+
+    <!-- Modal del Carrito -->
+    <div class="modal-carrito" id="modal-carrito">
+        <div class="modal-contenido">
+            <div class="modal-encabezado">
+                <h3><i class="fas fa-shopping-cart"></i> Tu Carrito</h3>
+                <button class="cerrar-modal" id="cerrar-carrito"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-cuerpo" id="carrito-items">
+                <!-- Los items del carrito se cargarán dinámicamente aquí -->
+                <div class="carrito-vacio">
+                    <i class="fas fa-shopping-basket"></i>
+                    <p>Tu carrito está vacío</p>
+                </div>
+            </div>
+            <div class="modal-pie">
+                <div class="carrito-total">
+                    <span>Total:</span>
+                    <span id="carrito-total">$0.00</span>
+                </div>
+                <div class="carrito-botones">
+                    <button class="btn btn-vaciar" id="vaciar-carrito">
+                        <i class="fas fa-trash-alt"></i> Vaciar Carrito
+                    </button>
+                    <button class="btn btn-checkout" id="finalizar-compra">
+                        <i class="fas fa-check"></i> Finalizar Compra
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Botón flotante de carrito -->
+    <button class="floating-cta" id="carrito-btn">
+        <i class="fas fa-shopping-cart"></i>
+        <span>Ver Carrito</span>
+        <span class="cart-count" id="cart-count">0</span>
+    </button>
+    
+    <!-- Botón volver arriba -->
+    <div class="back-to-top" id="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+ 
+    <!-- Sistema de notificaciones -->
+    <div id="notificacion" class="notificacion"></div>
+
+    <!-- Scripts de Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-storage-compat.js"></script>
+    
+    <!-- Configuración de Firebase -->
+    <script src="/scripts/userFirebase.js"></script>
+    
+    <!-- Scripts adicionales -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/3.9.1/chart.min.js"></script>
+    
+    <!-- Scripts para cargar productos y manejar el carrito -->
+    <script src="carrito.js"></script>
+    <script src="firebase-independiente.js"></script>
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="assets/Logo2.png" alt="24-7 Logo" />
+                </div>
+                <div class="footer-links">
+                    <h4>Enlaces rápidos</h4>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="servicios.html">Servicios</a></li>
+                        <li><a href="nosotros.html">Nosotros</a></li>
+                        <li><a href="casos.html">Casos de Éxito</a></li>
+                        <li><a href="contacto.html">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-servicios">
+                    <h4>Servicios</h4>
+                    <ul>
+                        <li><a href="servicios.html#guardia-virtual">Guardia Virtual</a></li>
+                        <li><a href="servicios.html#reconocimiento">Reconocimiento Facial</a></li>
+                        <li><a href="servicios.html#monitoreo">Monitoreo 24/7</a></li>
+                        <li><a href="servicios.html#accesos">Control de Accesos</a></li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h4>Suscríbete</h4>
+                    <p>Recibe nuestras novedades y ofertas</p>
+                    <form id="newsletter-form">
+                        <input type="email" placeholder="Tu correo electrónico" required />
+                        <button type="submit">Suscribirse</button>
+                    </form>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 24-7 SEGURIDAD DEL ECUADOR. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
