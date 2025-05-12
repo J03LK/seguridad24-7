@@ -110,9 +110,17 @@ document.addEventListener('DOMContentLoaded', function() {
                           <h3 class="product-title">${productData.name}</h3>
                           <p class="product-description">${productData.description || 'Sin descripción'}</p>
                           <div class="product-price">$${parseFloat(productData.price || 0).toFixed(2)}</div>
+                          <div class="product-publish-status">
+                              ${productData.published !== false 
+                                  ? '<span class="status-badge published">Publicado en tienda</span>' 
+                                  : '<span class="status-badge not-published">No publicado</span>'}
+                          </div>
                           <div class="product-footer">
                               <span class="product-stock">Stock: ${productData.stock || 0}</span>
                               <div class="product-actions">
+                                  <button class="btn-icon ${productData.published !== false ? 'success' : 'warning'}" title="${productData.published !== false ? 'Despublicar' : 'Publicar'}" data-action="toggle-publish">
+                                      <i class="fas ${productData.published !== false ? 'fa-eye' : 'fa-eye-slash'}"></i>
+                                  </button>
                                   <button class="btn-icon edit" title="Editar">
                                       <i class="fas fa-edit"></i>
                                   </button>
@@ -127,6 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   // Agregar event listeners para los botones
                   const editBtn = productCard.querySelector('.edit');
                   const deleteBtn = productCard.querySelector('.danger');
+                  const publishBtn = productCard.querySelector('[data-action="toggle-publish"]');
                   
                   if (editBtn) {
                       editBtn.addEventListener('click', function() {
@@ -139,6 +148,12 @@ document.addEventListener('DOMContentLoaded', function() {
                           if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {
                               deleteProduct(productId);
                           }
+                      });
+                  }
+                  
+                  if (publishBtn) {
+                      publishBtn.addEventListener('click', function() {
+                          toggleProductPublishStatus(productId, !(productData.published !== false));
                       });
                   }
                   
@@ -189,6 +204,11 @@ document.addEventListener('DOMContentLoaded', function() {
               activeCheckbox.checked = productData.active !== false; // Por defecto true
           }
           
+          const publishedCheckbox = document.getElementById('product-published');
+          if (publishedCheckbox) {
+              publishedCheckbox.checked = productData.published !== false; // Por defecto true
+          }
+          
           // Preview de imagen si existe
           if (productData.imageUrl && productImagePreview) {
               productImagePreview.src = productData.imageUrl;
@@ -214,6 +234,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const stock = parseInt(document.getElementById('product-stock').value) || 0;
       const featured = document.getElementById('product-featured').checked;
       const active = document.getElementById('product-active').checked;
+      const published = document.getElementById('product-published').checked;
       
       // Validar nombre
       if (!name) {
@@ -236,6 +257,7 @@ document.addEventListener('DOMContentLoaded', function() {
           stock,
           featured,
           active,
+          published,
           imageUrl: imagePreviewUrl || '/api/placeholder/280/160' // Usar URL de preview o placeholder
       };
       
@@ -295,5 +317,22 @@ document.addEventListener('DOMContentLoaded', function() {
               console.error('Error al eliminar producto:', error);
               alert('Error al eliminar producto: ' + error.message);
           });
+  }
+  
+  // Función para cambiar el estado de publicación de un producto
+  function toggleProductPublishStatus(productId, newPublishStatus) {
+      // Actualizar el estado de publicación en Firestore
+      productsRef.doc(productId).update({
+          published: newPublishStatus,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then(() => {
+          alert(`Producto ${newPublishStatus ? 'publicado en tienda' : 'despublicado de tienda'} correctamente`);
+          loadProducts(); // Recargar productos para actualizar la UI
+      })
+      .catch(error => {
+          console.error('Error al cambiar estado de publicación:', error);
+          alert('Error al cambiar estado de publicación: ' + error.message);
+      });
   }
 });

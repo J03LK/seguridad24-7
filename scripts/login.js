@@ -1,86 +1,57 @@
-// Configuración de Firebase
-const firebaseConfig = {
-    apiKey: "AIzaSyD_C3sJCghWpV1DHn4Qyxsa-exdcEJGst0",
-    authDomain: "seguridad-24-7.firebaseapp.com",
-    projectId: "seguridad-24-7",
-    storageBucket: "seguridad-24-7.firebasestorage.app",
-    messagingSenderId: "979899411271",
-    appId: "1:979899411271:web:4d8db498a9388054a7fa62",
-    measurementId: "G-XQG0KDMMX4"
-};
-
-// Inicializar Firebase si no está inicializado
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-
+// Elementos del DOM
 document.addEventListener('DOMContentLoaded', function() {
-    // Referencias a Firebase
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    
     // Selectores principales
     const signInBtn = document.getElementById('sign-in-btn');
     const signInBtnPanel = document.getElementById('sign-in-btn-panel');
     const signUpBtn = document.getElementById('sign-up-btn');
     const container = document.getElementById('container');
-    
-    // Selectores para formulario de login
     const loginForm = document.getElementById('loginForm');
-    const emailInput = document.getElementById('email-login');
-    const passwordInput = document.getElementById('password-login');
-    const emailError = document.getElementById('email-login-error');
-    const passwordError = document.getElementById('password-login-error');
-    const loginButton = document.getElementById('login-button');
     
     // Selectores para inputs y botones
     const inputFields = document.querySelectorAll('.input-field input');
     const passwordToggles = document.querySelectorAll('.password-toggle');
-    const toggleUsername = document.getElementById('toggle-login-username');
-    const togglePassword = document.getElementById('toggle-login-password');
+    const loginButton = document.getElementById('login-button');
+    const loader = loginButton.querySelector('.loader');
+    const emailInput = document.getElementById('email-login');
+    const passwordInput = document.getElementById('password-login');
+    const emailError = document.getElementById('email-login-error');
+    const passwordError = document.getElementById('password-login-error');
     
+    // Configuración de Firebase - Corregida
+    const firebaseConfig = {
+        apiKey: "AIzaSyD_C3sJCghWpV1DHn4Qyxsa-exdcEJGst0",
+        authDomain: "seguridad-24-7.firebaseapp.com",
+        projectId: "seguridad-24-7",
+        storageBucket: "seguridad-24-7.appspot.com", // Corregido el formato de storage
+        messagingSenderId: "979899411271",
+        appId: "1:979899411271:web:4d8db498a9388054a7fa62",
+        measurementId: "G-XQG0KDMMX4"
+    };
+
+    // Inicializar Firebase
+    if (!firebase.apps.length) {
+        console.log("Inicializando Firebase...");
+        firebase.initializeApp(firebaseConfig);
+    } else {
+        console.log("Firebase ya está inicializado");
+    }
+
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // Para diagnóstico - verificar conexión a Firestore
+    db.collection('test').doc('test').set({
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    })
+    .then(() => console.log("✅ Conexión a Firestore exitosa"))
+    .catch(error => console.error("❌ Error conectando a Firestore:", error));
+
     // Verificar si el usuario ya está autenticado
-    auth.onAuthStateChanged(async (user) => {
+    auth.onAuthStateChanged((user) => {
+        console.log("Estado de autenticación cambiado:", user ? `Usuario: ${user.email}` : "No autenticado");
         if (user) {
-            try {
-                // Obtener datos del usuario desde Firestore
-                const userDoc = await db.collection('usuarios').doc(user.uid).get();
-                
-                if (!userDoc.exists) {
-                    console.log('No se encontró el documento del usuario');
-                    return;
-                }
-                
-                const userData = userDoc.data();
-                
-                // Redirigir según el rol
-                if (userData.role === 'admin') {
-                    // Guardar información para el dashboard admin
-                    localStorage.setItem('adminUser', JSON.stringify({
-                        uid: user.uid,
-                        email: user.email,
-                        displayName: userData.name || user.email.split('@')[0],
-                        photoURL: userData.photoURL || null,
-                        role: 'admin'
-                    }));
-                    
-                    window.location.href = 'dashboardAdmin.html';
-                } else if (userData.role === 'user') {
-                    // Guardar información para el dashboard usuario
-                    localStorage.setItem('userData', JSON.stringify({
-                        uid: user.uid,
-                        email: user.email,
-                        displayName: userData.name || user.email.split('@')[0],
-                        photoURL: userData.photoURL || null,
-                        phone: userData.phone || '',
-                        role: 'user'
-                    }));
-                    
-                    window.location.href = 'dashboardUsuario.html';
-                }
-            } catch (error) {
-                console.error('Error verificando usuario:', error);
-            }
+            // Usuario autenticado, verificar rol
+            checkUserRole(user);
         }
     });
 
@@ -243,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Mostrar/ocultar contraseña y manejo de toggles
+    // Mostrar/ocultar contraseña
     passwordToggles.forEach(toggle => {
         if (toggle.id.includes("password")) {
             toggle.addEventListener("click", () => {
@@ -295,102 +266,151 @@ document.addEventListener('DOMContentLoaded', function() {
     // ==================== AUTENTICACIÓN MEJORADA ====================
     
     // Manejar envío del formulario de login
-    if (loginForm) {
-        loginForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        console.log("Formulario de login enviado");
+        
+        // Limpiar mensajes de error previos
+        clearErrors();
+        
+        // Obtener valores
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+        
+        // Validar campos
+        if (!email) {
+            showError('email-login-error', 'El correo electrónico es requerido');
+            return;
+        }
+        
+        if (!password) {
+            showError('password-login-error', 'La contraseña es requerida');
+            return;
+        }
+        
+        // Mostrar loader
+        showLoader();
+        
+        try {
+            console.log("Intentando iniciar sesión con:", email);
+            // Intentar iniciar sesión
+            const userCredential = await auth.signInWithEmailAndPassword(email, password);
+            const user = userCredential.user;
             
-            // Limpiar mensajes de error previos
-            clearErrors();
+            console.log("Inicio de sesión exitoso para:", user.email);
             
-            // Obtener valores del formulario
-            const email = emailInput.value.trim();
-            const password = passwordInput.value.trim();
+            // Animación de éxito
+            loginForm.classList.add("success-animation");
             
-            // Validaciones básicas
-            if (!email) {
-                showError('email-login-error', 'El correo electrónico es requerido');
-                return;
+            // Efecto adicional en la burbuja ondulante
+            const waveBubble = document.querySelector(".wave-bubble");
+            if (waveBubble) {
+                waveBubble.style.filter = "hue-rotate(30deg) brightness(1.05)";
+                
+                setTimeout(() => {
+                    waveBubble.style.filter = "none";
+                }, 800);
             }
             
-            if (!password) {
-                showError('password-login-error', 'La contraseña es requerida');
-                return;
-            }
+            // Verificar rol del usuario
+            await checkUserRole(user);
             
-            // Mostrar loader
-            showLoader();
+        } catch (error) {
+            console.error("Error en inicio de sesión:", error);
+            hideLoader();
+            handleAuthError(error);
+        }
+    });
+
+    // Verificar el rol del usuario - FUNCIÓN CORREGIDA
+    async function checkUserRole(user) {
+        try {
+            console.log('Verificando rol para el usuario:', user.uid);
             
-            try {
-                // Intentar iniciar sesión con Firebase Auth
-                const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                const user = userCredential.user;
-                
-                if (!user) {
-                    throw new Error('No se pudo obtener la información del usuario');
-                }
-                
-                // Animación de éxito
-                loginForm.classList.add("success-animation");
-                
-                // Efecto adicional en la burbuja ondulante
-                const waveBubble = document.querySelector(".wave-bubble");
-                if (waveBubble) {
-                    waveBubble.style.filter = "hue-rotate(30deg) brightness(1.05)";
-                    
-                    setTimeout(() => {
-                        waveBubble.style.filter = "none";
-                    }, 800);
-                }
-                
-                // Obtener datos adicionales del usuario desde Firestore
-                const userDoc = await db.collection('usuarios').doc(user.uid).get();
-                
-                if (!userDoc.exists) {
-                    throw new Error('No se encontró el documento del usuario');
-                }
-                
-                const userData = userDoc.data();
-                
-                // Verificar el rol del usuario y redirigir al dashboard correspondiente
-                if (userData.role === 'admin') {
-                    // Es un administrador, guardar datos en localStorage
-                    const adminUser = {
-                        uid: user.uid,
-                        email: user.email,
-                        displayName: userData.name || user.email.split('@')[0],
-                        photoURL: userData.photoURL || null,
-                        role: 'admin'
-                    };
-                    
-                    localStorage.setItem('adminUser', JSON.stringify(adminUser));
-                    
-                    // Redirigir al dashboard de administrador
-                    window.location.href = 'dashboardAdmin.html';
-                } else if (userData.role === 'user') {
-                    // Es un cliente/usuario normal, guardar datos en localStorage
-                    const clientUser = {
-                        uid: user.uid,
-                        email: user.email,
-                        displayName: userData.name || user.email.split('@')[0],
-                        photoURL: userData.photoURL || null,
-                        phone: userData.phone || '',
-                        role: 'user'
-                    };
-                    
-                    localStorage.setItem('userData', JSON.stringify(clientUser));
-                    
-                    // Redirigir al dashboard de usuario
-                    window.location.href = 'dashboardUsuario.html';
-                } else {
-                    // Rol desconocido o no es admin ni usuario
-                    throw new Error('Rol de usuario no reconocido o no tiene permisos suficientes');
-                }
-                
-            } catch (error) {
+            // Importante: Confirmar que estamos autenticados antes de consultar Firestore
+            if (!firebase.auth().currentUser) {
+                console.error('No hay usuario autenticado al verificar el rol');
                 hideLoader();
-                handleAuthError(error);
+                showError('password-login-error', 'Error de autenticación. Por favor, intenta nuevamente.');
+                return;
             }
-        });
+            
+            // Esperar un momento para asegurar que la autenticación se propague
+            await new Promise(r => setTimeout(r, 500));
+            
+            // Obtener datos del usuario desde Firestore con manejo de errores más detallado
+            console.log('Consultando Firestore para el usuario:', user.uid);
+            
+            // Intentar obtener el documento del usuario
+            const userDoc = await db.collection('usuarios').doc(user.uid).get()
+                .catch(error => {
+                    console.error('Error específico al consultar Firestore:', error);
+                    if (error.code === 'permission-denied') {
+                        console.error('Este es un error de permisos. Verifica las reglas de seguridad de Firestore.');
+                    }
+                    throw error;
+                });
+            
+            // Verificar si el documento existe
+            if (!userDoc.exists) {
+                console.error('No se encontró información del usuario en Firestore');
+                throw new Error('No se encontró información del usuario');
+            }
+            
+            const userData = userDoc.data();
+            const userRole = userData.role || 'user';
+            
+            console.log('Rol del usuario encontrado:', userRole);
+            
+            // Manejar según el rol del usuario
+            if (userRole === 'admin') {
+                console.log('Usuario con rol admin. Redirigiendo a dashboard admin...');
+                // Guardar información del usuario en localStorage para usar en el dashboard
+                localStorage.setItem('adminUser', JSON.stringify({
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: userData.name || user.email.split('@')[0],
+                    photoURL: userData.photoURL || null,
+                    role: userRole
+                }));
+                
+                // Redirigir al dashboard administrativo
+                window.location.href = 'dashboardAdmin.html';
+            } else if (userRole === 'user') {
+                console.log('Usuario con rol user. Redirigiendo a dashboard usuario...');
+                // Guardar información del usuario en localStorage para usar en el dashboard
+                localStorage.setItem('userData', JSON.stringify({
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: userData.name || user.email.split('@')[0],
+                    photoURL: userData.photoURL || null,
+                    phone: userData.phone || '',
+                    role: userRole
+                }));
+                
+                // Redirigir al dashboard de usuario
+                window.location.href = 'dashboardUsuario.html';
+            } else {
+                // Si no tiene rol reconocido, cerrar sesión y mostrar error
+                console.error('Rol no reconocido:', userRole);
+                await firebase.auth().signOut();
+                hideLoader();
+                showError('password-login-error', 'Acceso denegado. No tienes un rol válido en el sistema.');
+            }
+        } catch (error) {
+            console.error('Error verificando rol:', error);
+            hideLoader();
+            
+            // Mostrar mensajes más informativos según el tipo de error
+            if (error.code === 'permission-denied') {
+                showError('password-login-error', 'Error de permisos. Por favor, contacta al administrador.');
+            } else {
+                showError('password-login-error', 'Error al verificar permisos de usuario. Intenta nuevamente.');
+            }
+            
+            // Cerrar sesión por seguridad
+            await firebase.auth().signOut();
+        }
     }
 
     // Manejar errores de autenticación
@@ -440,25 +460,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Mostrar loader
     function showLoader() {
-        if (loginButton) {
-            loginButton.disabled = true;
-            loginButton.classList.add("loading");
-            const loader = loginButton.querySelector('.loader');
-            if (loader) {
-                loader.style.display = 'inline-block';
-            }
+        loginButton.disabled = true;
+        loginButton.classList.add("loading");
+        if (loader) {
+            loader.style.display = 'inline-block';
         }
     }
 
     // Ocultar loader
     function hideLoader() {
-        if (loginButton) {
-            loginButton.disabled = false;
-            loginButton.classList.remove("loading");
-            const loader = loginButton.querySelector('.loader');
-            if (loader) {
-                loader.style.display = 'none';
-            }
+        loginButton.disabled = false;
+        loginButton.classList.remove("loading");
+        if (loader) {
+            loader.style.display = 'none';
         }
     }
 
@@ -534,27 +548,32 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Función para alternar el menú en móviles
-    const menuToggle = document.getElementById('menu-toggle');
-    const menu = document.getElementById('menu');
-    const overlay = document.getElementById('overlay');
-    
-    if (menuToggle && menu && overlay) {
-        menuToggle.addEventListener('click', function() {
-            this.classList.toggle('active');
-            menu.classList.toggle('active');
-            overlay.classList.toggle('active');
-        });
-        
-        overlay.addEventListener('click', function() {
-            menuToggle.classList.remove('active');
-            menu.classList.remove('active');
-            this.classList.remove('active');
-        });
-    }
-
     // Cargar y configurar el carrusel
     initCarousel();
+    
+    // Función para crear usuarios de prueba (para desarrollo)
+    window.createTestUser = async function(email, password, role) {
+        try {
+            // Crear usuario en Firebase Auth
+            const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+            const user = userCredential.user;
+            
+            // Crear documento en Firestore
+            await db.collection('usuarios').doc(user.uid).set({
+                email: email,
+                name: email.split('@')[0],
+                role: role || 'user',
+                status: 'active',
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            console.log(`Usuario ${email} creado exitosamente con rol ${role}`);
+            return true;
+        } catch (error) {
+            console.error("Error creando usuario:", error);
+            return false;
+        }
+    };
 });
 
 // Inicializar carrusel

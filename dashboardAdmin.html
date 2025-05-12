@@ -41,6 +41,12 @@
                             <span>Usuarios</span>
                         </a>
                     </li>
+             <li>
+    <a href="#" data-section="plans">
+        <i class="fas fa-cubes"></i>
+        <span>Planes de Servicio</span>
+    </a>
+</li>
                     <li>
                         <a href="#" data-section="products">
                             <i class="fas fa-shield-alt"></i>
@@ -393,6 +399,98 @@
                     </button>
                 </div>
             </section>
+            <!-- Sección Planes de Servicio -->
+<section id="plans-section" class="content-section">
+    <div class="section-header">
+        <h2>Planes de Servicio</h2>
+    </div>
+    
+    <div class="plans-container">
+        <!-- Plan Premium -->
+        <div class="plan-card premium">
+            <div class="plan-header">
+                <h3>Plan Premium</h3>
+                <div class="plan-price">
+                    <span class="price">$99.99</span>
+                    <span class="period">/ mes</span>
+                </div>
+            </div>
+            <div class="plan-features">
+                <ul>
+                    <li><i class="fas fa-check"></i> Monitoreo 24/7</li>
+                    <li><i class="fas fa-check"></i> Respuesta de emergencia</li>
+                    <li><i class="fas fa-check"></i> Hasta 8 dispositivos</li>
+                    <li><i class="fas fa-check"></i> Soporte prioritario</li>
+                    <li><i class="fas fa-check"></i> Alertas en tiempo real</li>
+                </ul>
+            </div>
+            <div class="plan-actions">
+                <button class="btn-secondary edit-plan" data-id="premium">
+                    <i class="fas fa-edit"></i> Editar Plan
+                </button>
+                <button class="btn-primary view-clients" data-id="premium">
+                    <i class="fas fa-users"></i> Ver Clientes
+                </button>
+            </div>
+        </div>
+        
+        <!-- Plan Básico -->
+        <div class="plan-card basic">
+            <div class="plan-header">
+                <h3>Plan Básico</h3>
+                <div class="plan-price">
+                    <span class="price">$49.99</span>
+                    <span class="period">/ mes</span>
+                </div>
+            </div>
+            <div class="plan-features">
+                <ul>
+                    <li><i class="fas fa-check"></i> Monitoreo en horario laboral</li>
+                    <li><i class="fas fa-check"></i> Alertas por email</li>
+                    <li><i class="fas fa-check"></i> Hasta 3 dispositivos</li>
+                    <li><i class="fas fa-check"></i> Soporte estándar</li>
+                </ul>
+            </div>
+            <div class="plan-actions">
+                <button class="btn-secondary edit-plan" data-id="basic">
+                    <i class="fas fa-edit"></i> Editar Plan
+                </button>
+                <button class="btn-primary view-clients" data-id="basic">
+                    <i class="fas fa-users"></i> Ver Clientes
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Lista de Clientes por Plan -->
+    <div class="plan-clients-container" id="plan-clients-container" style="display: none;">
+        <div class="plan-clients-header">
+            <h3>Clientes con Plan <span id="plan-name"></span></h3>
+            <button class="btn-close" id="close-plan-clients">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="clients-table-container">
+            <table class="data-table clients-table">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Fecha Inicio</th>
+                        <th>Próxima Facturación</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="plan-clients-body">
+                    <!-- Los clientes se cargarán dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+            <!-- Sección Gestión de Dispositivos (para añadir en dashboardAdmin.html) -->
+
             
             <!-- Sección Productos -->
             <section id="products-section" class="content-section">
@@ -1102,6 +1200,17 @@
                                     <span class="slider round"></span>
                                 </label>
                             </div>
+                            <!-- Modificación al modal de productos en dashboardAdmin.html -->
+<!-- Buscar dentro del formulario de productos, en la sección de switches (después del switch "Activo") -->
+
+<!-- Añadir después del switch de "Activo" -->
+<div class="switch-group">
+    <label for="product-published">Publicar en Tienda</label>
+    <label class="switch">
+        <input type="checkbox" id="product-published" checked>
+        <span class="slider round"></span>
+    </label>
+</div>
                         </div>
                     </div>
                     
@@ -1288,6 +1397,7 @@
     <script src="dashboardsjs/settings.js"></script>
     <script src="dashboardsjs/notificaciones.js"></script>
     <script src="dashboardsjs/busqueda.js"></script>
+    <script src="dashboardsjs/dispositivos.js"></script>
 
     
   
