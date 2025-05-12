@@ -1197,3 +1197,146 @@ document.addEventListener('DOMContentLoaded', function() {
         createSamplePaymentsBtn.addEventListener('click', createSamplePayments);
     }
 });
+// Función para ver el comprobante de un pago
+function viewPaymentProof(proofUrl) {
+    // Crear un modal para mostrar la imagen
+    const proofModal = document.createElement('div');
+    proofModal.className = 'modal active';
+    proofModal.style.zIndex = '2000';
+    
+    proofModal.innerHTML = `
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3>Comprobante de Pago</h3>
+                <button class="modal-close" onclick="this.parentElement.parentElement.parentElement.remove()">&times;</button>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <img src="${proofUrl}" alt="Comprobante de pago" style="max-width: 100%; max-height: 600px;">
+            </div>
+            <div class="modal-footer" style="text-align: right; padding-top: 15px; border-top: 1px solid #eee;">
+                <button class="btn-secondary" onclick="this.parentElement.parentElement.parentElement.remove()">Cerrar</button>
+                <a href="${proofUrl}" target="_blank" class="btn-primary">Ver en Pantalla Completa</a>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(proofModal);
+}
+
+// Función para verificar un pago (aprobarlo)
+async function verifyPayment(paymentId) {
+    try {
+        // Obtener datos del pago
+        const paymentDoc = await firebase.firestore().collection('payments').doc(paymentId).get();
+        
+        if (!paymentDoc.exists) {
+            alert('El pago no existe o ha sido eliminado');
+            return;
+        }
+        
+        const paymentData = paymentDoc.data();
+        
+        // Verificar el pago
+        await firebase.firestore().collection('payments').doc(paymentId).update({
+            status: 'verified',
+            verifiedBy: firebase.auth().currentUser ? firebase.auth().currentUser.uid : 'admin',
+            verifiedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        // Actualizar el estado de la factura
+        if (paymentData.invoiceId) {
+            await firebase.firestore().collection('invoices').doc(paymentData.invoiceId).update({
+                status: 'paid',
+                paidAt: firebase.firestore.FieldValue.serverTimestamp(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        }
+        
+        alert('Pago verificado correctamente');
+        loadPendingPayments();
+        loadRecentPayments();
+        
+    } catch (error) {
+        console.error('Error al verificar pago:', error);
+        alert('Error al verificar el pago: ' + error.message);
+    }
+}
+
+// Función para rechazar un pago
+async function rejectPayment(paymentId) {
+    const reason = prompt('Por favor, ingrese el motivo del rechazo:');
+    
+    if (reason === null) {
+        // El usuario canceló
+        return;
+    }
+    
+    try {
+        // Obtener datos del pago
+        const paymentDoc = await firebase.firestore().collection('payments').doc(paymentId).get();
+        
+        if (!paymentDoc.exists) {
+            alert('El pago no existe o ha sido eliminado');
+            return;
+        }
+        
+        const paymentData = paymentDoc.data();
+        
+        // Rechazar el pago
+        await firebase.firestore().collection('payments').doc(paymentId).update({
+            status: 'rejected',
+            rejectionReason: reason,
+            rejectedBy: firebase.auth().currentUser ? firebase.auth().currentUser.uid : 'admin',
+            rejectedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        // Actualizar el estado de la factura a pendiente nuevamente
+        if (paymentData.invoiceId) {
+            await firebase.firestore().collection('invoices').doc(paymentData.invoiceId).update({
+                status: 'pending',
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        }
+        
+        alert('Pago rechazado correctamente');
+        loadPendingPayments();
+        loadRecentPayments();
+        
+    } catch (error) {
+        console.error('Error al rechazar pago:', error);
+        alert('Error al rechazar el pago: ' + error.message);
+    }
+}
+
+// Asegúrate de agregar event listeners a los botones de verificar, rechazar y ver comprobante
+function setupPaymentButtons() {
+    // Botones para ver comprobante
+    document.querySelectorAll('.view-proof').forEach(button => {
+        button.addEventListener('click', function() {
+            const proofUrl = this.getAttribute('data-url');
+            if (proofUrl) {
+                viewPaymentProof(proofUrl);
+            } else {
+                alert('No hay comprobante disponible para este pago');
+            }
+        });
+    });
+    
+    // Botones para verificar pago
+    document.querySelectorAll('.verify-payment').forEach(button => {
+        button.addEventListener('click', function() {
+            const paymentId = this.getAttribute('data-id');
+            if (confirm('¿Estás seguro de que deseas verificar este pago? Esto marcará la factura correspondiente como pagada.')) {
+                verifyPayment(paymentId);
+            }
+        });
+    });
+    
+    // Botones para rechazar pago
+    document.querySelectorAll('.reject-payment').forEach(button => {
+        button.addEventListener('click', function() {
+            const paymentId = this.getAttribute('data-id');
+            rejectPayment(paymentId);
+        });
+    });
+}

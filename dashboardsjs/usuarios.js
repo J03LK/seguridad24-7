@@ -140,169 +140,237 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Función para abrir modal de usuario
-    function openUserModal(userId = null, userData = null) {
-        if (!userModal || !userForm) return;
-        
-        // Limpiar formulario
-        userForm.reset();
-        
-        // Título del modal
-        const modalTitle = document.getElementById('user-modal-title');
-        if (modalTitle) {
-            modalTitle.textContent = userId ? 'Editar Usuario' : 'Nuevo Usuario';
-        }
-        
-        // Si es edición, rellenar con datos existentes
-        if (userId && userData) {
-            editingUserId = userId;
-            originalEmail = userData.email || '';
-            
-            document.getElementById('user-name').value = userData.name || '';
-            document.getElementById('user-email').value = userData.email || '';
-            
-            // El campo de contraseña solo es requerido para nuevos usuarios
-            const passwordField = document.getElementById('user-password');
-            if (passwordField) {
-                passwordField.required = false;
-                passwordField.parentElement.style.display = 'none';
-            }
-            
-            const roleField = document.getElementById('user-role');
-            if (roleField) {
-                roleField.value = userData.role || 'user';
-            }
-            
-            const phoneField = document.getElementById('user-phone');
-            if (phoneField) {
-                phoneField.value = userData.phone || '';
-            }
-            
-            const addressField = document.getElementById('user-address');
-            if (addressField) {
-                addressField.value = userData.address || '';
-            }
-        } else {
-            editingUserId = null;
-            originalEmail = null;
-            
-            // Para nuevos usuarios, mostrar y requerir contraseña
-            const passwordField = document.getElementById('user-password');
-            if (passwordField) {
-                passwordField.required = true;
-                passwordField.parentElement.style.display = 'block';
-            }
-        }
-        
-        // Mostrar modal
-        userModal.classList.add('active');
+    // Función para abrir modal de usuario
+function openUserModal(userId = null, userData = null) {
+    if (!userModal || !userForm) return;
+    
+    // Limpiar formulario
+    userForm.reset();
+    
+    // Título del modal
+    const modalTitle = document.getElementById('user-modal-title');
+    if (modalTitle) {
+        modalTitle.textContent = userId ? 'Editar Usuario' : 'Nuevo Usuario';
     }
     
-    // Función para guardar usuario
-    async function saveUser() {
-        if (!userForm) return;
+    // Si es edición, rellenar con datos existentes
+    if (userId && userData) {
+        editingUserId = userId;
+        originalEmail = userData.email || '';
         
-        // Obtener datos del formulario
-        const name = document.getElementById('user-name').value.trim();
-        const email = document.getElementById('user-email').value.trim();
-        const password = document.getElementById('user-password')?.value;
-        const role = document.getElementById('user-role').value;
-        const phone = document.getElementById('user-phone').value.trim();
-        const address = document.getElementById('user-address').value.trim();
+        document.getElementById('user-name').value = userData.name || '';
+        document.getElementById('user-email').value = userData.email || '';
         
-        // Validar email
-        if (!email) {
-            alert('El correo electrónico es obligatorio');
-            return;
+        // El campo de contraseña solo es requerido para nuevos usuarios
+        const passwordField = document.getElementById('user-password');
+        if (passwordField) {
+            passwordField.required = false;
+            passwordField.parentElement.style.display = 'none';
         }
         
-        // Mostrar estado de carga
-        if (saveUserBtn) {
-            saveUserBtn.disabled = true;
-            saveUserBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+        const roleField = document.getElementById('user-role');
+        if (roleField) {
+            roleField.value = userData.role || 'user';
         }
         
-        try {
-            if (editingUserId) {
-                // Actualizar usuario existente
-                const emailChanged = email !== originalEmail;
-                
-                // Siempre actualizamos Firestore
-                await usersRef.doc(editingUserId).update({
-                    name,
-                    email,  // Actualizar el email en Firestore aunque no se pueda en Auth
-                    role,
-                    phone,
-                    address,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                if (emailChanged) {
-                    // Si el email cambió, mostrar instrucciones al usuario
-                    confirmEmailChanged(originalEmail, email);
-                } else {
-                    alert('Usuario actualizado correctamente');
-                }
-                
-                userModal.classList.remove('active');
-                loadUsers();
-            } else {
-                // Crear nuevo usuario
-                if (!password) {
-                    alert('La contraseña es obligatoria para nuevos usuarios');
-                    if (saveUserBtn) {
-                        saveUserBtn.disabled = false;
-                        saveUserBtn.textContent = 'Guardar';
-                    }
-                    return;
-                }
-                
-                // Solución temporal: usaremos una segunda instancia de Firebase
-                let secondaryApp;
-                try {
-                    secondaryApp = firebase.initializeApp(firebase.app().options, 'secondaryApp');
-                } catch (e) {
-                    secondaryApp = firebase.app('secondaryApp');
-                }
-                
-                // Usar la app secundaria para crear el usuario
-                const userCredential = await secondaryApp.auth().createUserWithEmailAndPassword(email, password);
-                const uid = userCredential.user.uid;
-                
-                // Cerrar sesión inmediatamente en la app secundaria
-                await secondaryApp.auth().signOut();
-                
-                // Guardar datos en Firestore
-                await db.collection('usuarios').doc(uid).set({
-                    name,
-                    email,
-                    role,
-                    phone,
-                    address,
-                    status: 'active',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                // Limpiar
-                try {
-                    secondaryApp.delete();
-                } catch (e) {
-                    console.error('Error al eliminar app secundaria:', e);
-                }
-                
-                alert('Usuario creado correctamente');
-                userModal.classList.remove('active');
-                loadUsers();
-            }
-        } catch (error) {
-            console.error('Error al guardar usuario:', error);
-            alert('Error al guardar usuario: ' + error.message);
-        } finally {
-            if (saveUserBtn) {
-                saveUserBtn.disabled = false;
-                saveUserBtn.textContent = 'Guardar';
-            }
+        // Cargar el plan si existe
+        const planField = document.getElementById('user-plan');
+        if (planField && userData.planId) {
+            planField.value = userData.planId;
+        }
+        
+        const phoneField = document.getElementById('user-phone');
+        if (phoneField) {
+            phoneField.value = userData.phone || '';
+        }
+        
+        const addressField = document.getElementById('user-address');
+        if (addressField) {
+            addressField.value = userData.address || '';
+        }
+    } else {
+        editingUserId = null;
+        originalEmail = null;
+        
+        // Para nuevos usuarios, mostrar y requerir contraseña
+        const passwordField = document.getElementById('user-password');
+        if (passwordField) {
+            passwordField.required = true;
+            passwordField.parentElement.style.display = 'block';
         }
     }
+    
+    // Verificar visibilidad del campo de plan según el rol seleccionado
+    togglePlanField();
+    
+    // Mostrar modal
+    userModal.classList.add('active');
+}
+    // Función para guardar usuario
+   // Función para guardar usuario
+async function saveUser() {
+    if (!userForm) return;
+    
+    // Obtener datos del formulario
+    const name = document.getElementById('user-name').value.trim();
+    const email = document.getElementById('user-email').value.trim();
+    const password = document.getElementById('user-password')?.value;
+    const role = document.getElementById('user-role').value;
+    const phone = document.getElementById('user-phone').value.trim();
+    const address = document.getElementById('user-address').value.trim();
+    
+    // Obtener el plan seleccionado (solo relevante para clientes)
+    const planId = document.getElementById('user-plan').value;
+    
+    // Validar email
+    if (!email) {
+        alert('El correo electrónico es obligatorio');
+        return;
+    }
+    
+    // Mostrar estado de carga
+    if (saveUserBtn) {
+        saveUserBtn.disabled = true;
+        saveUserBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+    }
+    
+    try {
+        if (editingUserId) {
+            // Actualizar usuario existente
+            const emailChanged = email !== originalEmail;
+            
+            // Siempre actualizamos Firestore
+            await usersRef.doc(editingUserId).update({
+                name,
+                email,  // Actualizar el email en Firestore aunque no se pueda en Auth
+                role,
+                phone,
+                address,
+                planId, // Guardar el plan seleccionado
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            // Si es cliente y tiene plan, actualizar su suscripción
+            if (role === 'user' && planId) {
+                // Verificar si ya tiene una suscripción
+                const subscriptionsRef = db.collection('subscriptions');
+                const existingSubscription = await subscriptionsRef
+                    .where('clientId', '==', editingUserId)
+                    .where('status', '==', 'active')
+                    .get();
+                
+                // Calcular próxima facturación (1 mes desde hoy)
+                const today = new Date();
+                const nextBillingDate = new Date(today);
+                nextBillingDate.setMonth(today.getMonth() + 1);
+                
+                if (existingSubscription.empty) {
+                    // Crear nueva suscripción
+                    await subscriptionsRef.add({
+                        clientId: editingUserId,
+                        planId: planId,
+                        status: 'active',
+                        startDate: today.toISOString(),
+                        nextBillingDate: nextBillingDate.toISOString(),
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                } else {
+                    // Actualizar suscripción existente
+                    const subscriptionDoc = existingSubscription.docs[0];
+                    await subscriptionDoc.ref.update({
+                        planId: planId,
+                        nextBillingDate: nextBillingDate.toISOString(),
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+            }
+            
+            if (emailChanged) {
+                // Si el email cambió, mostrar instrucciones al usuario
+                confirmEmailChanged(originalEmail, email);
+            } else {
+                alert('Usuario actualizado correctamente');
+            }
+            
+            userModal.classList.remove('active');
+            loadUsers();
+        } else {
+            // Crear nuevo usuario
+            if (!password) {
+                alert('La contraseña es obligatoria para nuevos usuarios');
+                if (saveUserBtn) {
+                    saveUserBtn.disabled = false;
+                    saveUserBtn.textContent = 'Guardar';
+                }
+                return;
+            }
+            
+            // Solución temporal: usaremos una segunda instancia de Firebase
+            let secondaryApp;
+            try {
+                secondaryApp = firebase.initializeApp(firebase.app().options, 'secondaryApp');
+            } catch (e) {
+                secondaryApp = firebase.app('secondaryApp');
+            }
+            
+            // Usar la app secundaria para crear el usuario
+            const userCredential = await secondaryApp.auth().createUserWithEmailAndPassword(email, password);
+            const uid = userCredential.user.uid;
+            
+            // Cerrar sesión inmediatamente en la app secundaria
+            await secondaryApp.auth().signOut();
+            
+            // Guardar datos en Firestore
+            await db.collection('usuarios').doc(uid).set({
+                name,
+                email,
+                role,
+                phone,
+                address,
+                planId, // Guardar el plan seleccionado
+                status: 'active',
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            // Si es cliente y tiene plan, crear una suscripción
+            if (role === 'user' && planId) {
+                // Calcular próxima facturación (1 mes desde hoy)
+                const today = new Date();
+                const nextBillingDate = new Date(today);
+                nextBillingDate.setMonth(today.getMonth() + 1);
+                
+                // Crear suscripción
+                await db.collection('subscriptions').add({
+                    clientId: uid,
+                    planId: planId,
+                    status: 'active',
+                    startDate: today.toISOString(),
+                    nextBillingDate: nextBillingDate.toISOString(),
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            }
+            
+            // Limpiar
+            try {
+                secondaryApp.delete();
+            } catch (e) {
+                console.error('Error al eliminar app secundaria:', e);
+            }
+            
+            alert('Usuario creado correctament');
+            userModal.classList.remove('active');
+            loadUsers();
+        }
+    } catch (error) {
+        console.error('Error al guardar usuario:', error);
+        alert('Error al guardar usuario: ' + error.message);
+    } finally {
+        if (saveUserBtn) {
+            saveUserBtn.disabled = false;
+            saveUserBtn.textContent = 'Guardar';
+        }
+    }
+}
     
     // Función para eliminar usuario
     async function deleteUser(userId) {
@@ -625,3 +693,31 @@ function loadUsers() {
             userTableBody.innerHTML = `<tr><td colspan="7" class="error-row">Error al cargar usuarios: ${error.message}</td></tr>`;
         });
 }
+// Agregar esto después de los event listeners existentes en tu archivo usuarios.js
+
+// Controlar visibilidad del campo de plan según el rol seleccionado
+const roleSelect = document.getElementById('user-role');
+const planGroup = document.getElementById('plan-group');
+
+// Función para mostrar/ocultar el campo de plan según el rol
+function togglePlanField() {
+    if (roleSelect.value === 'user') {
+        // Si es cliente, mostrar el campo de plan
+        planGroup.style.display = 'block';
+    } else {
+        // Si es administrador, ocultar el campo de plan
+        planGroup.style.display = 'none';
+        // Además, resetear la selección a "Sin plan"
+        document.getElementById('user-plan').value = '';
+    }
+}
+
+// Verificar estado inicial al abrir el modal
+togglePlanField();
+
+// Agregar listener para cuando cambie el rol
+roleSelect.addEventListener('change', togglePlanField);
+
+// También actualizar la función openUserModal para que tenga en cuenta esto
+// Busca la función openUserModal existente y añade esta línea justo antes de mostrar el modal:
+// togglePlanField();

@@ -2,6 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     // Referencias a elementos del DOM
+    
     const pendingPaymentsList = document.getElementById('pending-payments-list');
     const paymentsHistoryList = document.getElementById('payments-history-list');
     const pagosPendientesEl = document.getElementById('pagos-facturas-pendientes');
