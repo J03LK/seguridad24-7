@@ -1,4 +1,4 @@
-// reportes.js - Gestión de reportes del cliente
+// reportes.js - Gestión de reportes del cliente (versión optimizada)
 
 document.addEventListener('DOMContentLoaded', function() {
     // Referencias a elementos del DOM
@@ -36,7 +36,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Inicializar sistema de reportes
     function initReportSystem(userId) {
-        // Ya no necesitamos cargar dispositivos sino servicios
         // Cargar reportes iniciales
         loadReports(userId);
         
@@ -81,7 +80,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // Para cada suscripción, obtener el nombre del plan
             for (const doc of subscriptionsSnapshot.docs) {
                 const subscription = doc.data();
-                console.log('Suscripción encontrada:', subscription);
                 
                 try {
                     // Obtener datos del plan
@@ -91,7 +89,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     if (planDoc.exists) {
                         const planData = planDoc.data();
-                        console.log('Plan encontrado:', planData);
                         
                         // Crear opción para el selector
                         const option = document.createElement('option');
@@ -101,7 +98,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         // Si la suscripción tiene una ubicación asociada, guardarla como atributo
                         if (subscription.locationId) {
                             option.setAttribute('data-location', subscription.locationId);
-                            console.log('Ubicación asociada:', subscription.locationId);
                         }
                         
                         serviceSelect.appendChild(option);
@@ -113,14 +109,11 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Si se agregaron opciones, añadir listener para cambio
             if (serviceSelect.options.length > 1) {
-                console.log('Opciones de servicio cargadas correctamente');
-                
                 // Añadir event listener para cuando cambia el servicio seleccionado
                 serviceSelect.addEventListener('change', function() {
                     const selectedOption = this.options[this.selectedIndex];
                     if (selectedOption) {
                         const locationId = selectedOption.getAttribute('data-location');
-                        console.log('Servicio seleccionado cambió. Location ID:', locationId);
                         
                         if (locationId) {
                             // Si tiene ubicación asociada, obtener sus datos
@@ -132,8 +125,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }
                 });
-            } else {
-                console.log('No se encontraron suficientes servicios para añadir el listener');
             }
             
         } catch (error) {
@@ -153,8 +144,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         try {
-            console.log('Cargando datos de ubicación:', locationId);
-            
             // Guardar ID de ubicación
             locationIdField.value = locationId;
             
@@ -165,12 +154,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (locationDoc.exists) {
                 const locationData = locationDoc.data();
-                console.log('Ubicación encontrada:', locationData);
-                
                 // Mostrar nombre de la ubicación
                 locationNameField.value = locationData.name || 'Ubicación sin nombre';
             } else {
-                console.log('Ubicación no encontrada');
                 locationNameField.value = 'Ubicación no encontrada';
             }
         } catch (error) {
@@ -233,6 +219,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Cargar reportes desde Firestore
     async function loadReports(userId) {
         if (!reportsContainer) return;
+        
+        // Verificar que userId no sea undefined
+        if (!userId && firebase.auth().currentUser) {
+            userId = firebase.auth().currentUser.uid;
+        }
+        
+        // Si aún no hay userId válido, mostrar mensaje y salir
+        if (!userId) {
+            reportsContainer.innerHTML = '<div class="loading-message">Esperando autenticación...</div>';
+            return;
+        }
         
         // Mostrar mensaje de carga
         reportsContainer.innerHTML = '<div class="loading-message">Cargando reportes...</div>';
@@ -353,6 +350,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function createReportCard(reportId, reportData) {
         const reportCard = document.createElement('div');
         reportCard.className = 'report-card';
+        reportCard.setAttribute('data-id', reportId);
         
         // Convertir timestamp a fecha legible
         const createdDate = reportData.createdAt ? 
@@ -413,6 +411,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         <button class="btn-icon info" title="Ver Detalles" data-id="${reportId}">
                             <i class="fas fa-info-circle"></i>
                         </button>
+                        <button class="btn-icon delete-report-btn danger" title="Eliminar Reporte" data-id="${reportId}">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -423,6 +424,16 @@ document.addEventListener('DOMContentLoaded', function() {
         if (infoBtn) {
             infoBtn.addEventListener('click', function() {
                 openReportDetails(reportId, reportData);
+            });
+        }
+        
+        // Agregar evento al botón de eliminar
+        const deleteBtn = reportCard.querySelector('.delete-report-btn');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                confirmDeleteReport(reportId);
             });
         }
         
@@ -570,156 +581,154 @@ document.addEventListener('DOMContentLoaded', function() {
         reportModal.classList.add('active');
     }
     
-    // Modificar función saveReport para corregir el problema con statusHistory
-
-// Guardar reporte
-async function saveReport(userId) {
-    if (!reportForm) return;
-    
-    // Obtener datos del formulario
-    const title = document.getElementById('report-title').value.trim();
-    const type = document.getElementById('report-type').value;
-    const serviceId = document.getElementById('report-service').value;
-    const locationId = document.getElementById('report-location-id')?.value || '';
-    const locationName = document.getElementById('report-location-name')?.value || '';
-    const description = document.getElementById('report-description').value.trim();
-    const imageFile = reportImageInput.files[0];
-    
-    // Validar datos
-    if (!title) {
-        showToast('Error', 'El título es obligatorio', 'error');
-        return;
-    }
-    
-    if (!type) {
-        showToast('Error', 'Debe seleccionar un tipo de reporte', 'error');
-        return;
-    }
-    
-    if (!serviceId) {
-        showToast('Error', 'Debe seleccionar un servicio', 'error');
-        return;
-    }
-    
-    if (!description) {
-        showToast('Error', 'La descripción es obligatoria', 'error');
-        return;
-    }
-    
-    // Mostrar estado de carga
-    if (saveReportBtn) {
-        saveReportBtn.disabled = true;
-        saveReportBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
-    }
-    
-    try {
-        // Obtener nombre del servicio
-        const serviceDoc = await db.collection('subscriptions').doc(serviceId).get();
-        let serviceName = 'Servicio desconocido';
+    // Función para guardar reporte
+    async function saveReport(userId) {
+        if (!reportForm) return;
         
-        if (serviceDoc.exists) {
-            const serviceData = serviceDoc.data();
+        // Obtener datos del formulario
+        const title = document.getElementById('report-title').value.trim();
+        const type = document.getElementById('report-type').value;
+        const serviceId = document.getElementById('report-service').value;
+        const locationId = document.getElementById('report-location-id')?.value || '';
+        const locationName = document.getElementById('report-location-name')?.value || '';
+        const description = document.getElementById('report-description').value.trim();
+        const imageFile = reportImageInput.files[0];
+        
+        // Validar datos
+        if (!title) {
+            showToast('Error', 'El título es obligatorio', 'error');
+            return;
+        }
+        
+        if (!type) {
+            showToast('Error', 'Debe seleccionar un tipo de reporte', 'error');
+            return;
+        }
+        
+        if (!serviceId) {
+            showToast('Error', 'Debe seleccionar un servicio', 'error');
+            return;
+        }
+        
+        if (!description) {
+            showToast('Error', 'La descripción es obligatoria', 'error');
+            return;
+        }
+        
+        // Mostrar estado de carga
+        if (saveReportBtn) {
+            saveReportBtn.disabled = true;
+            saveReportBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+        }
+        
+        try {
+            // Obtener nombre del servicio
+            const serviceDoc = await db.collection('subscriptions').doc(serviceId).get();
+            let serviceName = 'Servicio desconocido';
             
-            // Obtener nombre del plan asociado a la suscripción
-            if (serviceData.planId) {
-                const planDoc = await db.collection('plans').doc(serviceData.planId).get();
-                if (planDoc.exists) {
-                    serviceName = planDoc.data().name || 'Plan sin nombre';
+            if (serviceDoc.exists) {
+                const serviceData = serviceDoc.data();
+                
+                // Obtener nombre del plan asociado a la suscripción
+                if (serviceData.planId) {
+                    const planDoc = await db.collection('plans').doc(serviceData.planId).get();
+                    if (planDoc.exists) {
+                        serviceName = planDoc.data().name || 'Plan sin nombre';
+                    }
                 }
             }
-        }
-        
-        // Obtener datos del usuario
-        const userDoc = await db.collection('usuarios').doc(userId).get();
-        const userData = userDoc.exists ? userDoc.data() : {};
-        
-        // Crear objeto de datos base
-        const reportData = {
-            title,
-            type,
-            serviceId,
-            serviceName,
-            locationId: locationId || null,
-            locationName,
-            description,
-            status: 'pending',
-            clientId: userId,
-            clientName: userData.name || 'Cliente',
-            clientEmail: userData.email || '',
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        };
-        
-        // Si hay imagen, subirla a Storage
-        let uploadPromise = Promise.resolve(null);
-        if (imageFile) {
-            const storageRef = storage.ref();
-            const imageRef = storageRef.child(`reports/${userId}/${Date.now()}_${imageFile.name}`);
             
-            uploadPromise = imageRef.put(imageFile).then(() => {
-                return imageRef.getDownloadURL();
-            }).then(url => {
-                reportData.imageUrl = url;
-            });
-        }
-        
-        // Esperar a que se suba la imagen (si hay)
-        await uploadPromise;
-        
-        // Guardar en Firestore
-        if (editingReportId) {
-            // Actualizar reporte existente
-            await db.collection('reportes').doc(editingReportId).update(reportData);
-            showToast('Éxito', 'Reporte actualizado correctamente', 'success');
-        } else {
-            // Crear nuevo reporte
-            reportData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+            // Obtener datos del usuario
+            const userDoc = await db.collection('usuarios').doc(userId).get();
+            const userData = userDoc.exists ? userDoc.data() : {};
             
-            // Crear entrada inicial del historial de estados con Date normal en lugar de ServerTimestamp
-            reportData.statusHistory = [{
+            // Crear objeto de datos base
+            const reportData = {
+                title,
+                type,
+                serviceId,
+                serviceName,
+                locationId: locationId || null,
+                locationName,
+                description,
                 status: 'pending',
-                date: new Date(), // Usar Date normal en lugar de ServerTimestamp
-                note: 'Reporte creado'
-            }];
-            
-            const docRef = await db.collection('reportes').add(reportData);
-            
-            // Crear notificación para administradores
-            const notificationData = {
-                type: 'report',
-                title: 'Nuevo Reporte',
-                message: `${userData.name || 'Cliente'} ha creado un nuevo reporte: ${title}`,
-                link: `reports:view:${docRef.id}`
+                clientId: userId,
+                clientName: userData.name || 'Cliente',
+                clientEmail: userData.email || '',
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
             
-            // Crear notificación para el usuario
-            await createUserNotification('report', 'Reporte Enviado', 'Su reporte ha sido enviado y está pendiente de revisión');
-            
-            // Notificar a todos los administradores (esta función está definida en notificaciones.js)
-            if (typeof window.createAdminNotification === 'function') {
-                window.createAdminNotification(notificationData);
-            } else {
-                // Si la función no está disponible, crear notificación manual para admins
-                createAdminNotifications(notificationData);
+            // Si hay imagen, subirla a Storage
+            let uploadPromise = Promise.resolve(null);
+            if (imageFile) {
+                const storageRef = storage.ref();
+                const imageRef = storageRef.child(`reports/${userId}/${Date.now()}_${imageFile.name}`);
+                
+                uploadPromise = imageRef.put(imageFile).then(() => {
+                    return imageRef.getDownloadURL();
+                }).then(url => {
+                    reportData.imageUrl = url;
+                });
             }
             
-            showToast('Éxito', 'Reporte creado correctamente', 'success');
-        }
-        
-        // Cerrar modal y recargar reportes
-        reportModal.classList.remove('active');
-        loadReports(userId);
-        
-    } catch (error) {
-        console.error('Error al guardar reporte:', error);
-        showToast('Error', 'No se pudo guardar el reporte: ' + error.message, 'error');
-    } finally {
-        // Restaurar botón
-        if (saveReportBtn) {
-            saveReportBtn.disabled = false;
-            saveReportBtn.textContent = 'Enviar Reporte';
+            // Esperar a que se suba la imagen (si hay)
+            await uploadPromise;
+            
+            // Guardar en Firestore
+            if (editingReportId) {
+                // Actualizar reporte existente
+                await db.collection('reportes').doc(editingReportId).update(reportData);
+                showToast('Éxito', 'Reporte actualizado correctamente', 'success');
+            } else {
+                // Crear nuevo reporte
+                reportData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                
+                // Crear entrada inicial del historial de estados con Date normal en lugar de ServerTimestamp
+                reportData.statusHistory = [{
+                    status: 'pending',
+                    date: new Date(), // Usar Date normal en lugar de ServerTimestamp
+                    note: 'Reporte creado'
+                }];
+                
+                const docRef = await db.collection('reportes').add(reportData);
+                
+                // Crear notificación para administradores
+                const notificationData = {
+                    type: 'report',
+                    title: 'Nuevo Reporte',
+                    message: `${userData.name || 'Cliente'} ha creado un nuevo reporte: ${title}`,
+                    link: `reports:view:${docRef.id}`
+                };
+                
+                // Crear notificación para el usuario
+                await createUserNotification('report', 'Reporte Enviado', 'Su reporte ha sido enviado y está pendiente de revisión');
+                
+                // Notificar a todos los administradores (esta función está definida en notificaciones.js)
+                if (typeof window.createAdminNotification === 'function') {
+                    window.createAdminNotification(notificationData);
+                } else {
+                    // Si la función no está disponible, crear notificación manual para admins
+                    createAdminNotifications(notificationData);
+                }
+                
+                showToast('Éxito', 'Reporte creado correctamente', 'success');
+            }
+            
+            // Cerrar modal y recargar reportes
+            reportModal.classList.remove('active');
+            loadReports(userId);
+            
+        } catch (error) {
+            console.error('Error al guardar reporte:', error);
+            showToast('Error', 'No se pudo guardar el reporte: ' + error.message, 'error');
+        } finally {
+            // Restaurar botón
+            if (saveReportBtn) {
+                saveReportBtn.disabled = false;
+                saveReportBtn.textContent = 'Enviar Reporte';
+            }
         }
     }
-}
     
     // Crear notificaciones para administradores
     async function createAdminNotifications(notificationData) {
@@ -770,6 +779,35 @@ async function saveReport(userId) {
             read: false,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
+    }
+    
+    // Confirmar y eliminar reporte
+    function confirmDeleteReport(reportId) {
+        const confirmDelete = confirm('¿Estás seguro de que quieres eliminar este reporte? Esta acción no se puede deshacer.');
+        
+        if (!confirmDelete) {
+            return; // Usuario canceló la eliminación
+        }
+        
+        // Eliminar el reporte
+        db.collection('reportes').doc(reportId).delete()
+            .then(() => {
+                console.log('Reporte eliminado correctamente:', reportId);
+                showToast('Éxito', 'Reporte eliminado correctamente', 'success');
+                
+                // Obtener ID de usuario actual para recargar
+                const currentUser = firebase.auth().currentUser;
+                if (currentUser) {
+                    loadReports(currentUser.uid);
+                } else {
+                    // Si no hay usuario, recargar la página
+                    location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Error al eliminar reporte:', error);
+                showToast('Error', 'No se pudo eliminar el reporte: ' + error.message, 'error');
+            });
     }
     
     // Abrir detalles del reporte
@@ -835,7 +873,7 @@ async function saveReport(userId) {
                     <div class="report-details-section">
                         <h4>Información General</h4>
                         <div class="detail-row">
-                        <div class="detail-label">Título:</div>
+                            <div class="detail-label">Título:</div>
                             <div class="detail-value">${reportData.title || 'Sin título'}</div>
                         </div>
                         <div class="detail-row">
@@ -886,6 +924,7 @@ async function saveReport(userId) {
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <button class="btn-danger delete-report-btn" data-id="${reportId}">Eliminar</button>
                     <button class="btn-secondary close-details-btn">Cerrar</button>
                 </div>
             </div>
@@ -898,6 +937,25 @@ async function saveReport(userId) {
         setTimeout(() => {
             modal.classList.add('active');
         }, 10);
+        
+        // Evento para botón de eliminar
+        const deleteBtn = modal.querySelector('.delete-report-btn');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', function() {
+                const reportId = this.getAttribute('data-id');
+                
+                // Cerrar modal
+                modal.classList.remove('active');
+                setTimeout(() => {
+                    if (modal.parentNode) {
+                        modal.parentNode.removeChild(modal);
+                    }
+                }, 300);
+                
+                // Confirmar y eliminar
+                confirmDeleteReport(reportId);
+            });
+        }
         
         // Evento para botón de cerrar
         const closeBtn = modal.querySelector('.modal-close');
@@ -936,11 +994,141 @@ async function saveReport(userId) {
         // Verificar si existe la función global
         if (typeof window.showToast === 'function') {
             window.showToast(title, message, type);
-        } else {
-            // Implementación básica de toast si no existe la función global
-            console.log(`${type.toUpperCase()}: ${title} - ${message}`);
-            alert(`${title}: ${message}`);
+            return;
         }
+        
+        // Implementación básica de toast si no existe la función global
+        console.log(`${type.toUpperCase()}: ${title} - ${message}`);
+        
+        // Crear elemento toast
+        const toast = document.createElement('div');
+        toast.className = `notification-toast ${type}`;
+        toast.style.position = 'fixed';
+        toast.style.bottom = '20px';
+        toast.style.right = '20px';
+        toast.style.backgroundColor = '#fff';
+        toast.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+        toast.style.borderRadius = '4px';
+        toast.style.padding = '15px';
+        toast.style.display = 'flex';
+        toast.style.alignItems = 'center';
+        toast.style.zIndex = '9999';
+        toast.style.minWidth = '250px';
+        toast.style.maxWidth = '350px';
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s';
+        
+        // Determinar ícono según tipo
+        let iconClass = 'fa-info-circle';
+        let iconColor = '#3498db';
+        
+        if (type === 'success') {
+            iconClass = 'fa-check-circle';
+            iconColor = '#2ecc71';
+        } else if (type === 'error') {
+            iconClass = 'fa-exclamation-circle';
+            iconColor = '#e74c3c';
+        } else if (type === 'warning') {
+            iconClass = 'fa-exclamation-triangle';
+            iconColor = '#f39c12';
+        }
+        
+        // HTML del toast
+        toast.innerHTML = `
+            <div style="width: 24px; height: 24px; color: ${iconColor}; margin-right: 12px;">
+                <i class="fas ${iconClass}" style="font-size: 24px;"></i>
+            </div>
+            <div style="flex: 1;">
+                <div style="font-weight: bold; margin-bottom: 5px;">${title}</div>
+                <div style="font-size: 14px; color: #666;">${message}</div>
+            </div>
+            <div style="margin-left: 12px; cursor: pointer;" class="toast-close">
+                <i class="fas fa-times"></i>
+            </div>
+        `;
+        
+        // Agregar al documento
+        document.body.appendChild(toast);
+        
+        // Mostrar con animación
+        setTimeout(() => {
+            toast.style.opacity = '1';
+        }, 10);
+        
+        // Evento para cerrar
+        const closeBtn = toast.querySelector('.toast-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            });
+        }
+        
+        // Auto-cerrar después de 3 segundos
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }
+        }, 3000);
     }
+    
+    // Aplicar estilos al botón de eliminar en las cards
+    function applyDeleteButtonStyles() {
+        document.querySelectorAll('.delete-report-btn').forEach(btn => {
+            // Aplicar estilos solo si no los tiene ya
+            if (!btn.hasAttribute('data-styled')) {
+                btn.style.backgroundColor = '#f8d7da';
+                btn.style.color = '#dc3545';
+                btn.style.border = 'none';
+                btn.style.borderRadius = '50%';
+                btn.style.width = '32px';
+                btn.style.height = '32px';
+                btn.style.display = 'inline-flex';
+                btn.style.alignItems = 'center';
+                btn.style.justifyContent = 'center';
+                btn.style.cursor = 'pointer';
+                btn.style.marginLeft = '5px';
+                btn.style.transition = 'all 0.2s';
+                
+                // Marcar como estilizado
+                btn.setAttribute('data-styled', 'true');
+                
+                // Eventos hover
+                btn.addEventListener('mouseover', function() {
+                    this.style.backgroundColor = '#dc3545';
+                    this.style.color = '#fff';
+                });
+                
+                btn.addEventListener('mouseout', function() {
+                    this.style.backgroundColor = '#f8d7da';
+                    this.style.color = '#dc3545';
+                });
+            }
+        });
+    }
+    
+    // Observer para aplicar estilos a los botones de eliminar cuando se añaden al DOM
+    const observer = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+            if (mutation.addedNodes.length) {
+                // Buscar y estilizar botones nuevos
+                applyDeleteButtonStyles();
+            }
+        });
+    });
+    
+    // Iniciar observación
+    if (reportsContainer) {
+        observer.observe(reportsContainer, { childList: true, subtree: true });
+    }
+    
+    // Estilizar botones existentes
+    applyDeleteButtonStyles();
 });
-                            

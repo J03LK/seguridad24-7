@@ -892,3 +892,104 @@ function updateClientFilter(clients) {
   
   console.log('Filtro de clientes actualizado');
 }
+// Modificaciones para ubicaciones.js
+// Hacer que las funciones clave sean globales para acceso desde otros módulos
+
+// Modificar la función loadLocations para hacerla accesible globalmente
+// Reemplazar la definición actual de loadLocations con esta:
+
+// Cargar ubicaciones desde Firestore
+window.loadLocations = function() {
+    if (!map) return;
+    
+    console.log('Cargando ubicaciones en el mapa...');
+    
+    // Limpiar marcadores y círculos existentes
+    window.clearMarkers();
+    
+    // Obtener valores de filtros
+    const clientId = clientFilter ? clientFilter.value : 'all';
+    const status = statusFilter ? statusFilter.value : 'all';
+    
+    // Consulta base
+    let query = locationsRef;
+    
+    // Aplicar filtros
+    if (clientId !== 'all') {
+        query = query.where('clientId', '==', clientId);
+    }
+    
+    if (status !== 'all') {
+        query = query.where('status', '==', status);
+    }
+    
+    // Ejecutar consulta
+    query.get()
+        .then(snapshot => {
+            if (snapshot.empty) {
+                console.log('No se encontraron ubicaciones');
+                return;
+            }
+            
+            console.log('Ubicaciones encontradas:', snapshot.size);
+            
+            // Procesar cada ubicación
+            snapshot.forEach(doc => {
+                const locationData = doc.data();
+                const locationId = doc.id;
+                
+                console.log('Creando marcador para ubicación:', locationId, 'con estado:', locationData.status);
+                
+                // Crear marcador y círculo para esta ubicación
+                createMarkerAndCircle(locationId, locationData);
+            });
+            
+            // Ajustar vista del mapa para mostrar todos los marcadores
+            if (markers.length > 0) {
+                const group = new L.featureGroup(markers);
+                map.fitBounds(group.getBounds(), { padding: [50, 50] });
+            }
+        })
+        .catch(error => {
+            console.error('Error al cargar ubicaciones:', error);
+        });
+};
+
+// Hacer global la función clearMarkers
+window.clearMarkers = function() {
+    console.log('Limpiando marcadores del mapa...');
+    
+    markers.forEach(marker => {
+        // Detener animación si existe
+        if (marker.intervalId) {
+            clearInterval(marker.intervalId);
+        }
+        // Eliminar marcador del mapa
+        map.removeLayer(marker);
+    });
+    
+    circles.forEach(circle => {
+        map.removeLayer(circle);
+    });
+    
+    markers = [];
+    circles = [];
+};
+
+// También hacer global la referencia al mapa
+document.addEventListener('DOMContentLoaded', function() {
+    // Cuando el mapa se inicialice, hacerlo accesible globalmente
+    if (typeof initMaps === 'function') {
+        const originalInitMaps = initMaps;
+        
+        initMaps = function() {
+            originalInitMaps();
+            
+            // Hacer que el mapa sea accesible globalmente después de inicializarlo
+            if (map) {
+                console.log('Haciendo el mapa accesible globalmente');
+                window.map = map;
+            }
+        };
+    }
+});

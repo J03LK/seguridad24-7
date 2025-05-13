@@ -495,3 +495,633 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     };
 });
+// Mejoras al sistema de notificaciones para asegurar la comunicación entre dashboards
+
+// Estas funciones deberían estar al final de dashboardsjs/notificaciones.js
+
+// Función mejorada para crear notificaciones para todos los administradores
+window.createAdminNotification = function(notification) {
+    console.log('Creando notificación para administradores:', notification);
+    
+    // Valores por defecto para la notificación
+    const defaultNotification = {
+        type: 'info',
+        title: 'Nueva Notificación',
+        message: '',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        read: false
+    };
+    
+    // Combinar valores por defecto con los proporcionados
+    const finalNotification = { ...defaultNotification, ...notification };
+    
+    // Obtener todos los usuarios administradores
+    return db.collection('usuarios')
+        .where('role', '==', 'admin')
+        .get()
+        .then(snapshot => {
+            if (snapshot.empty) {
+                console.log('No se encontraron administradores');
+                return Promise.resolve();
+            }
+            
+            console.log('Administradores encontrados:', snapshot.size);
+            
+            // Crear batch para operaciones en masa
+            const batch = db.batch();
+            
+            // Crear notificación para cada administrador
+            snapshot.forEach(doc => {
+                const adminId = doc.id;
+                console.log('Creando notificación para admin:', adminId);
+                
+                const notificationRef = db.collection('notifications').doc();
+                
+                batch.set(notificationRef, {
+                    ...finalNotification,
+                    userId: adminId
+                });
+            });
+            
+            // Ejecutar batch
+            return batch.commit();
+        })
+        .then(() => {
+            console.log('Notificaciones para administradores creadas con éxito');
+            return Promise.resolve();
+        })
+        .catch(error => {
+            console.error('Error al crear notificaciones para administradores:', error);
+            return Promise.reject(error);
+        });
+};
+
+// Función mejorada para crear notificación para un usuario específico
+window.createUserNotification = function(userId, notification) {
+    console.log('Creando notificación para usuario:', userId);
+    
+    if (!userId) {
+        console.error('No se proporcionó ID de usuario');
+        return Promise.reject('No se proporcionó ID de usuario');
+    }
+    
+    // Valores por defecto para la notificación
+    const defaultNotification = {
+        type: 'info',
+        title: 'Nueva Notificación',
+        message: '',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        read: false
+    };
+    
+    // Combinar valores por defecto con los proporcionados
+    const finalNotification = { 
+        ...defaultNotification, 
+        ...notification,
+        userId: userId // Asegurar que se use el ID correcto
+    };
+    
+    // Crear la notificación
+    return db.collection('notifications')
+        .add(finalNotification)
+        .then(docRef => {
+            console.log('Notificación creada con éxito:', docRef.id);
+            return docRef;
+        })
+        .catch(error => {
+            console.error('Error al crear notificación:', error);
+            return Promise.reject(error);
+        });
+};
+
+// Función para mostrar una notificación toast
+window.showToast = function(title, message, type = 'info') {
+    console.log('Mostrando toast:', title, message, type);
+    
+    // Crear elemento toast
+    const toast = document.createElement('div');
+    toast.className = `notification-toast ${type}`;
+    
+    // Determinar ícono según tipo
+    let iconClass = 'fa-info-circle';
+    switch (type) {
+        case 'success':
+            iconClass = 'fa-check-circle';
+            break;
+        case 'error':
+        case 'alert':
+            iconClass = 'fa-exclamation-circle';
+            break;
+        case 'warning':
+            iconClass = 'fa-exclamation-triangle';
+            break;
+    }
+    
+    // HTML del toast
+    toast.innerHTML = `
+        <div class="toast-icon">
+            <i class="fas ${iconClass}"></i>
+        </div>
+        <div class="toast-content">
+            <div class="toast-title">${title}</div>
+            <div class="toast-message">${message}</div>
+        </div>
+        <button class="toast-close">&times;</button>
+    `;
+    
+    // Agregar a documento
+    document.body.appendChild(toast);
+    
+    // Mostrar con animación
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 10);
+    
+    // Botón para cerrar
+    const closeBtn = toast.querySelector('.toast-close');
+    closeBtn.addEventListener('click', () => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 300);
+    });
+    
+    // Auto-cerrar después de 5 segundos
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 300);
+    }, 5000);
+};
+
+// Actualizar la función de notificación específica para reportes
+window.notifyReportStatusChanged = function(reportId, newStatus, clientId) {
+    console.log('Notificando cambio de estado de reporte:', reportId, newStatus, 'para cliente:', clientId);
+    
+    // Verificar parámetros
+    if (!reportId || !newStatus || !clientId) {
+        console.error('Parámetros incompletos para notificación');
+        return Promise.reject('Parámetros incompletos');
+    }
+    
+    // Mapeo de estados a nombres amigables
+    const statusNames = {
+        'pending': 'Pendiente',
+        'in-progress': 'En Proceso',
+        'completed': 'Resuelto'
+    };
+    
+    const statusName = statusNames[newStatus] || newStatus;
+    
+    // Obtener datos del reporte para crear notificación con contexto
+    return db.collection('reportes')
+        .doc(reportId)
+        .get()
+        .then(doc => {
+            if (!doc.exists) {
+                throw new Error('Reporte no encontrado');
+            }
+            
+            const reportData = doc.data();
+            const reportTitle = reportData.title || 'Reporte sin título';
+            
+            // Crear notificación para el cliente
+            const notification = {
+                type: 'report',
+                title: 'Actualización de Reporte',
+                message: `Tu reporte "${reportTitle}" ha cambiado a estado: ${statusName}`,
+                link: `reportes:view:${reportId}`,
+                read: false,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            
+            // Crear notificación
+            return window.createUserNotification(clientId, notification);
+        })
+        .then(() => {
+            console.log('Notificación de cambio de estado creada con éxito');
+            return Promise.resolve();
+        })
+        .catch(error => {
+            console.error('Error al crear notificación de cambio de estado:', error);
+            return Promise.reject(error);
+        });
+};
+// fix-notification-modal.js - Solución para el problema del modal de notificaciones
+
+(function() {
+    console.log('Aplicando corrección al modal de notificaciones');
+    
+    // Función para inicializar la corrección
+    function fixNotificationModal() {
+        console.log('Buscando elementos de notificaciones...');
+        
+        // Obtener elementos del DOM
+        const notificationBtn = document.querySelector('.notification-btn');
+        const notificationPanel = document.querySelector('.notification-panel');
+        
+        // Verificar si existen los elementos necesarios
+        if (!notificationBtn || !notificationPanel) {
+            console.log('No se encontraron los elementos necesarios, reintentando en 500ms...');
+            setTimeout(fixNotificationModal, 500);
+            return;
+        }
+        
+        console.log('Elementos encontrados, aplicando corrección...');
+        
+        // 1. Corregir el CSS del panel para asegurar que aparece correctamente
+        notificationPanel.style.position = 'absolute';
+        notificationPanel.style.top = '60px';  // Ajustar según sea necesario
+        notificationPanel.style.right = '10px';
+        notificationPanel.style.zIndex = '9999'; // Valor alto para estar por encima de todo
+        notificationPanel.style.width = '350px';
+        notificationPanel.style.maxHeight = '80vh';
+        notificationPanel.style.overflowY = 'auto';
+        notificationPanel.style.backgroundColor = '#fff';
+        notificationPanel.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
+        notificationPanel.style.borderRadius = '8px';
+        notificationPanel.style.display = 'none'; // Inicialmente oculto
+        
+        // 2. Reemplazar la lógica de alternancia de clase con display
+        const togglePanel = function() {
+            console.log('Alternando panel de notificaciones');
+            
+            if (notificationPanel.style.display === 'none') {
+                notificationPanel.style.display = 'block';
+                console.log('Panel abierto');
+                
+                // Cargar notificaciones
+                if (typeof loadNotifications === 'function') {
+                    loadNotifications();
+                }
+            } else {
+                notificationPanel.style.display = 'none';
+                console.log('Panel cerrado');
+            }
+        };
+        
+        // 3. Asignar el evento de clic de forma directa (sin clonar)
+        notificationBtn.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            togglePanel();
+        };
+        
+        // 4. Cerrar al hacer clic fuera
+        document.addEventListener('click', function(e) {
+            if (notificationPanel.style.display !== 'none' && 
+                !notificationPanel.contains(e.target) && 
+                !notificationBtn.contains(e.target)) {
+                notificationPanel.style.display = 'none';
+                console.log('Panel cerrado (clic fuera)');
+            }
+        });
+        
+        console.log('Corrección aplicada correctamente');
+    }
+    
+    // También podemos arreglar los estilos de los elementos internos del panel
+    function fixPanelInternalStyles() {
+        const panel = document.querySelector('.notification-panel');
+        if (!panel) return;
+        
+        // Arreglar los headers y footers
+        const header = panel.querySelector('.notification-panel-header');
+        if (header) {
+            header.style.padding = '15px';
+            header.style.borderBottom = '1px solid #eee';
+            header.style.display = 'flex';
+            header.style.justifyContent = 'space-between';
+            header.style.alignItems = 'center';
+        }
+        
+        const body = panel.querySelector('.notification-panel-body');
+        if (body) {
+            body.style.maxHeight = '60vh';
+            body.style.overflowY = 'auto';
+        }
+        
+        const footer = panel.querySelector('.notification-panel-footer');
+        if (footer) {
+            footer.style.padding = '10px 15px';
+            footer.style.borderTop = '1px solid #eee';
+            footer.style.textAlign = 'center';
+        }
+        
+        // Arreglar botón de marcar como leídas
+        const markAllReadBtn = panel.querySelector('.mark-all-read-btn');
+        if (markAllReadBtn) {
+            markAllReadBtn.style.backgroundColor = '#f0f0f0';
+            markAllReadBtn.style.border = 'none';
+            markAllReadBtn.style.padding = '5px 10px';
+            markAllReadBtn.style.borderRadius = '4px';
+            markAllReadBtn.style.cursor = 'pointer';
+        }
+    }
+    
+    // Ejecutar cuando el DOM esté completamente cargado
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            fixNotificationModal();
+            setTimeout(fixPanelInternalStyles, 500);
+        });
+    } else {
+        // Si el DOM ya está cargado, ejecutar de inmediato
+        fixNotificationModal();
+        setTimeout(fixPanelInternalStyles, 500);
+    }
+})();
+// notification-styles-fix.js - Mejoras visuales para el panel de notificaciones
+
+(function() {
+    console.log('Aplicando mejoras visuales al panel de notificaciones');
+    
+    // Función para aplicar estilos mejorados al panel de notificaciones
+    function enhanceNotificationStyles() {
+        // Estilos para el panel principal
+        const panel = document.querySelector('.notification-panel');
+        if (!panel) {
+            console.log('Panel de notificaciones no encontrado, reintentando...');
+            setTimeout(enhanceNotificationStyles, 500);
+            return;
+        }
+        
+        console.log('Aplicando estilos al panel de notificaciones');
+        
+        // Estilos para el panel principal
+        Object.assign(panel.style, {
+            position: 'absolute',
+            top: '60px',
+            right: '10px',
+            zIndex: '9999',
+            width: '350px',
+            maxHeight: '80vh',
+            backgroundColor: '#fff',
+            boxShadow: '0 8px 16px rgba(0,0,0,0.15)',
+            borderRadius: '8px',
+            fontFamily: "'Poppins', sans-serif",
+            border: '1px solid #eaeaea',
+            overflow: 'hidden'
+        });
+        
+        // Estilos para el encabezado del panel
+        const header = panel.querySelector('.notification-panel-header');
+        if (header) {
+            Object.assign(header.style, {
+                padding: '15px',
+                borderBottom: '1px solid #eaeaea',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                backgroundColor: '#f8f9fa'
+            });
+            
+            // Estilo para el título del panel
+            const title = header.querySelector('h3');
+            if (title) {
+                Object.assign(title.style, {
+                    margin: '0',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    color: '#333'
+                });
+            }
+            
+            // Estilo para el botón "Marcar todas como leídas"
+            const markAllBtn = header.querySelector('.mark-all-read-btn');
+            if (markAllBtn) {
+                Object.assign(markAllBtn.style, {
+                    backgroundColor: '#e9ecef',
+                    color: '#495057',
+                    border: 'none',
+                    padding: '6px 10px',
+                    borderRadius: '4px',
+                    fontSize: '12px',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s'
+                });
+                
+                // Efecto hover
+                markAllBtn.addEventListener('mouseover', function() {
+                    this.style.backgroundColor = '#dee2e6';
+                });
+                
+                markAllBtn.addEventListener('mouseout', function() {
+                    this.style.backgroundColor = '#e9ecef';
+                });
+            }
+        }
+        
+        // Estilos para el cuerpo del panel
+        const body = panel.querySelector('.notification-panel-body');
+        if (body) {
+            Object.assign(body.style, {
+                maxHeight: '400px',
+                overflowY: 'auto',
+                padding: '0'
+            });
+            
+            // Mensaje de carga o sin notificaciones
+            const loadingMsg = body.querySelector('.loading');
+            const emptyMsg = body.querySelector('.no-notifications');
+            const errorMsg = body.querySelector('.error');
+            
+            [loadingMsg, emptyMsg, errorMsg].forEach(el => {
+                if (el) {
+                    Object.assign(el.style, {
+                        padding: '20px',
+                        textAlign: 'center',
+                        color: '#6c757d',
+                        fontSize: '14px'
+                    });
+                }
+            });
+            
+            // Mejorar estilo de los elementos de notificación
+            styleNotificationItems(body);
+        }
+        
+        // Estilos para el pie del panel
+        const footer = panel.querySelector('.notification-panel-footer');
+        if (footer) {
+            Object.assign(footer.style, {
+                padding: '12px 15px',
+                borderTop: '1px solid #eaeaea',
+                textAlign: 'center',
+                backgroundColor: '#f8f9fa'
+            });
+            
+            // Estilo para el enlace "Ver todas"
+            const viewAllLink = footer.querySelector('.view-all-notifications');
+            if (viewAllLink) {
+                Object.assign(viewAllLink.style, {
+                    color: '#3B82F6',
+                    textDecoration: 'none',
+                    fontSize: '14px',
+                    fontWeight: '500'
+                });
+                
+                // Efecto hover
+                viewAllLink.addEventListener('mouseover', function() {
+                    this.style.textDecoration = 'underline';
+                });
+                
+                viewAllLink.addEventListener('mouseout', function() {
+                    this.style.textDecoration = 'none';
+                });
+            }
+        }
+        
+        console.log('Mejoras visuales aplicadas al panel de notificaciones');
+    }
+    
+    // Función para estilizar los elementos de notificación individuales
+    function styleNotificationItems(container) {
+        // Observar cambios en el contenedor para estilizar nuevos elementos
+        const observer = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                if (mutation.addedNodes.length) {
+                    // Buscar los nuevos elementos de notificación
+                    mutation.addedNodes.forEach(node => {
+                        if (node.nodeType === 1) { // Nodo de elemento
+                            const items = node.classList && node.classList.contains('notification-item') ? 
+                                         [node] : node.querySelectorAll('.notification-item');
+                            
+                            items.forEach(applyNotificationItemStyles);
+                        }
+                    });
+                }
+            });
+        });
+        
+        // Iniciar observación
+        observer.observe(container, { childList: true, subtree: true });
+        
+        // Estilizar elementos existentes
+        const existingItems = container.querySelectorAll('.notification-item');
+        existingItems.forEach(applyNotificationItemStyles);
+    }
+    
+    // Aplicar estilos a un elemento de notificación individual
+    function applyNotificationItemStyles(item) {
+        Object.assign(item.style, {
+            display: 'flex',
+            padding: '12px 15px',
+            borderBottom: '1px solid #eaeaea',
+            cursor: 'pointer',
+            transition: 'background-color 0.2s'
+        });
+        
+        // Efecto hover
+        item.addEventListener('mouseover', function() {
+            this.style.backgroundColor = '#f8f9fa';
+        });
+        
+        item.addEventListener('mouseout', function() {
+            this.style.backgroundColor = '';
+        });
+        
+        // Estilo para notificaciones leídas
+        if (item.classList.contains('read')) {
+            item.style.opacity = '0.7';
+        }
+        
+        // Estilo para el icono de notificación
+        const icon = item.querySelector('.notification-icon');
+        if (icon) {
+            Object.assign(icon.style, {
+                minWidth: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: '12px',
+                color: '#fff',
+                fontSize: '16px'
+            });
+            
+            // Colores para diferentes tipos de notificación
+            if (icon.classList.contains('success')) {
+                icon.style.backgroundColor = '#22C55E';
+            } else if (icon.classList.contains('error') || icon.classList.contains('alert')) {
+                icon.style.backgroundColor = '#EF4444';
+            } else if (icon.classList.contains('warning')) {
+                icon.style.backgroundColor = '#FACC15';
+            } else if (icon.classList.contains('payment')) {
+                icon.style.backgroundColor = '#3B82F6';
+            } else if (icon.classList.contains('report')) {
+                icon.style.backgroundColor = '#8B5CF6';
+            } else if (icon.classList.contains('user')) {
+                icon.style.backgroundColor = '#EC4899';
+            } else {
+                icon.style.backgroundColor = '#6B7280'; // info o tipo por defecto
+            }
+        }
+        
+        // Estilo para el contenido de la notificación
+        const content = item.querySelector('.notification-content');
+        if (content) {
+            Object.assign(content.style, {
+                flex: '1',
+                overflow: 'hidden'
+            });
+            
+            // Título de la notificación
+            const title = content.querySelector('.notification-title');
+            if (title) {
+                Object.assign(title.style, {
+                    margin: '0 0 4px 0',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    color: '#333',
+                    lineHeight: '1.3',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                });
+            }
+            
+            // Texto de la notificación
+            const text = content.querySelector('.notification-text');
+            if (text) {
+                Object.assign(text.style, {
+                    margin: '0 0 6px 0',
+                    fontSize: '13px',
+                    lineHeight: '1.4',
+                    color: '#4B5563',
+                    display: '-webkit-box',
+                    WebkitLineClamp: '2',
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden'
+                });
+            }
+            
+            // Tiempo de la notificación
+            const time = content.querySelector('.notification-time');
+            if (time) {
+                Object.assign(time.style, {
+                    fontSize: '12px',
+                    color: '#9CA3AF',
+                    marginTop: '2px'
+                });
+            }
+        }
+    }
+    
+    // Ejecutar la función cuando el DOM esté cargado
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            // Esperar un poco para asegurar que el panel esté en el DOM
+            setTimeout(enhanceNotificationStyles, 500);
+        });
+    } else {
+        // Si el DOM ya está cargado, ejecutar después de un breve retraso
+        setTimeout(enhanceNotificationStyles, 500);
+    }
+})();

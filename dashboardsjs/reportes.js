@@ -497,40 +497,109 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Actualizar estado de un reporte
-    function updateReportStatus(reportId, newStatus, note) {
-        // Obtener reporte actual
-        return reportsRef.doc(reportId).get()
-            .then(doc => {
-                if (!doc.exists) {
-                    throw new Error('El reporte no existe');
-                }
-                
-                const reportData = doc.data();
-                
-                // Crear entrada para historial
-                const statusEntry = {
-                    status: newStatus,
-                    date: firebase.firestore.FieldValue.serverTimestamp()
-                };
-                
-                if (note) {
-                    statusEntry.note = note;
-                }
-                
-                // Actualizar historial
-                let statusHistory = reportData.statusHistory || [];
-                statusHistory.push(statusEntry);
-                
-                // Actualizar reporte
-                return reportsRef.doc(reportId).update({
-                    status: newStatus,
-                    statusHistory: statusHistory,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            });
+   // Actualizar estado de un reporte
+// Función para actualizar el estado de una ubicación basado en reportes
+function updateLocationStatusBasedOnReports(locationId) {
+    console.log('Actualizando estado de ubicación', locationId);
+    
+    // Verificar que exista el ID de la ubicación
+    if (!locationId) {
+        console.error('ID de ubicación no proporcionado');
+        return Promise.reject('ID de ubicación no proporcionado');
     }
     
+    // Buscar reportes activos para esta ubicación
+    return db.collection('reportes')
+        .where('locationId', '==', locationId)
+        .where('status', 'in', ['pending', 'in-progress'])
+        .get()
+        .then(snapshot => {
+            // Determinar el nuevo estado basado en reportes
+            let newStatus = 'active'; // estado predeterminado
+            
+            // Si hay reportes pendientes o en proceso, cambiar estado
+            if (!snapshot.empty) {
+                // Verificar si hay reportes de tipo error o alerta
+                let hasErrorReports = false;
+                let hasPendingReports = false;
+                
+                snapshot.forEach(doc => {
+                    const reportData = doc.data();
+                    
+                    if (reportData.type === 'error' || reportData.type === 'alert') {
+                        hasErrorReports = true;
+                    }
+                    
+                    if (reportData.status === 'pending') {
+                        hasPendingReports = true;
+                    }
+                });
+                
+                // Determinar estado según prioridad: error > pending > active
+                if (hasErrorReports) {
+                    newStatus = 'error';
+                } else if (hasPendingReports) {
+                    newStatus = 'pending';
+                }
+            }
+            
+            // Actualizar estado de la ubicación
+            return db.collection('ubicaciones').doc(locationId).update({
+                status: newStatus,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        })
+        .then(() => {
+            console.log('Estado de ubicación actualizado correctamente');
+            // Recargar ubicaciones para actualizar mapa
+            if (typeof loadLocations === 'function') {
+                loadLocations();
+            }
+            return true;
+        })
+        .catch(error => {
+            console.error('Error al actualizar estado de ubicación:', error);
+            return Promise.reject(error);
+        });
+}
+
+// Modificar la función updateReportStatus para que también actualice la ubicación
+function updateReportStatus(reportId, newStatus, note) {
+    // Obtener reporte actual
+    return reportsRef.doc(reportId).get()
+        .then(doc => {
+            if (!doc.exists) {
+                throw new Error('El reporte no existe');
+            }
+            
+            const reportData = doc.data();
+            let locationId = reportData.locationId;
+            
+            // Crear entrada para historial
+            const statusEntry = {
+                status: newStatus,
+                date: new Date(), // Usar Date normal en lugar de ServerTimestamp
+                note: note || ''
+            };
+            
+            // Actualizar historial
+            let statusHistory = reportData.statusHistory || [];
+            statusHistory.push(statusEntry);
+            
+            // Actualizar reporte
+            return reportsRef.doc(reportId).update({
+                status: newStatus,
+                statusHistory: statusHistory,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                // Si tiene una ubicación asociada, actualizar su estado
+                if (locationId) {
+                    return updateLocationStatusBasedOnReports(locationId);
+                }
+                return Promise.resolve();
+            });
+        });
+}
     // Obtener nombre de estado
     function getStatusName(status) {
         const statuses = {
@@ -541,109 +610,496 @@ document.addEventListener('DOMContentLoaded', function() {
         
         return statuses[status] || 'Desconocido';
     }
+    // Agregar esta función para vincular explícitamente los reportes con el mapa
+// Colocar al final de reportes.js
+
+// Función global para actualizar el mapa desde cualquier parte de la aplicación
+window.updateMapAfterReportChange = function(locationId) {
+    console.log('Actualizando mapa después de cambio en reporte para ubicación:', locationId);
     
-    // Obtener nombre de tipo
-    function getTypeName(type) {
-        const types = {
-            'alert': 'Alerta',
-            'error': 'Error',
-            'maintenance': 'Mantenimiento',
-            'info': 'Información'
-        };
-        
-        return types[type] || 'Desconocido';
+    // Si no hay ID de ubicación, no hay nada que actualizar
+    if (!locationId) {
+        console.log('No hay ID de ubicación para actualizar');
+        return;
     }
     
-    // Crear reportes de prueba (solo para desarrollo)
-    function createSampleReports() {
-        // Solo ejecutar si no hay reportes
-        reportsRef.limit(1).get()
-            .then(snapshot => {
-                if (!snapshot.empty) {
-                    console.log('Ya existen reportes en la base de datos');
-                    return;
-                }
+    // Buscar todos los reportes activos para esta ubicación
+    db.collection('reportes')
+        .where('locationId', '==', locationId)
+        .where('status', 'in', ['pending', 'in-progress'])
+        .get()
+        .then(snapshot => {
+            // Determinar el estado basado en los reportes
+            let newStatus = 'active'; // Por defecto, activo (verde)
+            
+            if (!snapshot.empty) {
+                let hasErrorReports = false;
                 
-                // Crear 10 reportes de ejemplo
-                const sampleReports = [
-                    {
-                        title: 'Alarma disparada',
-                        type: 'alert',
-                        status: 'pending',
-                        description: 'La alarma se ha disparado sin causa aparente.',
-                        clientId: 'client1',
-                        clientName: 'Juan Pérez',
-                        clientEmail: 'juan@example.com',
-                        locationName: 'Residencia Principal',
-                        deviceId: 'ALARM-001',
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    },
-                    {
-                        title: 'Cámara fuera de línea',
-                        type: 'error',
-                        status: 'in-progress',
-                        description: 'La cámara del jardín trasero no está respondiendo.',
-                        clientId: 'client2',
-                        clientName: 'María López',
-                        clientEmail: 'maria@example.com',
-                        locationName: 'Casa de Playa',
-                        deviceId: 'CAM-007',
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    },
-                    {
-                        title: 'Solicitud de mantenimiento',
-                        type: 'maintenance',
-                        status: 'completed',
-                        description: 'Se requiere mantenimiento preventivo del sistema.',
-                        clientId: 'client3',
-                        clientName: 'Carlos Ruiz',
-                        clientEmail: 'carlos@example.com',
-                        locationName: 'Oficina Central',
-                        deviceId: 'SYS-123',
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        statusHistory: [
-                            {
-                                status: 'pending',
-                                date: new Date(Date.now() - 48 * 60 * 60 * 1000)
-                            },
-                            {
-                                status: 'in-progress',
-                                date: new Date(Date.now() - 24 * 60 * 60 * 1000),
-                                note: 'Programada visita técnica'
-                            },
-                            {
-                                status: 'completed',
-                                date: new Date(),
-                                note: 'Mantenimiento realizado correctamente'
-                            }
-                        ]
+                snapshot.forEach(doc => {
+                    const reportData = doc.data();
+                    
+                    // Si hay algún reporte de error o alerta, marcar como error
+                    if (reportData.type === 'error' || reportData.type === 'alert') {
+                        hasErrorReports = true;
                     }
-                ];
-                
-                // Crear batch para procesamiento por lotes
-                const batch = db.batch();
-                
-                // Añadir reportes al batch
-                sampleReports.forEach(report => {
-                    const newReportRef = reportsRef.doc();
-                    batch.set(newReportRef, report);
                 });
                 
-                // Ejecutar batch
-                return batch.commit();
-            })
-            .then(() => {
-                console.log('Reportes de ejemplo creados correctamente');
-                loadReports(); // Recargar reportes
-            })
-            .catch(error => {
-                console.error('Error al crear reportes de ejemplo:', error);
+                // Priorizar errores sobre pendientes
+                if (hasErrorReports) {
+                    newStatus = 'error'; // Rojo
+                } else {
+                    newStatus = 'pending'; // Amarillo
+                }
+            }
+            
+            // Actualizar estado de la ubicación
+            return db.collection('ubicaciones').doc(locationId).update({
+                status: newStatus,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             });
+        })
+        .then(() => {
+            console.log('Estado de ubicación actualizado a:', newStatus);
+            
+            // Intentar recargar el mapa si estamos en la página de ubicaciones
+            if (document.getElementById('locations-section').classList.contains('active')) {
+                console.log('Recargando mapa en sección de ubicaciones');
+                
+                // Si la función loadLocations existe en el ámbito global, llamarla
+                if (typeof window.loadLocations === 'function') {
+                    window.loadLocations();
+                } else {
+                    console.log('Función loadLocations no encontrada en ámbito global');
+                    
+                    // Intentar buscar la instancia del mapa y recargar marcadores
+                    if (window.map) {
+                        console.log('Invalidando tamaño del mapa');
+                        window.map.invalidateSize();
+                        
+                        // Si hay una función de limpieza de marcadores, usarla
+                        if (typeof window.clearMarkers === 'function') {
+                            window.clearMarkers();
+                        }
+                    }
+                }
+            } else {
+                console.log('No estamos en la sección de ubicaciones, no es necesario recargar el mapa');
+            }
+        })
+        .catch(error => {
+            console.error('Error al actualizar estado de ubicación en el mapa:', error);
+        });
+};
+
+// Modificar updateReportStatus para que use la nueva función global
+function updateReportStatus(reportId, newStatus, note) {
+    console.log('Actualizando estado de reporte:', reportId, 'a', newStatus);
+    
+    // Obtener reporte actual
+    return reportsRef.doc(reportId).get()
+        .then(doc => {
+            if (!doc.exists) {
+                throw new Error('El reporte no existe');
+            }
+            
+            const reportData = doc.data();
+            const locationId = reportData.locationId;
+            
+            // Crear entrada para historial
+            const statusEntry = {
+                status: newStatus,
+                date: new Date(),
+                note: note || ''
+            };
+            
+            // Actualizar historial
+            let statusHistory = reportData.statusHistory || [];
+            statusHistory.push(statusEntry);
+            
+            // Actualizar reporte
+            return reportsRef.doc(reportId).update({
+                status: newStatus,
+                statusHistory: statusHistory,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                // Después de actualizar el reporte, actualizar el mapa si hay ubicación asociada
+                if (locationId) {
+                    console.log('Reporte actualizado, actualizando mapa para ubicación:', locationId);
+                    
+                    // Usar la función global para actualizar el mapa
+                    window.updateMapAfterReportChange(locationId);
+                } else {
+                    console.log('Reporte no tiene ubicación asociada, no se actualiza el mapa');
+                }
+                
+                // Recargar reportes para mostrar los cambios
+                loadReports();
+                
+                return Promise.resolve();
+            });
+        });
+}
+   
+});
+// Mejora a la función updateReportStatus para integrar notificaciones
+// Agregar esta versión al final de reportes.js
+
+// Actualizar estado de un reporte con notificaciones
+function updateReportStatus(reportId, newStatus, note) {
+    console.log('Actualizando estado de reporte:', reportId, 'a', newStatus);
+    
+    if (!reportId || !newStatus) {
+        console.error('ID de reporte o nuevo estado no proporcionados');
+        return Promise.reject('Datos incompletos');
     }
     
-    // Botón para crear reportes de prueba (solo para desarrollo)
-    const createSamplesBtn = document.getElementById('create-sample-reports');
-    if (createSamplesBtn) {
-        createSamplesBtn.addEventListener('click', createSampleReports);
+    // Obtener reporte actual
+    return reportsRef.doc(reportId).get()
+        .then(doc => {
+            if (!doc.exists) {
+                throw new Error('El reporte no existe');
+            }
+            
+            const reportData = doc.data();
+            const clientId = reportData.clientId;
+            
+            // Si el estado ya es el mismo, no hacer nada
+            if (reportData.status === newStatus) {
+                console.log('El reporte ya tiene el estado:', newStatus);
+                return Promise.resolve();
+            }
+            
+            // Crear entrada para historial
+            const statusEntry = {
+                status: newStatus,
+                date: new Date(), // Usar Date normal en lugar de ServerTimestamp
+                note: note || ''
+            };
+            
+            // Actualizar historial
+            let statusHistory = reportData.statusHistory || [];
+            statusHistory.push(statusEntry);
+            
+            // Actualizar reporte
+            return reportsRef.doc(reportId).update({
+                status: newStatus,
+                statusHistory: statusHistory,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                // Notificar al cliente sobre el cambio de estado
+                if (clientId && typeof window.notifyReportStatusChanged === 'function') {
+                    console.log('Enviando notificación al cliente:', clientId);
+                    return window.notifyReportStatusChanged(reportId, newStatus, clientId);
+                } else {
+                    console.log('No se pudo notificar al cliente. ID:', clientId);
+                    return Promise.resolve();
+                }
+            }).then(() => {
+                // Actualizar ubicación si existe
+                const locationId = reportData.locationId;
+                if (locationId) {
+                    console.log('Actualizando ubicación:', locationId);
+                    return updateLocationStatus(locationId, reportData.type, newStatus);
+                }
+                return Promise.resolve();
+            }).then(() => {
+                // Recargar lista de reportes
+                loadReports();
+                
+                // Mostrar mensaje de éxito
+                showToast('Éxito', 'Estado del reporte actualizado correctamente', 'success');
+                
+                return Promise.resolve();
+            });
+        })
+        .catch(error => {
+            console.error('Error al actualizar estado del reporte:', error);
+            showToast('Error', 'No se pudo actualizar el reporte: ' + error.message, 'error');
+            return Promise.reject(error);
+        });
+}
+
+// Función específica para actualizar el estado de una ubicación basado en un reporte
+function updateLocationStatus(locationId, reportType, reportStatus) {
+    console.log('Actualizando estado de ubicación:', locationId, 'basado en reporte tipo:', reportType, 'estado:', reportStatus);
+    
+    if (!locationId) {
+        return Promise.resolve(); // No hay ubicación para actualizar
     }
+    
+    // Si el reporte se completó, verificar si hay otros reportes activos
+    if (reportStatus === 'completed') {
+        return checkActiveReportsForLocation(locationId);
+    } else {
+        // Para reportes activos, actualizar según tipo
+        let newLocationStatus = 'active';
+        
+        if (reportType === 'error' || reportType === 'alert') {
+            newLocationStatus = 'error';
+        } else if (reportStatus === 'pending') {
+            newLocationStatus = 'pending';
+        }
+        
+        return db.collection('ubicaciones').doc(locationId).update({
+            status: newLocationStatus,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
+            console.log('Estado de ubicación actualizado a:', newLocationStatus);
+            triggerMapUpdate();
+            return Promise.resolve();
+        }).catch(error => {
+            console.error('Error al actualizar ubicación:', error);
+            return Promise.reject(error);
+        });
+    }
+}
+
+// Verificar si hay reportes activos para una ubicación
+function checkActiveReportsForLocation(locationId) {
+    return db.collection('reportes')
+        .where('locationId', '==', locationId)
+        .where('status', 'in', ['pending', 'in-progress'])
+        .get()
+        .then(snapshot => {
+            // Determinar nuevo estado basado en reportes activos
+            let newStatus = 'active'; // Por defecto, si no hay reportes activos
+            
+            if (!snapshot.empty) {
+                let hasErrorReports = false;
+                let hasPendingReports = false;
+                
+                snapshot.forEach(doc => {
+                    const reportData = doc.data();
+                    
+                    if (reportData.type === 'error' || reportData.type === 'alert') {
+                        hasErrorReports = true;
+                    }
+                    
+                    if (reportData.status === 'pending') {
+                        hasPendingReports = true;
+                    }
+                });
+                
+                if (hasErrorReports) {
+                    newStatus = 'error';
+                } else if (hasPendingReports) {
+                    newStatus = 'pending';
+                }
+            }
+            
+            // Actualizar estado de la ubicación
+            return db.collection('ubicaciones').doc(locationId).update({
+                status: newStatus,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                console.log('Estado de ubicación actualizado a:', newStatus, 'basado en reportes activos');
+                triggerMapUpdate();
+                return Promise.resolve();
+            });
+        })
+        .catch(error => {
+            console.error('Error al verificar reportes activos:', error);
+            return Promise.reject(error);
+        });
+}
+
+// Función para intentar actualizar el mapa si está disponible
+function triggerMapUpdate() {
+    // Si estamos en la sección de ubicaciones, intentar recargar el mapa
+    const locationsSection = document.getElementById('locations-section');
+    
+    if (locationsSection && locationsSection.classList.contains('active')) {
+        console.log('Intentando recargar mapa...');
+        
+        // Intentar diferentes formas de recargar el mapa
+        if (typeof window.loadLocations === 'function') {
+            console.log('Usando función global loadLocations');
+            window.loadLocations();
+        } else if (typeof loadLocations === 'function') {
+            console.log('Usando función local loadLocations');
+            loadLocations();
+        } else {
+            console.log('Función loadLocations no encontrada, intentando invalidar mapa');
+            
+            // Si el mapa está accesible, invalidar su tamaño para forzar actualización
+            if (window.map) {
+                window.map.invalidateSize();
+            }
+        }
+    } else {
+        console.log('No estamos en la sección de ubicaciones, no es necesario actualizar el mapa');
+    }
+}
+
+// Asegurar que showToast esté disponible
+function showToast(title, message, type = 'info') {
+    // Si existe la función global, usarla
+    if (typeof window.showToast === 'function') {
+        window.showToast(title, message, type);
+    } else {
+        // Implementación básica de fallback
+        console.log(`[${type.toUpperCase()}] ${title}: ${message}`);
+        
+        // Solo mostrar alerta para errores para no interrumpir demasiado
+        if (type === 'error') {
+            alert(`${title}: ${message}`);
+        }
+    }
+}
+// Implementación de actualizaciones en tiempo real para reportes
+// Agregar al final de dashboardsjs/reportes.js (dashboard admin)
+
+// Variables globales para controlar suscripciones
+let reportSubscriptions = [];
+
+// Función para inicializar actualizaciones en tiempo real
+function initRealtimeReports() {
+    console.log('Inicializando actualizaciones en tiempo real para reportes');
+    
+    // Limpiar suscripciones anteriores
+    clearReportSubscriptions();
+    
+    // Obtener elementos necesarios para controlar estado
+    const reportsContainer = document.querySelector('.reports-container');
+    const loadingMessage = document.createElement('div');
+    loadingMessage.className = 'loading-message';
+    loadingMessage.textContent = 'Conectando a actualizaciones en tiempo real...';
+    
+    // Mostrar mensaje mientras se establece la conexión
+    if (reportsContainer) {
+        reportsContainer.innerHTML = '';
+        reportsContainer.appendChild(loadingMessage);
+    }
+    
+    // Obtener filtros actuales
+    const statusFilter = document.getElementById('report-status-filter') ? 
+                        document.getElementById('report-status-filter').value : 'all';
+    const typeFilter = document.getElementById('report-type-filter') ? 
+                      document.getElementById('report-type-filter').value : 'all';
+    
+    // Construir consulta base
+    let query = db.collection('reportes')
+                 .orderBy('createdAt', 'desc');
+    
+    // Aplicar filtros adicionales si se seleccionaron
+    if (statusFilter !== 'all') {
+        query = query.where('status', '==', statusFilter);
+    }
+    
+    if (typeFilter !== 'all') {
+        query = query.where('type', '==', typeFilter);
+    }
+    
+    // Suscribirse a cambios en tiempo real
+    const subscription = query.onSnapshot(snapshot => {
+        // Actualizar contenedor solo si existe
+        if (!reportsContainer) return;
+        
+        // Verificar si hay cambios
+        if (snapshot.empty) {
+            reportsContainer.innerHTML = '<div class="empty-message">No se encontraron reportes</div>';
+            return;
+        }
+        
+        // Mostrar reportes
+        reportsContainer.innerHTML = '';
+        
+        // Almacenar reportes para paginación
+        const reports = [];
+        snapshot.forEach(doc => {
+            reports.push({
+                id: doc.id,
+                data: doc.data()
+            });
+        });
+        
+        // Actualizar paginación
+        updatePagination(reports.length);
+        
+        // Obtener reportes para la página actual
+        const startIndex = (currentPage - 1) * reportsPerPage;
+        const endIndex = Math.min(startIndex + reportsPerPage, reports.length);
+        const reportsToShow = reports.slice(startIndex, endIndex);
+        
+        // Crear tarjetas para cada reporte
+        reportsToShow.forEach(report => {
+            createReportCard(report.id, report.data);
+        });
+        
+        // Mostrar notificación si hubo cambios (excepto la primera carga)
+        if (!snapshot.metadata.hasPendingWrites && snapshot.docChanges().length > 0) {
+            snapshot.docChanges().forEach(change => {
+                if (change.type === 'added' && !change.doc.metadata.hasPendingWrites) {
+                    // Nuevo reporte
+                    showToast('Nuevo reporte', 'Se ha recibido un nuevo reporte', 'info');
+                } else if (change.type === 'modified') {
+                    // Reporte actualizado
+                    showToast('Reporte actualizado', 'Un reporte ha sido actualizado', 'info');
+                }
+            });
+        }
+    }, error => {
+        console.error('Error en actualizaciones en tiempo real:', error);
+        if (reportsContainer) {
+            reportsContainer.innerHTML = '<div class="error-message">Error al conectar actualizaciones en tiempo real: ' + error.message + '</div>';
+        }
+    });
+    
+    // Guardar suscripción para limpiarla después
+    reportSubscriptions.push(subscription);
+}
+
+// Función para limpiar suscripciones
+function clearReportSubscriptions() {
+    reportSubscriptions.forEach(subscription => {
+        subscription();
+    });
+    reportSubscriptions = [];
+}
+
+// Modificar función de carga de reportes
+const originalLoadReports = loadReports;
+loadReports = function() {
+    // Si estamos en modo tiempo real, no es necesario cargar manualmente
+    if (reportSubscriptions.length > 0) {
+        return;
+    }
+    
+    // Usar la función original para la primera carga
+    return originalLoadReports.apply(this, arguments);
+};
+
+// Inicializar sistema de tiempo real
+document.addEventListener('DOMContentLoaded', function() {
+    // Verificar si estamos en la página de reportes
+    const reportsSection = document.getElementById('reports-section');
+    if (!reportsSection) return;
+    
+    // Cuando el usuario cambie a la sección de reportes
+    document.querySelectorAll('a[data-section="reports"]').forEach(link => {
+        link.addEventListener('click', function() {
+            setTimeout(initRealtimeReports, 500);
+        });
+    });
+    
+    // Si la sección de reportes ya está activa, inicializar
+    if (reportsSection.classList.contains('active')) {
+        setTimeout(initRealtimeReports, 500);
+    }
+    
+    // Manejar cambios de filtros
+    const filterElements = [
+        document.getElementById('report-status-filter'),
+        document.getElementById('report-type-filter'),
+        document.getElementById('report-date-filter')
+    ];
+    
+    filterElements.forEach(element => {
+        if (element) {
+            element.addEventListener('change', function() {
+                // Al cambiar filtros, reiniciar conexión en tiempo real
+                setTimeout(initRealtimeReports, 100);
+            });
+        }
+    });
 });
