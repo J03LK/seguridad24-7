@@ -15,19 +15,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalCloseBtn = document.querySelector('#plan-modal .modal-close');
     const cancelPlanBtn = document.querySelector('.cancel-plan-btn');
     const invoiceModal = document.getElementById('invoice-modal');
-const invoiceForm = document.getElementById('invoice-form');
-const invoiceClientIdInput = document.getElementById('invoice-client-id');
-const invoiceSubscriptionIdInput = document.getElementById('invoice-subscription-id');
-const invoiceClientNameSpan = document.getElementById('invoice-client-name');
-const invoiceClientEmailSpan = document.getElementById('invoice-client-email');
-const invoiceClientPlanSpan = document.getElementById('invoice-client-plan');
-const invoiceConceptInput = document.getElementById('invoice-concept');
-const invoiceAmountInput = document.getElementById('invoice-amount');
-const invoiceDueDateInput = document.getElementById('invoice-due-date');
-const invoiceDetailsInput = document.getElementById('invoice-details');
-const saveInvoiceBtn = document.getElementById('save-invoice-btn');
-const closeInvoiceModalBtn = document.querySelector('#invoice-modal .modal-close');
-const cancelInvoiceBtn = document.querySelector('.cancel-invoice-btn');
+    const invoiceForm = document.getElementById('invoice-form');
+    const invoiceClientIdInput = document.getElementById('invoice-client-id');
+    const invoiceSubscriptionIdInput = document.getElementById('invoice-subscription-id');
+    const invoiceClientNameSpan = document.getElementById('invoice-client-name');
+    const invoiceClientEmailSpan = document.getElementById('invoice-client-email');
+    const invoiceClientPlanSpan = document.getElementById('invoice-client-plan');
+    const invoiceConceptInput = document.getElementById('invoice-concept');
+    const invoiceAmountInput = document.getElementById('invoice-amount');
+    const invoiceDueDateInput = document.getElementById('invoice-due-date');
+    const invoiceDetailsInput = document.getElementById('invoice-details');
+    const saveInvoiceBtn = document.getElementById('save-invoice-btn');
+    const closeInvoiceModalBtn = document.querySelector('#invoice-modal .modal-close');
+    const cancelInvoiceBtn = document.querySelector('.cancel-invoice-btn');
     
     // Definir los planes por defecto (para tener algo inicialmente)
     const defaultPlans = {
@@ -386,29 +386,29 @@ const cancelInvoiceBtn = document.querySelector('.cancel-invoice-btn');
     // Configurar botones para cada cliente
     function setupClientButtons() {
         // Botones de editar suscripción
-          document.querySelectorAll('.edit-subscription').forEach(button => {
-        button.addEventListener('click', function() {
-            const subscriptionId = this.getAttribute('data-id');
-            alert(`La edición de la suscripción ${subscriptionId} está en desarrollo.`);
+        document.querySelectorAll('.edit-subscription').forEach(button => {
+            button.addEventListener('click', function() {
+                const subscriptionId = this.getAttribute('data-id');
+                alert(`La edición de la suscripción ${subscriptionId} está en desarrollo.`);
+            });
         });
-    });
         
         // Botones de generar factura
         document.querySelectorAll('.generate-invoice').forEach(button => {
-        button.addEventListener('click', function() {
-            const subscriptionId = this.getAttribute('data-id');
-            const clientId = this.getAttribute('data-client');
-            
-            // Usar la función del módulo de facturas si está disponible
-            if (window.invoiceModule && window.invoiceModule.openInvoiceModal) {
-                window.invoiceModule.openInvoiceModal(clientId, subscriptionId);
-            } else {
-                // Fallback por si el módulo no está cargado
-                alert(`Generando factura para el cliente ${clientId} (suscripción ${subscriptionId})`);
-            }
+            button.addEventListener('click', function() {
+                const subscriptionId = this.getAttribute('data-id');
+                const clientId = this.getAttribute('data-client');
+                
+                // Usar la función del módulo de facturas si está disponible
+                if (window.invoiceModule && window.invoiceModule.openInvoiceModal) {
+                    window.invoiceModule.openInvoiceModal(clientId, subscriptionId);
+                } else {
+                    // Fallback por si el módulo no está cargado
+                    alert(`Generando factura para el cliente ${clientId} (suscripción ${subscriptionId})`);
+                }
+            });
         });
-    });
-}
+    }
     
     // Obtener nombre legible del estado
     function getStatusName(status) {
@@ -420,6 +420,195 @@ const cancelInvoiceBtn = document.querySelector('.cancel-invoice-btn');
         };
         
         return statuses[status] || status;
+    }
+    
+    // Función para abrir el modal de factura
+    function openInvoiceModal(clientId, subscriptionId) {
+        // Verificar que el modal existe
+        if (!invoiceModal) {
+            console.error('Modal de factura no encontrado');
+            return;
+        }
+        
+        // Limpiar formulario
+        invoiceForm.reset();
+        
+        // Establecer IDs
+        invoiceClientIdInput.value = clientId;
+        invoiceSubscriptionIdInput.value = subscriptionId;
+        
+        // Cargar datos del cliente y la suscripción
+        Promise.all([
+            firebase.firestore().collection('usuarios').doc(clientId).get(),
+            firebase.firestore().collection('subscriptions').doc(subscriptionId).get()
+        ])
+        .then(([clientDoc, subscriptionDoc]) => {
+            if (!clientDoc.exists || !subscriptionDoc.exists) {
+                alert('No se pudieron cargar los datos. Por favor, intente de nuevo.');
+                return;
+            }
+            
+            const clientData = clientDoc.data();
+            const subscriptionData = subscriptionDoc.data();
+            
+            // Mostrar datos del cliente
+            invoiceClientNameSpan.textContent = clientData.name || 'Cliente sin nombre';
+            invoiceClientEmailSpan.textContent = clientData.email || 'N/A';
+            
+            // Cargar datos del plan
+            return firebase.firestore().collection('plans').doc(subscriptionData.planId).get()
+                .then(planDoc => {
+                    if (planDoc.exists) {
+                        const planData = planDoc.data();
+                        invoiceClientPlanSpan.textContent = planData.name || 'Plan sin nombre';
+                        
+                        // Pre-rellenar concepto y monto con datos del plan
+                        invoiceConceptInput.value = `Servicio ${planData.name}`;
+                        invoiceAmountInput.value = planData.price;
+                        
+                        // Establecer fecha límite por defecto (30 días)
+                        const dueDate = new Date();
+                        dueDate.setDate(dueDate.getDate() + 30);
+                        invoiceDueDateInput.valueAsDate = dueDate;
+                    }
+                });
+        })
+        .catch(error => {
+            console.error('Error al cargar datos:', error);
+            alert('Error al cargar los datos. Por favor, intente de nuevo.');
+        })
+        .finally(() => {
+            // Mostrar modal
+            invoiceModal.classList.add('active');
+        });
+    }
+
+    // Función para guardar la factura - VERSIÓN SIMPLIFICADA
+    function saveInvoice(event) {
+        event.preventDefault();
+        
+        // Obtener datos del formulario
+        const clientId = invoiceClientIdInput.value;
+        const subscriptionId = invoiceSubscriptionIdInput.value;
+        const concept = invoiceConceptInput.value;
+        const amount = parseFloat(invoiceAmountInput.value);
+        const dueDateStr = invoiceDueDateInput.value;
+        const details = invoiceDetailsInput.value;
+        
+        // Validaciones básicas
+        if (!clientId || !concept || isNaN(amount) || amount <= 0 || !dueDateStr) {
+            alert('Por favor, complete todos los campos requeridos');
+            return;
+        }
+        
+        // Convertir fecha
+        const dueDate = new Date(dueDateStr);
+        
+        // Mostrar estado de carga
+        saveInvoiceBtn.disabled = true;
+        saveInvoiceBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+        
+        // Cargar datos del cliente
+        firebase.firestore().collection('usuarios').doc(clientId).get()
+            .then(doc => {
+                if (!doc.exists) {
+                    throw new Error('Cliente no encontrado');
+                }
+                
+                const clientData = doc.data();
+                
+                // Crear ID único para la factura
+                const newInvoiceId = firebase.firestore().collection('invoices').doc().id;
+                
+                // Datos de la factura
+                const invoiceData = {
+                    clientId: clientId,
+                    clientName: clientData.name || 'Cliente',
+                    clientEmail: clientData.email || '',
+                    subscriptionId: subscriptionId,
+                    concept: concept,
+                    amount: amount,
+                    date: firebase.firestore.FieldValue.serverTimestamp(),
+                    dueDate: firebase.firestore.Timestamp.fromDate(dueDate),
+                    details: details,
+                    status: 'pending',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    createdBy: firebase.auth().currentUser ? firebase.auth().currentUser.uid : 'admin'
+                };
+                
+                // Crear documento en invoices - llamada directa
+                return firebase.firestore().collection('invoices').doc(newInvoiceId).set(invoiceData)
+                    .then(() => {
+                        console.log('Documento en invoices creado con ID:', newInvoiceId);
+                        
+                        // Crear documento en pagos con referencia a la factura
+                        const paymentData = {
+                            ...invoiceData,
+                            invoiceId: newInvoiceId,
+                            serviceName: concept
+                        };
+                        
+                        return firebase.firestore().collection('pagos').add(paymentData);
+                    });
+            })
+            .then((paymentRef) => {
+                console.log('Documento en pagos creado con ID:', paymentRef.id);
+                
+                // Crear notificación para el cliente (si la función existe)
+                if (typeof window.createUserNotification === 'function' && clientId) {
+                    return window.createUserNotification(clientId, {
+                        type: 'payment',
+                        title: 'Nueva Factura Pendiente',
+                        message: `Se ha generado una nueva factura por ${amount.toFixed(2)} USD para el concepto: ${concept}`,
+                        link: `pagos:view:${paymentRef.id}`
+                    })
+                    .then(() => {
+                        console.log('Notificación enviada al cliente');
+                        return paymentRef;
+                    })
+                    .catch(error => {
+                        console.error('Error al enviar notificación:', error);
+                        return paymentRef; // Continuar aunque falle la notificación
+                    });
+                }
+                
+                return paymentRef;
+            })
+            .then(() => {
+                alert('Factura generada correctamente');
+                invoiceModal.classList.remove('active');
+            })
+            .catch(error => {
+                console.error('Error al generar factura:', error);
+                alert('Error al generar la factura: ' + error.message);
+            })
+            .finally(() => {
+                // Restaurar botón
+                saveInvoiceBtn.disabled = false;
+                saveInvoiceBtn.textContent = 'Generar Factura';
+            });
+    }
+
+    // Exponer la función globalmente para que pueda ser llamada desde los botones
+    window.invoiceModule = {
+        openInvoiceModal: openInvoiceModal
+    };
+
+    // Agregar event listeners para el modal de factura
+    if (invoiceForm) {
+        invoiceForm.addEventListener('submit', saveInvoice);
+    }
+
+    if (closeInvoiceModalBtn) {
+        closeInvoiceModalBtn.addEventListener('click', function() {
+            invoiceModal.classList.remove('active');
+        });
+    }
+
+    if (cancelInvoiceBtn) {
+        cancelInvoiceBtn.addEventListener('click', function() {
+            invoiceModal.classList.remove('active');
+        });
     }
     
     // Inicializar planes y cargar datos
