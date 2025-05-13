@@ -2,7 +2,6 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     // Referencias a elementos del DOM
-    
     const pendingPaymentsList = document.getElementById('pending-payments-list');
     const paymentsHistoryList = document.getElementById('payments-history-list');
     const pagosPendientesEl = document.getElementById('pagos-facturas-pendientes');
@@ -237,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Consultar pagos completados
             const snapshot = await db.collection('pagos')
                 .where('clientId', '==', userId)
-                .where('status', '==', 'completed')
+                .where('status', 'in', ['completed', 'verification_pending', 'verified', 'rejected'])
                 .orderBy('date', 'desc')
                 .limit(10)
                 .get();
@@ -319,6 +318,32 @@ document.addEventListener('DOMContentLoaded', function() {
         // Formatear fecha de pago
         const paymentDate = paymentData.date ? formatFirestoreDate(paymentData.date) : 'N/A';
         
+        // Determinar el estado y clase CSS
+        let statusText = '';
+        let statusClass = '';
+        
+        switch(paymentData.status) {
+            case 'completed':
+                statusText = 'Completado';
+                statusClass = 'success';
+                break;
+            case 'verification_pending':
+                statusText = 'Verificación pendiente';
+                statusClass = 'pending';
+                break;
+            case 'verified':
+                statusText = 'Verificado';
+                statusClass = 'success';
+                break;
+            case 'rejected':
+                statusText = 'Rechazado';
+                statusClass = 'error';
+                break;
+            default:
+                statusText = 'Procesado';
+                statusClass = 'info';
+        }
+        
         // Crear HTML del elemento
         item.innerHTML = `
             <div class="history-icon">
@@ -330,6 +355,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     Método: ${getPaymentMethodName(paymentData.method)}
                     ${paymentData.reference ? ` / Ref: ${paymentData.reference}` : ''}
                 </p>
+                <span class="payment-status ${statusClass}">${statusText}</span>
+                ${paymentData.rejectionReason ? `<p class="rejection-reason">Motivo: ${paymentData.rejectionReason}</p>` : ''}
             </div>
             <div class="history-meta">
                 <div class="history-amount">${formatCurrency(paymentData.amount || 0)}</div>
@@ -386,6 +413,32 @@ document.addEventListener('DOMContentLoaded', function() {
         const paymentDate = paymentData.date ? 
                           formatFirestoreDate(paymentData.date) : 'N/A';
         
+        // Determinar estado y clase CSS
+        let statusText = '';
+        let statusClass = '';
+        
+        switch(paymentData.status) {
+            case 'completed':
+                statusText = 'Completado';
+                statusClass = 'success';
+                break;
+            case 'verification_pending':
+                statusText = 'Verificación pendiente';
+                statusClass = 'pending';
+                break;
+            case 'verified':
+                statusText = 'Verificado';
+                statusClass = 'success';
+                break;
+            case 'rejected':
+                statusText = 'Rechazado';
+                statusClass = 'error';
+                break;
+            default:
+                statusText = 'Procesado';
+                statusClass = 'info';
+        }
+        
         // Crear contenido del modal
         modal.innerHTML = `
             <div class="modal-content">
@@ -412,6 +465,12 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div class="detail-label">Fecha:</div>
                             <div class="detail-value">${paymentDate}</div>
                         </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Estado:</div>
+                            <div class="detail-value">
+                                <span class="status-badge ${statusClass}">${statusText}</span>
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="payment-details-section">
@@ -424,6 +483,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="detail-row">
                             <div class="detail-label">Referencia:</div>
                             <div class="detail-value">${paymentData.reference}</div>
+                        </div>
+                        ` : ''}
+                        ${paymentData.rejectionReason ? `
+                        <div class="detail-row">
+                            <div class="detail-label">Motivo de rechazo:</div>
+                            <div class="detail-value rejection-reason">${paymentData.rejectionReason}</div>
                         </div>
                         ` : ''}
                     </div>
@@ -444,6 +509,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         <i class="fas fa-download"></i> Descargar Factura
                     </a>
                     ` : ''}
+                    ${paymentData.status === 'rejected' ? `
+                    <button class="btn-primary retry-payment-btn" data-id="${paymentId}">
+                        <i class="fas fa-redo"></i> Intentar Nuevamente
+                    </button>
+                    ` : ''}
                 </div>
             </div>
         `;
@@ -459,6 +529,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Evento para botón de cerrar
         const closeBtn = modal.querySelector('.modal-close');
         const closeDetailsBtn = modal.querySelector('.close-details-btn');
+        const retryPaymentBtn = modal.querySelector('.retry-payment-btn');
         
         // Función para cerrar modal
         const closeModal = () => {
@@ -471,6 +542,14 @@ document.addEventListener('DOMContentLoaded', function() {
         // Asignar eventos
         closeBtn.addEventListener('click', closeModal);
         closeDetailsBtn.addEventListener('click', closeModal);
+        
+        // Si existe el botón de reintento de pago
+        if (retryPaymentBtn) {
+            retryPaymentBtn.addEventListener('click', function() {
+                closeModal();
+                openPaymentModal(paymentData.clientId, paymentId, paymentData);
+            });
+        }
         
         // Cerrar al hacer clic fuera del contenido
         modal.addEventListener('click', function(e) {
@@ -560,63 +639,37 @@ document.addEventListener('DOMContentLoaded', function() {
                 receiptUrl = await imageRef.getDownloadURL();
             }
             
-            // Actualizar pago en Firestore
+            // Actualizar pago en Firestore - Ahora con estado "verification_pending"
             await db.collection('pagos').doc(currentPaymentId).update({
-                status: 'completed',
+                status: 'verification_pending', // Nuevo estado para verificación pendiente
                 method,
                 reference: paymentReference,
                 date: firebase.firestore.FieldValue.serverTimestamp(),
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                receiptUrl
+                receiptUrl,
+                adminVerified: false, // Indicador para el administrador
+                adminViewed: false    // Indica si el administrador ha visto este pago
             });
-            
-            // Generar factura (si no existe)
-            let invoiceUrl = null;
-            
-            // Verificar si ya existe una factura
-            const invoicesSnapshot = await db.collection('facturas')
-                .where('paymentId', '==', currentPaymentId)
-                .limit(1)
-                .get();
-            
-            if (invoicesSnapshot.empty) {
-                // Datos para la factura
-                const invoiceData = {
-                    paymentId: currentPaymentId,
-                    clientId: userId,
-                    clientName: paymentData.clientName,
-                    clientEmail: paymentData.clientEmail,
-                    serviceId: paymentData.serviceId,
-                    serviceName: paymentData.serviceName,
-                    amount: paymentData.amount,
-                    date: firebase.firestore.FieldValue.serverTimestamp(),
-                    status: 'paid',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
-                
-                // Guardar en Firestore
-                await db.collection('facturas').add(invoiceData);
-            }
             
             // Crear notificación para el usuario
             await createUserNotification(
                 'payment', 
-                'Pago Confirmado', 
-                `Su pago de ${formatCurrency(paymentData.amount || 0)} ha sido procesado correctamente.`
+                'Pago Enviado para Verificación', 
+                `Su pago de ${formatCurrency(paymentData.amount || 0)} ha sido enviado y está pendiente de verificación.`
             );
             
             // Crear notificación para administradores
             if (typeof window.createAdminNotification === 'function') {
                 window.createAdminNotification({
                     type: 'payment',
-                    title: 'Nuevo Pago Realizado',
-                    message: `${paymentData.clientName || 'Cliente'} ha realizado un pago de ${formatCurrency(paymentData.amount || 0)}`,
-                    link: `payments:view:${currentPaymentId}`
+                    title: 'Nuevo Pago para Verificar',
+                    message: `${paymentData.clientName || 'Cliente'} ha realizado un pago de ${formatCurrency(paymentData.amount || 0)} que requiere verificación.`,
+                    link: `payments:verify:${currentPaymentId}`
                 });
             }
             
             // Mostrar mensaje de éxito
-            showToast('Éxito', 'Pago procesado correctamente', 'success');
+            showToast('Éxito', 'Pago enviado para verificación. Recibirá una notificación cuando sea aprobado.', 'success');
             
             // Cerrar modal y recargar datos
             paymentModal.classList.remove('active');
@@ -646,5 +699,36 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         
         return methods[method] || 'Desconocido';
+    }
+    
+    // Función para reintento de pago (cuando fue rechazado)
+    async function retryPayment(paymentId) {
+        try {
+            // Obtener datos del pago rechazado
+            const paymentDoc = await db.collection('pagos').doc(paymentId).get();
+            
+            if (!paymentDoc.exists) {
+                showToast('Error', 'No se encontró el pago', 'error');
+                return;
+            }
+            
+            const paymentData = paymentDoc.data();
+            
+            // Cambiar el estado para permitir volver a intentar
+            await db.collection('pagos').doc(paymentId).update({
+                status: 'pending',
+                rejectionReason: firebase.firestore.FieldValue.delete(),
+                rejectedBy: firebase.firestore.FieldValue.delete(),
+                rejectedAt: firebase.firestore.FieldValue.delete(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            // Abrir modal de pago
+            openPaymentModal(paymentData.clientId, paymentId, paymentData);
+            
+        } catch (error) {
+            console.error('Error al reintentar pago:', error);
+            showToast('Error', 'No se pudo reintentar el pago: ' + error.message, 'error');
+        }
     }
 });
