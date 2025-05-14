@@ -2,20 +2,27 @@
 
 /* Variables específicas */
 :root {
+    --primary-color: #0575e6;
+    --secondary-color: #021b79;
+    --accent-color: #00e5ff;
+    --text-white: #ffffff;
+    --text-light: rgba(255, 255, 255, 0.9);
     --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    --gradient-dark: linear-gradient(135deg, var(--background-dark) 0%, var(--background-darker) 100%);
     --shadow-soft: 0 4px 6px rgba(0, 0, 0, 0.1);
     --shadow-strong: 0 8px 16px rgba(0, 0, 0, 0.2);
     --transition-smooth: all 0.3s ease-in-out;
-    --text-white: #ffffff;
-    --text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    --text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    --glow-effect: 0 0 15px rgba(0, 229, 255, 0.5);
 }
 
-/* Sección Sobre Nosotros */
+/* Sección Principal Nosotros */
 .nosotros {
     padding: 6rem 0;
-    background: linear-gradient(135deg, #000428 0%, #001b36 100%);
+    background: var(--gradient-dark);
     position: relative;
     overflow: hidden;
+    color: var(--text-white);
 }
 
 .nosotros::before {
@@ -25,12 +32,23 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,10 90,90 10,90" fill="rgba(255,255,255,0.03)"/></svg>') repeat;
-    opacity: 0.1;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,10 90,90 10,90" fill="rgba(0,229,255,0.02)"/></svg>') repeat;
+    opacity: 0.15;
     animation: floatBackground 20s linear infinite;
     background-size: 30px 30px;
 }
 
+.nosotros::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* Títulos y contenedores */
 .section-title {
     text-align: center;
     margin-bottom: 3rem;
@@ -44,16 +62,32 @@
     margin-bottom: 1rem;
     text-shadow: var(--text-shadow);
     animation: fadeInDown 1s ease-out;
+    position: relative;
+    display: inline-block;
+}
+
+.section-title h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: var(--accent-color);
+    border-radius: 2px;
+    box-shadow: var(--glow-effect);
 }
 
 .section-title p {
-    color: var(--text-white);
+    color: var(--text-light);
     font-size: 1.2rem;
-    opacity: 0.9;
-    text-shadow: var(--text-shadow);
+    max-width: 800px;
+    margin: 0 auto;
     animation: fadeIn 1s ease-out 0.3s both;
 }
 
+/* Contenedor principal con grid */
 .nosotros-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -61,15 +95,21 @@
     align-items: center;
     position: relative;
     z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
 }
 
+/* Imagen con efectos */
 .nosotros-img {
     position: relative;
     overflow: hidden;
-    border-radius: 2rem;
+    border-radius: 1rem;
     box-shadow: var(--shadow-strong);
     transition: var(--transition-smooth);
     transform: perspective(1000px) rotateY(-5deg);
+    height: 100%;
+    min-height: 400px;
 }
 
 .nosotros-img::before {
@@ -79,13 +119,32 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(45deg, rgba(0,0,0,0.2), transparent);
+    background: linear-gradient(45deg, rgba(0,0,0,0.4), transparent);
     z-index: 1;
+}
+
+.nosotros-img::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid var(--accent-color);
+    border-radius: 1rem;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 2;
 }
 
 .nosotros-img:hover {
     transform: perspective(1000px) rotateY(0deg) translateY(-10px);
     box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.nosotros-img:hover::after {
+    opacity: 0.5;
+    box-shadow: var(--glow-effect);
 }
 
 .nosotros-img img {
@@ -101,19 +160,22 @@
     filter: brightness(1);
 }
 
+/* Contenido de texto */
 .nosotros-text {
-    padding: 2rem;
-    background: rgba(255, 255, 255, 0.1);
+    padding: 2.5rem;
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
-    border-radius: 2rem;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     transition: var(--transition-smooth);
+    box-shadow: var(--shadow-soft);
 }
 
 .nosotros-text:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.08);
     transform: translateY(-5px);
     box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    border-color: rgba(0,229,255,0.3);
 }
 
 .nosotros-text h2 {
@@ -134,9 +196,10 @@
     left: 0;
     width: 80px;
     height: 4px;
-    background: var(--text-white);
+    background: var(--accent-color);
     border-radius: 2px;
     transition: width 0.3s ease;
+    box-shadow: var(--glow-effect);
 }
 
 .nosotros-text:hover h2::after {
@@ -144,13 +207,13 @@
 }
 
 .nosotros-text p {
-    color: var(--text-white);
+    color: var(--text-light);
     line-height: 1.8;
     margin-bottom: 1.5rem;
-    text-shadow: var(--text-shadow);
     font-size: 1.1rem;
     animation: fadeIn 1s ease-out 0.3s both;
 }
+valores
 
 /* Valores */
 .valores {
@@ -158,6 +221,7 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
     margin-top: 3rem;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
 }
 
 .valor {
@@ -199,16 +263,29 @@
 
 .valor i {
     font-size: 2.5rem;
-    color: var(--text-white);
+    color: white;
     margin-bottom: 1rem;
-    text-shadow: 0 0 20px rgba(255,255,255,0.5);
     transition: all 0.3s ease;
-    animation: pulse 2s infinite;
+    
+    /* Propiedades para el efecto circular con sombreado */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    box-shadow: 0 0 20px rgba(0, 194, 255, 0.6);
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
 }
 
+
+
 .valor:hover i {
-    transform: scale(1.2) rotate(360deg);
-    text-shadow: 0 0 30px rgba(255,255,255,0.8);
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(0, 194, 255, 0.9);
 }
 
 .valor h4 {
@@ -354,7 +431,6 @@
 /* Sección de Equipo */
 .equipo {
     padding: 4rem 0;
-    background: linear-gradient(135deg, #000428 0%, #001b36 100%);
     position: relative;
     overflow: hidden;
 }
@@ -440,7 +516,6 @@
 /* Sección Misión y Visión */
 .mision-vision {
     padding: 4rem 0;
-    background: linear-gradient(135deg, #000428 0%, #001b36 100%);
     color: var(--text-white);
     position: relative;
     overflow: hidden;
@@ -512,16 +587,27 @@
 .vision-card .icon {
     font-size: 3.5rem;
     margin-bottom: 1.5rem;
-    color: var(--text-white);
+    color: white;
     animation: rotateIn 1s ease-out;
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
     transition: all 0.3s ease;
+    
+    /* Nuevas propiedades para el efecto circular */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    box-shadow: 0 0 20px rgba(0, 194, 255, 0.6);
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .mision-card:hover .icon,
 .vision-card:hover .icon {
-    transform: scale(1.2) rotate(360deg);
-    text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+    transform: scale(1.1);
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
 }
 
 .mision-card h3,
@@ -648,13 +734,13 @@
 
 @keyframes pulse {
     0% {
-        transform: scale(1);
+        box-shadow: 0 0 20px rgba(0, 194, 255, 0.6);
     }
     50% {
-        transform: scale(1.1);
+        box-shadow: 0 0 30px rgba(0, 194, 255, 0.8);
     }
     100% {
-        transform: scale(1);
+        box-shadow: 0 0 20px rgba(0, 194, 255, 0.6);
     }
 }
 
