@@ -38,7 +38,7 @@ Contiene los estilos para el efecto de logo neón con brillo aumentado
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 400px;
+    width: 800px;
     max-width: 90%;
     pointer-events: none;
 }

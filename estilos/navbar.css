@@ -13,7 +13,7 @@ body {
 
 /* Navbar Styles */
 :root {
-    --header-height: 80px;
+    --header-height: 100px; /* Altura aumentada para una barra más ancha */
 }
 
 /* Espaciador para empujar el contenido debajo del navbar */
@@ -31,16 +31,18 @@ header {
     left: 0;
     width: 100%;
     height: var(--header-height);
-    background: rgba(1, 23, 48, 1);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     z-index: 1000;
     transition: all 0.3s ease;
 }
 
+/* Eliminado el efecto hover oscuro */
 header:hover {
-    background: rgba(1, 23, 48, 0.95);
+    background: rgba(255, 255, 255, 0.98);
 }
 
 nav {
@@ -62,7 +64,7 @@ nav {
 }
 
 .logo img {
-    height: 50px;
+    height: 180px; /* Logo más grande */
     transition: transform 0.3s ease;
 }
 
@@ -79,7 +81,7 @@ nav {
 
 .menu {
     display: flex;
-    gap: 3rem;
+    gap: 3.5rem; /* Mayor separación entre elementos del menú */
     list-style: none;
     margin: 0;
     padding: 0;
@@ -103,28 +105,13 @@ header.scrolled {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-header.scrolled .menu a {
-    color: #333;
-}
-
-header.scrolled .menu a:hover {
-    color: #007bff;
-}
-
-header.scrolled .btn-contacto {
-    background: #007bff;
-    color: white;
-}
-
-header.scrolled .btn-contacto:hover {
-    background: #0056b3;
-}
-
+/* Enlaces del menú */
 .menu a {
-    color: #fff;
+    color: #000; /* Negro por defecto */
     text-decoration: none;
     font-weight: 500;
-    padding: 0.5rem 1rem;
+    font-size: 1.2rem; /* Texto más grande */
+    padding: 0.7rem 1.2rem; /* Padding aumentado */
     transition: all 0.3s ease;
     position: relative;
 }
@@ -136,14 +123,13 @@ header.scrolled .btn-contacto:hover {
     bottom: 0;
     left: 50%;
     width: 0;
-    height: 2px;
+    height: 3px; /* Línea más gruesa */
     background: #007bff;
     transition: all 0.3s ease;
     transform: translateX(-50%);
 }
 
-.menu a:not(.btn-contacto):hover::after,
-.menu a.active:not(.btn-contacto)::after {
+.menu a:not(.btn-contacto):hover::after {
     width: 100%;
 }
 
@@ -151,18 +137,40 @@ header.scrolled .btn-contacto:hover {
     color: #007bff;
 }
 
+/* Clase para el enlace activo - versión mejorada */
 .menu a.active {
     color: #007bff;
     font-weight: 600;
+    background-color: rgba(0, 123, 255, 0.1);
+    border-radius: 20px;
+}
+
+/* Añadir un indicador de activo más visible */
+.menu a.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 80%; /* Ancho del indicador */
+    height: 3px; /* Altura del indicador */
+    background: #007bff;
+    transform: translateX(-50%);
+}
+
+/* Mantiene el estilo activo al hacer scroll */
+header.scrolled .menu a.active {
+    color: #007bff;
+    background-color: rgba(0, 123, 255, 0.1);
 }
 
 /* Contact button styles */
 .btn-contacto {
     background: transparent;
     border: 2px solid #007bff;
-    color: #ffffff;
-    padding: 0.5rem 1.5rem;
+    color: #000;
+    padding: 0.7rem 1.8rem; /* Botón más grande */
     border-radius: 25px;
+    font-size: 1.2rem; /* Texto más grande */
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -182,8 +190,8 @@ header.scrolled .btn-contacto:hover {
     display: none;
     flex-direction: column;
     justify-content: space-between;
-    width: 30px;
-    height: 21px;
+    width: 35px; /* Más grande */
+    height: 24px; /* Más grande */
     cursor: pointer;
     z-index: 1001;
     transition: all 0.3s ease;
@@ -191,12 +199,17 @@ header.scrolled .btn-contacto:hover {
     border: none;
 }
 
-.menu-toggle:hover {
-    transform: scale(1.1);
+.menu-toggle span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background: #000; /* Barras negras para mejor contraste */
+    border-radius: 3px;
+    transition: all 0.3s ease;
 }
 
 .menu-toggle.active span:nth-child(1) {
-    transform: translateY(9px) rotate(45deg);
+    transform: translateY(10px) rotate(45deg);
 }
 
 .menu-toggle.active span:nth-child(2) {
@@ -204,50 +217,43 @@ header.scrolled .btn-contacto:hover {
 }
 
 .menu-toggle.active span:nth-child(3) {
-    transform: translateY(-9px) rotate(-45deg);
-}
-
-.menu-toggle span {
-    display: block;
-    width: 100%;
-    height: 3px;
-    background: #fff;
-    border-radius: 3px;
-    transition: all 0.3s ease;
+    transform: translateY(-10px) rotate(-45deg);
 }
 
 /* Auth buttons */
 .auth-buttons {
     display: flex;
-    gap: 1rem;
+    gap: 1.3rem; /* Mayor separación */
     align-items: center;
     margin-left: 2rem;
 }
 
 .btn-login,
 .btn-registro {
-    padding: 0.5rem 1.5rem;
+    padding: 0.7rem 1.8rem; /* Botones más grandes */
     border-radius: 25px;
     font-weight: 500;
+    font-size: 1.1rem; /* Texto más grande */
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
     gap: 0.5rem;
     text-decoration: none;
-    color: #fff;
+    color: #000;
 }
 
 .btn-login {
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.3);
 }
 
 .btn-registro {
     background: #007bff;
+    color: white; /* Texto blanco para contraste */
 }
 
 .btn-login:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.1);
 }
 
 .btn-registro:hover {
@@ -256,7 +262,7 @@ header.scrolled .btn-contacto:hover {
 
 .btn-login i,
 .btn-registro i {
-    font-size: 1.2rem;
+    font-size: 1.3rem; /* Iconos más grandes */
 }
 
 /* Overlay for mobile menu */
@@ -311,13 +317,13 @@ header.scrolled .btn-contacto:hover {
         left: -100%;
         width: 100%;
         height: calc(100vh - var(--header-height));
-        background: rgba(1, 23, 48, 0.9);
+        background: rgba(255, 255, 255, 0.98); /* Fondo claro para contraste */
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 2rem;
+        gap: 2.5rem; /* Mayor separación vertical */
         transition: all 0.3s ease;
         z-index: 1000;
     }
@@ -336,18 +342,30 @@ header.scrolled .btn-contacto:hover {
     }
 
     .menu a {
-        color: #ffffff;
+        font-size: 1.3rem; /* Texto aún más grande en móvil */
+        color: #000;
+    }
+
+    /* Estilo de la pestaña activa en móvil */
+    .menu a.active {
+        color: #007bff;
+        background-color: rgba(0, 123, 255, 0.1);
+        width: 80%;
+        text-align: center;
+        padding: 0.8rem 1.5rem; /* Padding más grande */
     }
 
     .menu a.btn-contacto {
         color: #007bff;
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba(0, 123, 255, 0.1);
+        font-size: 1.3rem;
+        padding: 0.8rem 2rem;
     }
 
     .auth-buttons-mobile {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: 1.2rem;
         width: 80%;
     }
 
@@ -356,23 +374,47 @@ header.scrolled .btn-contacto:hover {
         width: 100%;
         text-align: center;
         justify-content: center;
-        color: #fff;
-        background: #4a6de5;
-        border: none;
+        font-size: 1.3rem;
+        padding: 0.8rem 0;
+    }
+    
+    .menu .btn-login {
+        color: #000;
+        background: rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    .menu .btn-registro {
+        color: white;
+        background: #007bff;
     }
 }
+/* Ajustar la altura del header para acomodar el logo más grande */
+:root {
+    --header-height: 170px; /* Aumentar para que coincida con la altura del logo */
+}
 
-/* Contenido de prueba */
-.content {
-    padding: 2rem;
-    max-width: 1200px;
+/* Ajustar el logo para que se alinee correctamente */
+.logo img {
+    height: 170px;
+    transition: transform 0.3s ease;
+    vertical-align: middle; /* Asegurar alineación vertical adecuada */
+}
+
+/* Asegurar que nav ocupe toda la altura disponible */
+nav {
+    height: 100%;
+    padding: 0 2rem;
+    max-width: 1400px;
     margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.content h1 {
-    margin-bottom: 1rem;
-}
-
-.content p {
-    margin-bottom: 1rem;
+/* Mejorar el espaciado vertical de los elementos del menú */
+.menu a {
+    display: flex;
+    align-items: center;
+    height: 100%;
 }
