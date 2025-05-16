@@ -54,6 +54,40 @@ nav {
     max-width: 1400px;
     margin: 0 auto;
 }
+/* Solución para mover solo el logo a la izquierda */
+nav {
+    position: relative; /* Establecer posición relativa para el contenedor */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    padding: 0 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.logo {
+    position: absolute; /* Posicionar absolutamente el logo */
+    left: 0; /* Pegarlo completamente a la izquierda */
+    top: 50%; /* Centrarlo verticalmente */
+    transform: translateY(-50%); /* Ajuste vertical preciso */
+    z-index: 2; /* Asegurar que esté por encima */
+}
+
+/* Ajustar el contenedor del menú para que no se superponga con el logo */
+.menu-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    margin-left: 200px; /* Espacio para el logo */
+}
+
+/* Mantener los botones de autenticación en su lugar */
+.auth-buttons {
+    position: relative; /* Asegurar que mantenga su posición */
+    z-index: 2; /* Mismo z-index que el logo */
+}
+
 
 /* Logo with 3D rotation effect */
 .logo {
@@ -64,8 +98,10 @@ nav {
 }
 
 .logo img {
-    height: 180px; /* Logo más grande */
+    height: 400px; /* Logo más grande */
     transition: transform 0.3s ease;
+     margin-left: -300px; /* Posicionarlo más a la izquierda */
+   
 }
 
 .logo:hover img {
