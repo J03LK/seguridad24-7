@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="estilos/nosotros.css" />
     <link rel="stylesheet" href="estilos/logo.css" />
     <link rel="stylesheet" href="estilos/footer.css" />
+    <link rel="stylesheet" href="asistenteVirtual/asistenteVirtualNosotros.css" />
+    <link rel="stylesheet" href="asistenteVirtual/chatBubble.css" />
     <!-- Precargar recursos críticos -->
     <link rel="preload" href="assets/logo.png" as="image" />
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" as="script" />
@@ -52,6 +54,22 @@
                     <span></span>
                 </button>
                 <div class="auth-buttons">
+
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/Logo.png" alt="Detecta365 Logo" />
+                </a>
+            </div>
+            <ul class="menu" id="menu">
+                <li><a href="index.html" class="active">Inicio</a></li>
+                <li><a href="servicios.html">Servicios</a></li>
+                <li><a href="Paquetes.html">Paquetes</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="productos.html">Productos</a></li>
+                <li class="auth-buttons-mobile">
+
                     <a href="login.html" class="btn-login">
                         <i class="fas fa-user"></i>
                         <span>Ingresar</span>
@@ -60,26 +78,47 @@
                         <span>Registrarse</span>
                         <i class="fas fa-arrow-right"></i>
                     </a>
-                </div>
-            </nav>
-            <div class="overlay" id="overlay"></div>
-        </header>
+                </li>
+            </ul>
+            <button id="menu-toggle" class="menu-toggle" aria-label="Menú" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="auth-buttons">
+                <a href="login.html" class="btn-login">
+                    <i class="fas fa-user"></i>
+                    <span>Ingresar</span>
+                </a>
+                <a href="#registro" class="btn-registro">
+                    <span>Registrarse</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </nav>
+        <div class="overlay" id="overlay"></div>
+    </header>
 
     <div class="background-neon-light" id="backgroundNeonLight"></div>
     <div class="background-neon-light" id="backgroundNeonLight"></div>
     <div class="content-overlay"></div>
     <div class="neon-logo-wrap">
         <img src="assets/logo.png" class="logo-neon" alt="Seguridad 24-7 Del Ecuador" id="neonLogo">
+        <img src="assets/Logo2.png" class="logo-neon" alt="Seguridad 24-7 Del Ecuador" id="neonLogo" />
         <!-- Las chispas se añadirán dinámicamente con JavaScript -->
     </div>
 
     <!-- Hero Section mejorada -->
     <section class="hero-section">
         <div class="hero-overlay"></div>
-        <img src="https://images.unsplash.com/photo-1582139329536-e7284fece509?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1280&q=80" alt="Equipo de seguridad">
+        <img src="https://images.unsplash.com/photo-1582139329536-e7284fece509?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1280&q=80"
+            alt="Equipo de seguridad" />
         <div class="hero-content">
             <h1 class="animated-title">SOBRE NOSOTROS</h1>
-            <p class="hero-subtitle">Conozca más sobre nuestra empresa y nuestro compromiso con la seguridad</p>
+            <p class="hero-subtitle">
+                Conozca más sobre nuestra empresa y nuestro compromiso con la
+                seguridad
+            </p>
         </div>
     </section>
 
@@ -90,18 +129,24 @@
                 <div class="about-image">
                     <div class="image-wrapper">
                         <img src="https://www.unir.net/wp-content/uploads/2022/02/global-corporation-online-videoconference-in-meeting-room-with-in-picture-id1325899588.jpg"
-                            alt="Equipo 24-7 SEGURIDAD DEL ECUADOR">
+                            alt="Equipo 24-7 SEGURIDAD DEL ECUADOR" />
                     </div>
                 </div>
                 <div class="about-text">
                     <h2 class="section-title">QUIÉNES SOMOS</h2>
                     <div class="title-bar"></div>
-                    <p>Somos una empresa líder en soluciones de detección inteligente mediante visión artificial e
-                        inteligencia artificial. Nuestro equipo está formado por expertos en tecnología con más de 10
-                        años de experiencia en el sector.</p>
-                    <p>Nuestra misión es proporcionar herramientas tecnológicas accesibles y eficientes que ayuden a las
-                        empresas a optimizar sus procesos, mejorar la seguridad y tomar decisiones basadas en datos
-                        precisos.</p>
+                    <p>
+                        Somos una empresa líder en soluciones de detección inteligente
+                        mediante visión artificial e inteligencia artificial. Nuestro
+                        equipo está formado por expertos en tecnología con más de 10 años
+                        de experiencia en el sector.
+                    </p>
+                    <p>
+                        Nuestra misión es proporcionar herramientas tecnológicas
+                        accesibles y eficientes que ayuden a las empresas a optimizar sus
+                        procesos, mejorar la seguridad y tomar decisiones basadas en datos
+                        precisos.
+                    </p>
                     <div class="stats-container">
                         <div class="stat-item">
                             <span class="stat-number">10+</span>
@@ -126,36 +171,50 @@
         <div class="container">
             <h2 class="section-title center-title">NUESTROS VALORES</h2>
             <div class="title-bar center-bar"></div>
-            <p class="section-subtitle">Principios que guían nuestro trabajo diario</p>
-            
+            <p class="section-subtitle">
+                Principios que guían nuestro trabajo diario
+            </p>
+
             <div class="values-container">
                 <div class="value-card">
                     <div class="value-icon">
                         <i class="fas fa-rocket"></i>
                     </div>
                     <h3>Innovación</h3>
-                    <p>Buscamos constantemente nuevas tecnologías y soluciones para mejorar la seguridad.</p>
+                    <p>
+                        Buscamos constantemente nuevas tecnologías y soluciones para
+                        mejorar la seguridad.
+                    </p>
                 </div>
                 <div class="value-card">
                     <div class="value-icon">
                         <i class="fas fa-users"></i>
                     </div>
                     <h3>Colaboración</h3>
-                    <p>Trabajamos en equipo para ofrecer las mejores soluciones a nuestros clientes.</p>
+                    <p>
+                        Trabajamos en equipo para ofrecer las mejores soluciones a
+                        nuestros clientes.
+                    </p>
                 </div>
                 <div class="value-card">
                     <div class="value-icon">
                         <i class="fas fa-check-circle"></i>
                     </div>
                     <h3>Excelencia</h3>
-                    <p>Nos comprometemos a mantener los más altos estándares de calidad en todos nuestros servicios.</p>
+                    <p>
+                        Nos comprometemos a mantener los más altos estándares de calidad
+                        en todos nuestros servicios.
+                    </p>
                 </div>
                 <div class="value-card">
                     <div class="value-icon">
                         <i class="fas fa-shield-alt"></i>
                     </div>
                     <h3>Confianza</h3>
-                    <p>Construimos relaciones duraderas basadas en la confianza y la transparencia.</p>
+                    <p>
+                        Construimos relaciones duraderas basadas en la confianza y la
+                        transparencia.
+                    </p>
                 </div>
             </div>
         </div>
@@ -170,17 +229,23 @@
                         <i class="fas fa-bullseye"></i>
                     </div>
                     <h3>Nuestra Misión</h3>
-                    <p>Proporcionar soluciones de seguridad innovadoras y eficientes que protejan y optimicen las
-                        operaciones de nuestros clientes, utilizando tecnología de vanguardia y un equipo altamente
-                        capacitado.</p>
+                    <p>
+                        Proporcionar soluciones de seguridad innovadoras y eficientes que
+                        protejan y optimicen las operaciones de nuestros clientes,
+                        utilizando tecnología de vanguardia y un equipo altamente
+                        capacitado.
+                    </p>
                 </div>
                 <div class="vision-card">
                     <div class="card-icon">
                         <i class="fas fa-eye"></i>
                     </div>
                     <h3>Nuestra Visión</h3>
-                    <p>Ser la empresa líder en soluciones de seguridad inteligente en Ecuador, reconocida por nuestra
-                        innovación, calidad y compromiso con la excelencia en el servicio al cliente.</p>
+                    <p>
+                        Ser la empresa líder en soluciones de seguridad inteligente en
+                        Ecuador, reconocida por nuestra innovación, calidad y compromiso
+                        con la excelencia en el servicio al cliente.
+                    </p>
                 </div>
             </div>
         </div>
@@ -192,11 +257,11 @@
             <h2 class="section-title center-title">NUESTRO EQUIPO</h2>
             <div class="title-bar center-bar"></div>
             <p class="section-subtitle">Profesionales dedicados a su seguridad</p>
-            
+
             <div class="team-container">
                 <div class="team-card">
                     <div class="profile-image">
-                        <img src="assets/team1.jpg" alt="Director Ejecutivo">
+                        <img src="assets/team1.jpg" alt="Director Ejecutivo" />
                     </div>
                     <div class="profile-info">
                         <h3>Juan Pérez</h3>
@@ -210,7 +275,7 @@
                 </div>
                 <div class="team-card">
                     <div class="profile-image">
-                        <img src="assets/team2.jpg" alt="Directora Técnica">
+                        <img src="assets/team2.jpg" alt="Directora Técnica" />
                     </div>
                     <div class="profile-info">
                         <h3>María González</h3>
@@ -224,7 +289,7 @@
                 </div>
                 <div class="team-card">
                     <div class="profile-image">
-                        <img src="assets/team3.jpg" alt="Gerente de Operaciones">
+                        <img src="assets/team3.jpg" alt="Gerente de Operaciones" />
                     </div>
                     <div class="profile-info">
                         <h3>Carlos Rodríguez</h3>
@@ -239,7 +304,7 @@
             </div>
         </div>
     </section>
-    
+
     <!-- Sección CTA -->
     <section class="cta-section">
         <div class="container">
@@ -248,11 +313,11 @@
             <a href="#contacto" class="cta-button">Solicitar información</a>
         </div>
     </section>
-    <br>
+    <br />
 
-    <br>
-
+    <br />
     <!-- Footer -->
+
       <footer>
             <div class="container">
                 <div class="footer-content">
@@ -286,62 +351,128 @@
                             <button type="submit">Suscribirse</button>
                         </form>
                     </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="assets/Logo2.png" alt="24-7 Logo" />
                 </div>
-                <div class="copyright">
-                    <p>&copy; 2025 24-7 SEGURIDAD DEL ECUADOR. Todos los derechos reservados.</p>
+                <div class="footer-links">
+                    <h4>Enlaces rápidos</h4>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="servicios.html">Servicios</a></li>
+                        <li><a href="nosotros.html">Nosotros</a></li>
+                        <li><a href="casos.html">Casos de Éxito</a></li>
+                        <li><a href="contacto.html">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-servicios">
+                    <h4>Servicios</h4>
+                    <ul>
+                        <li>
+                            <a href="servicios.html#guardia-virtual">Guardia Virtual</a>
+                        </li>
+                        <li>
+                            <a href="servicios.html#reconocimiento">Reconocimiento Facial</a>
+                        </li>
+                        <li><a href="servicios.html#monitoreo">Monitoreo 24/7</a></li>
+                        <li><a href="servicios.html#accesos">Control de Accesos</a></li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h4>Suscríbete</h4>
+                    <p>Recibe nuestras novedades y ofertas</p>
+                    <form id="newsletter-form">
+                        <input type="email" placeholder="Tu correo electrónico" required />
+                        <button type="submit">Suscribirse</button>
+                    </form>
                 </div>
             </div>
-        </footer>
+            <div class="copyright">
+                <p>
+                    &copy; 2025 24-7 SEGURIDAD DEL ECUADOR. Todos los derechos
+                    reservados.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Asistente Virtual con OpenAI -->
+    <div id="asistente-virtual-container">
+        <div id="chat-button">
+            <img src="imagenes/asistente.png" alt="Asistente" />
+        </div>
+        <div id="chat-window" class="hidden">
+            <div id="chat-header">
+                <h3>Asistente Virtual 24-7</h3>
+                <button id="close-chat">×</button>
+            </div>
+            <div id="chat-messages">
+                <div class="message bot">
+                    ¡Hola! Soy el asistente virtual de 24-7 SEGURIDAD DEL ECUADOR. ¿En
+                    qué puedo ayudarte hoy?
+                </div>
+            </div>
+            <div id="chat-input-container">
+                <textarea id="user-input" placeholder="Escribe tu mensaje aquí..."></textarea>
+                <button id="send-button">Enviar</button>
+            </div>
+        </div>
+    </div>
 
 
     <!-- Cargar scripts de manera optimizada -->
     <script src="scripts/script.js" defer></script>
     <script src="scripts/logo.js" defer></script>
+    <script src="scripts/asistenteVirutal.js" defer></script>
+    <script src="scripts/chatBubble.js"></script>
     <script>
         // ScrollReveal inicialización
-        ScrollReveal().reveal('.hero-content', {
+        ScrollReveal().reveal(".hero-content", {
             delay: 200,
-            distance: '50px',
-            origin: 'bottom',
-            duration: 1000
+            distance: "50px",
+            origin: "bottom",
+            duration: 1000,
         });
-        
-        ScrollReveal().reveal('.about-content', {
+
+        ScrollReveal().reveal(".about-content", {
             delay: 300,
-            distance: '50px',
-            origin: 'left',
-            duration: 1000
+            distance: "50px",
+            origin: "left",
+            duration: 1000,
         });
-        
-        ScrollReveal().reveal('.value-card', {
+
+        ScrollReveal().reveal(".value-card", {
             delay: 200,
-            distance: '30px',
-            origin: 'bottom',
+            distance: "30px",
+            origin: "bottom",
             duration: 800,
-            interval: 200
+            interval: 200,
         });
-        
-        ScrollReveal().reveal('.mission-card, .vision-card', {
+
+        ScrollReveal().reveal(".mission-card, .vision-card", {
             delay: 300,
-            distance: '30px',
-            origin: 'top',
+            distance: "30px",
+            origin: "top",
             duration: 800,
-            interval: 200
+            interval: 200,
         });
-        
-        ScrollReveal().reveal('.team-card', {
+
+        ScrollReveal().reveal(".team-card", {
             delay: 200,
-            distance: '30px',
-            origin: 'bottom',
+            distance: "30px",
+            origin: "bottom",
             duration: 800,
-            interval: 200
+            interval: 200,
         });
-        
-        ScrollReveal().reveal('.cta-section', {
+
+        ScrollReveal().reveal(".cta-section", {
             delay: 400,
-            distance: '50px',
-            origin: 'bottom',
-            duration: 1000
+            distance: "50px",
+            origin: "bottom",
+            duration: 1000,
         });
     </script>
 </body>

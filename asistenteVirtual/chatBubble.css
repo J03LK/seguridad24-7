@@ -1,0 +1,71 @@
+/* Estilos para la burbuja de diálogo */
+.chat-bubble {
+    position: absolute;
+    bottom: 130px;
+    right: 20px;
+    background-color: rgba(0, 148, 255, 0.5);
+    color: white;
+    padding: 12px 18px;
+    border-radius: 18px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 220px;
+    z-index: 999;
+    animation: bubbleBounce 2s infinite, bubblePulse 2s infinite alternate;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.chat-bubble p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.chat-bubble-arrow {
+    position: absolute;
+    bottom: -10px;
+    right: 25px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid rgba(0, 148, 255, 0.5);
+}
+
+/* Animaciones para la burbuja */
+@keyframes bubbleBounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes bubblePulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 148, 255, 0.4);
+    }
+    100% {
+        box-shadow: 0 0 0 10px rgba(0, 148, 255, 0);
+    }
+}
+
+/* Cuando el chat está abierto, ocultar la burbuja */
+#chat-window:not(.hidden) ~ #chat-bubble {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0);
+}
+
+/* Estilo para cuando el usuario hace hover sobre el botón */
+#chat-button:hover ~ #chat-bubble {
+    animation: none;
+    transform: scale(1.05);
+}
+
+/* Estilo específico para cuando el chat está abierto */
+#chat-window:not(.hidden) ~ #chat-bubble,
+.chat-bubble.hidden {
+    opacity: 0 !important;
+    visibility: hidden !important;
+}

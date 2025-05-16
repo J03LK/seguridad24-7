@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="estilos/navbar.css" />
     <link rel="stylesheet" href="estilos/logo.css" />
     <link rel="stylesheet" href="estilos/footer.css" />
+    <link rel="stylesheet" href="asistenteVirtual/asistenteVirtual.css" />
+    <link rel="stylesheet" href="asistenteVirtual/chatBubble.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
@@ -27,7 +29,7 @@
                 <li><a href="nosotros.html">Nosotros</a></li>
                 <li><a href="productos.html">Productos</a></li>
                 <li class="auth-buttons-mobile">
-                    
+
                     <a href="login.html" class="btn-registro">
                         <span>Registrarse</span>
                         <i class="fas fa-arrow-right"></i>
@@ -53,19 +55,30 @@
         <div class="overlay" id="overlay"></div>
     </header>
     <!-- Elemento para la iluminación ambiental -->
-<div class="background-neon-light" id="backgroundNeonLight"></div>
-<div class="background-neon-light" id="backgroundNeonLight"></div>
-<div class="content-overlay"></div>
-<!-- Contenedor para el logo y los efectos visuales -->
-<div class="neon-logo-wrap">
-    <img src="assets/logo.png" class="logo-neon" alt="Seguridad 24-7 Del Ecuador" id="neonLogo"> 
-    
-    
-    <!-- Las chispas se añadirán dinámicamente con JavaScript -->
-</div>
-     
-     <!-- Background Elements desde CSS -->
-    
+    <div class="background-neon-light" id="backgroundNeonLight"></div>
+    <div class="background-neon-light" id="backgroundNeonLight"></div>
+    <div class="content-overlay"></div>
+    <!-- Contenedor para el logo y los efectos visuales -->
+    <div class="neon-logo-wrap">
+        <img src="assets/logo.png" class="logo-neon" alt="Seguridad 24-7 Del Ecuador" id="neonLogo">
+
+
+        <!-- Las chispas se añadirán dinámicamente con JavaScript -->
+    </div>
+
+    <!-- Background Elements desde CSS -->
+
+
+    <div class="background-neon-light" id="backgroundNeonLight"></div>
+    <div class="background-neon-light" id="backgroundNeonLight"></div>
+    <div class="content-overlay"></div>
+    <!-- Contenedor para el logo y los efectos visuales -->
+    <div class="neon-logo-wrap">
+        <img src="assets/Logo2.png" class="logo-neon" alt="Seguridad 24-7 Del Ecuador" id="neonLogo">
+        <!-- Las chispas se añadirán dinámicamente con JavaScript -->
+    </div>
+
+    <!-- Background Elements desde CSS -->
     <div class="main-container">
         <section class="inicio-section" id="inicio">
             <div class="hero-video">
@@ -141,39 +154,39 @@
 
         <!-- Sección de Estadísticas (después del Hero) -->
         <!-- Sección de Estadísticas (después del Hero) -->
-<section class="stats-section">
-    <div class="stats-container">
-        <div class="stat-card">
-            <div class="stat-number-wrap">
-                <span class="stat-number with-plus" data-target="19">19</span>
+        <section class="stats-section">
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-number-wrap">
+                        <span class="stat-number with-plus" data-target="19">19</span>
+                    </div>
+                    <div class="stat-icon"><i class="fas fa-award"></i></div>
+                    <div class="stat-label">Años experiencia</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number-wrap">
+                        <span class="stat-number with-plus" data-target="10">10</span>
+                    </div>
+                    <div class="stat-icon"><i class="fas fa-cogs"></i></div>
+                    <div class="stat-label">Servicios</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number-wrap">
+                        <span class="stat-number" data-target="200">200</span>
+                    </div>
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-label">Clientes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number-wrap">
+                        <span class="stat-number with-plus" data-target="7">7</span>
+                    </div>
+                    <div class="stat-icon"><i class="fas fa-certificate"></i></div>
+                    <div class="stat-label">Certificaciones</div>
+                </div>
             </div>
-            <div class="stat-icon"><i class="fas fa-award"></i></div>
-            <div class="stat-label">Años experiencia</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number-wrap">
-                <span class="stat-number with-plus" data-target="10">10</span>
-            </div>
-            <div class="stat-icon"><i class="fas fa-cogs"></i></div>
-            <div class="stat-label">Servicios</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number-wrap">
-                <span class="stat-number" data-target="200">200</span>
-            </div>
-            <div class="stat-icon"><i class="fas fa-users"></i></div>
-            <div class="stat-label">Clientes</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number-wrap">
-                <span class="stat-number with-plus" data-target="7">7</span>
-            </div>
-            <div class="stat-icon"><i class="fas fa-certificate"></i></div>
-            <div class="stat-label">Certificaciones</div>
-        </div>
-    </div>
-</section>
-        
+        </section>
+
         <!-- Sección "¿Por qué nosotros?" (puede ir antes o después de la sección de servicios) -->
         <section class="why-us-section">
             <div class="why-us-container">
@@ -227,193 +240,214 @@
             </div>
         </section>
         <!-- Nueva sección de Nuestros Trabajos -->
-<section class="trabajos-section" id="trabajos">
-    <div class="container">
-        <div class="section-title">
-            <h2>Nuestros Trabajos</h2>
-            <p>Proyectos de seguridad implementados con éxito</p>
-        </div>
-        
-        <div class="trabajos-grid">
-            <div class="trabajo-card">
-                <img src="assets/trabajos/trabajo1.jpg" alt="Sistema de seguridad corporativo" class="trabajo-img">
-                <div class="trabajo-overlay">
-                    <span class="trabajo-categoria">Corporativo</span>
-                    <h3 class="trabajo-titulo">Centro financiero internacional</h3>
-                    <p class="trabajo-descripcion">Implementación de sistema de reconocimiento facial y detección de objetos</p>
+        <section class="trabajos-section" id="trabajos">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Nuestros Trabajos</h2>
+                    <p>Proyectos de seguridad implementados con éxito</p>
                 </div>
-                <div class="trabajo-info">
-                    <i class="fas fa-plus"></i>
+
+                <div class="trabajos-grid">
+                    <div class="trabajo-card">
+                        <img src="assets/trabajos/trabajo1.jpg" alt="Sistema de seguridad corporativo"
+                            class="trabajo-img">
+                        <div class="trabajo-overlay">
+                            <span class="trabajo-categoria">Corporativo</span>
+                            <h3 class="trabajo-titulo">Centro financiero internacional</h3>
+                            <p class="trabajo-descripcion">Implementación de sistema de reconocimiento facial y
+                                detección de objetos</p>
+                        </div>
+                        <div class="trabajo-info">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+
+                    <div class="trabajo-card">
+                        <img src="assets/trabajos/trabajo2.jpg" alt="Monitoreo residencial" class="trabajo-img">
+                        <div class="trabajo-overlay">
+                            <span class="trabajo-categoria">Residencial</span>
+                            <h3 class="trabajo-titulo">Condominio Las Palmas</h3>
+                            <p class="trabajo-descripcion">Sistema integrado de monitoreo y control de accesos</p>
+                        </div>
+                        <div class="trabajo-info">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+
+                    <div class="trabajo-card">
+                        <img src="assets/trabajos/trabajo3.jpg" alt="Seguridad industrial" class="trabajo-img">
+                        <div class="trabajo-overlay">
+                            <span class="trabajo-categoria">Industrial</span>
+                            <h3 class="trabajo-titulo">Planta manufacturera</h3>
+                            <p class="trabajo-descripcion">Detección de amenazas y control de seguridad en línea de
+                                producción</p>
+                        </div>
+                        <div class="trabajo-info">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+
+                    <div class="trabajo-card">
+                        <img src="assets/trabajos/trabajo4.jpg" alt="Seguridad comercial" class="trabajo-img">
+                        <div class="trabajo-overlay">
+                            <span class="trabajo-categoria">Comercial</span>
+                            <h3 class="trabajo-titulo">Centro comercial Premium</h3>
+                            <p class="trabajo-descripcion">Monitoreo 24/7 con análisis de patrones de comportamiento</p>
+                        </div>
+                        <div class="trabajo-info">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+
+                    <div class="trabajo-card">
+                        <img src="assets/trabajos/trabajo5.jpg" alt="Seguridad hospitalaria" class="trabajo-img">
+                        <div class="trabajo-overlay">
+                            <span class="trabajo-categoria">Healthcare</span>
+                            <h3 class="trabajo-titulo">Hospital Metropolitano</h3>
+                            <p class="trabajo-descripcion">Sistema de control de acceso y monitoreo de áreas
+                                restringidas</p>
+                        </div>
+                        <div class="trabajo-info">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+
+                    <div class="trabajo-card">
+                        <img src="assets/trabajos/trabajo6.jpg" alt="Seguridad gubernamental" class="trabajo-img">
+                        <div class="trabajo-overlay">
+                            <span class="trabajo-categoria">Gubernamental</span>
+                            <h3 class="trabajo-titulo">Edificio administrativo</h3>
+                            <p class="trabajo-descripcion">Sistema integral de vigilancia inteligente con IA</p>
+                        </div>
+                        <div class="trabajo-info">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
-            
-            <div class="trabajo-card">
-                <img src="assets/trabajos/trabajo2.jpg" alt="Monitoreo residencial" class="trabajo-img">
-                <div class="trabajo-overlay">
-                    <span class="trabajo-categoria">Residencial</span>
-                    <h3 class="trabajo-titulo">Condominio Las Palmas</h3>
-                    <p class="trabajo-descripcion">Sistema integrado de monitoreo y control de accesos</p>
-                </div>
-                <div class="trabajo-info">
-                    <i class="fas fa-plus"></i>
-                </div>
-            </div>
-            
-            <div class="trabajo-card">
-                <img src="assets/trabajos/trabajo3.jpg" alt="Seguridad industrial" class="trabajo-img">
-                <div class="trabajo-overlay">
-                    <span class="trabajo-categoria">Industrial</span>
-                    <h3 class="trabajo-titulo">Planta manufacturera</h3>
-                    <p class="trabajo-descripcion">Detección de amenazas y control de seguridad en línea de producción</p>
-                </div>
-                <div class="trabajo-info">
-                    <i class="fas fa-plus"></i>
-                </div>
-            </div>
-            
-            <div class="trabajo-card">
-                <img src="assets/trabajos/trabajo4.jpg" alt="Seguridad comercial" class="trabajo-img">
-                <div class="trabajo-overlay">
-                    <span class="trabajo-categoria">Comercial</span>
-                    <h3 class="trabajo-titulo">Centro comercial Premium</h3>
-                    <p class="trabajo-descripcion">Monitoreo 24/7 con análisis de patrones de comportamiento</p>
-                </div>
-                <div class="trabajo-info">
-                    <i class="fas fa-plus"></i>
-                </div>
-            </div>
-            
-            <div class="trabajo-card">
-                <img src="assets/trabajos/trabajo5.jpg" alt="Seguridad hospitalaria" class="trabajo-img">
-                <div class="trabajo-overlay">
-                    <span class="trabajo-categoria">Healthcare</span>
-                    <h3 class="trabajo-titulo">Hospital Metropolitano</h3>
-                    <p class="trabajo-descripcion">Sistema de control de acceso y monitoreo de áreas restringidas</p>
-                </div>
-                <div class="trabajo-info">
-                    <i class="fas fa-plus"></i>
-                </div>
-            </div>
-            
-            <div class="trabajo-card">
-                <img src="assets/trabajos/trabajo6.jpg" alt="Seguridad gubernamental" class="trabajo-img">
-                <div class="trabajo-overlay">
-                    <span class="trabajo-categoria">Gubernamental</span>
-                    <h3 class="trabajo-titulo">Edificio administrativo</h3>
-                    <p class="trabajo-descripcion">Sistema integral de vigilancia inteligente con IA</p>
-                </div>
-                <div class="trabajo-info">
-                    <i class="fas fa-plus"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+        </section>
         <!-- Nueva sección de Preguntas Frecuentes -->
-<!-- Sección de Preguntas Frecuentes -->
-<section class="faq-section" id="preguntas-frecuentes">
-    <div class="container">
-        <div class="faq-header">
-            <h2 class="faq-title">Preguntas Frecuentes</h2>
-        </div>
-        
-        <div class="faq-content">
-            <div class="faq-left">
-                <div class="faq-item active">
-                    <div class="faq-question">
-                        <span class="faq-icon">—</span>
-                        <h3>¿Cómo funciona el monitoreo 24/7?</h3>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Nuestro sistema de monitoreo 24/7 utiliza inteligencia artificial avanzada para detectar personas y objetos en tiempo real, generando alertas inmediatas ante cualquier situación sospechosa.</p>
-                        <p>El centro de monitoreo está operativo las 24 horas del día, los 365 días del año con personal capacitado para responder rápidamente.</p>
-                    </div>
+        <!-- Sección de Preguntas Frecuentes -->
+        <section class="faq-section" id="preguntas-frecuentes">
+            <div class="container">
+                <div class="faq-header">
+                    <h2 class="faq-title">Preguntas Frecuentes</h2>
                 </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <span class="faq-icon">+</span>
-                        <h3>¿Cuánto tiempo se guardan las grabaciones?</h3>
+
+                <div class="faq-content">
+                    <div class="faq-left">
+                        <div class="faq-item active">
+                            <div class="faq-question">
+                                <span class="faq-icon">—</span>
+                                <h3>¿Cómo funciona el monitoreo 24/7?</h3>
+                            </div>
+                            <div class="faq-answer">
+                                <p>Nuestro sistema de monitoreo 24/7 utiliza inteligencia artificial avanzada para
+                                    detectar personas y objetos en tiempo real, generando alertas inmediatas ante
+                                    cualquier situación sospechosa.</p>
+                                <p>El centro de monitoreo está operativo las 24 horas del día, los 365 días del año con
+                                    personal capacitado para responder rápidamente.</p>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span class="faq-icon">+</span>
+                                <h3>¿Cuánto tiempo se guardan las grabaciones?</h3>
+                            </div>
+                            <div class="faq-answer hidden">
+                                <p>Las grabaciones de video se almacenan en servidores seguros por un período de 30 días
+                                    como estándar. Ofrecemos planes opcionales para extender este período hasta 90 días
+                                    o 1 año según sus necesidades.</p>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span class="faq-icon">+</span>
+                                <h3>¿Qué cubre la garantía?</h3>
+                            </div>
+                            <div class="faq-answer hidden">
+                                <p>Nuestra garantía cubre cualquier falla en los equipos instalados durante los primeros
+                                    12 meses, incluyendo reemplazo de piezas y mano de obra. También incluimos dos
+                                    mantenimientos preventivos gratuitos durante el primer año.</p>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span class="faq-icon">+</span>
+                                <h3>¿Qué ventajas tiene el reconocimiento facial?</h3>
+                            </div>
+                            <div class="faq-answer hidden">
+                                <p>El sistema de reconocimiento facial permite identificar automáticamente a personas
+                                    autorizadas, controlar accesos, generar registros de asistencia y detectar intrusos.
+                                    Es ideal para empresas que requieren un control de acceso preciso y seguro.</p>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span class="faq-icon">+</span>
+                                <h3>¿Qué incluye el mantenimiento?</h3>
+                            </div>
+                            <div class="faq-answer hidden">
+                                <p>El servicio de mantenimiento incluye limpieza de equipos, actualización de software,
+                                    verificación del funcionamiento de cámaras y sensores, comprobación de ángulos y
+                                    ajustes, y optimización del sistema de almacenamiento.</p>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span class="faq-icon">+</span>
+                                <h3>¿Cuál es el tiempo de respuesta ante una alarma?</h3>
+                            </div>
+                            <div class="faq-answer hidden">
+                                <p>Nuestro tiempo promedio de respuesta es de 3 a 5 minutos desde la activación de la
+                                    alarma. El equipo de seguridad verifica la alerta mediante las cámaras y coordina de
+                                    inmediato con la unidad móvil más cercana y las autoridades si es necesario.</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="faq-answer hidden">
-                        <p>Las grabaciones de video se almacenan en servidores seguros por un período de 30 días como estándar. Ofrecemos planes opcionales para extender este período hasta 90 días o 1 año según sus necesidades.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <span class="faq-icon">+</span>
-                        <h3>¿Qué cubre la garantía?</h3>
-                    </div>
-                    <div class="faq-answer hidden">
-                        <p>Nuestra garantía cubre cualquier falla en los equipos instalados durante los primeros 12 meses, incluyendo reemplazo de piezas y mano de obra. También incluimos dos mantenimientos preventivos gratuitos durante el primer año.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <span class="faq-icon">+</span>
-                        <h3>¿Qué ventajas tiene el reconocimiento facial?</h3>
-                    </div>
-                    <div class="faq-answer hidden">
-                        <p>El sistema de reconocimiento facial permite identificar automáticamente a personas autorizadas, controlar accesos, generar registros de asistencia y detectar intrusos. Es ideal para empresas que requieren un control de acceso preciso y seguro.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <span class="faq-icon">+</span>
-                        <h3>¿Qué incluye el mantenimiento?</h3>
-                    </div>
-                    <div class="faq-answer hidden">
-                        <p>El servicio de mantenimiento incluye limpieza de equipos, actualización de software, verificación del funcionamiento de cámaras y sensores, comprobación de ángulos y ajustes, y optimización del sistema de almacenamiento.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <span class="faq-icon">+</span>
-                        <h3>¿Cuál es el tiempo de respuesta ante una alarma?</h3>
-                    </div>
-                    <div class="faq-answer hidden">
-                        <p>Nuestro tiempo promedio de respuesta es de 3 a 5 minutos desde la activación de la alarma. El equipo de seguridad verifica la alerta mediante las cámaras y coordina de inmediato con la unidad móvil más cercana y las autoridades si es necesario.</p>
+
+                    <div class="faq-right">
+                        <div class="contact-form-container">
+                            <h3>¿Necesitas una solución personalizada?</h3>
+                            <h2>Contáctanos</h2>
+
+                            <form id="contact-form" class="contact-form">
+                                <div class="form-group">
+                                    <label for="nombre">Nombre</label>
+                                    <input type="text" id="nombre" name="nombre" placeholder="Tu nombre completo"
+                                        required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="email">Correo electrónico</label>
+                                    <input type="email" id="email" name="email" placeholder="Tu correo electrónico"
+                                        required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="whatsapp">WhatsApp</label>
+                                    <input type="tel" id="whatsapp" name="whatsapp" placeholder="Número de WhatsApp">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="mensaje">Mensaje o requerimiento</label>
+                                    <textarea id="mensaje" name="mensaje"
+                                        placeholder="Descríbenos tu necesidad de seguridad" rows="5"
+                                        required></textarea>
+                                </div>
+
+                                <button type="submit" class="btn-contactar">Solicitar Asesoría</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="faq-right">
-                <div class="contact-form-container">
-                    <h3>¿Necesitas una solución personalizada?</h3>
-                    <h2>Contáctanos</h2>
-                    
-                    <form id="contact-form" class="contact-form">
-                        <div class="form-group">
-                            <label for="nombre">Nombre</label>
-                            <input type="text" id="nombre" name="nombre" placeholder="Tu nombre completo" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="email">Correo electrónico</label>
-                            <input type="email" id="email" name="email" placeholder="Tu correo electrónico" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="whatsapp">WhatsApp</label>
-                            <input type="tel" id="whatsapp" name="whatsapp" placeholder="Número de WhatsApp">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="mensaje">Mensaje o requerimiento</label>
-                            <textarea id="mensaje" name="mensaje" placeholder="Descríbenos tu necesidad de seguridad" rows="5" required></textarea>
-                        </div>
-                        
-                        <button type="submit" class="btn-contactar">Solicitar Asesoría</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+        </section>
 
         <!-- Footer -->
         <footer>
@@ -456,9 +490,40 @@
             </div>
         </footer>
 
+        <!-- Asistente Virtual con OpenAI -->
+        <div id="asistente-virtual-container">
+            <!-- Burbuja de diálogo / nube -->
+            <div id="chat-bubble" class="chat-bubble">
+                <p>¡Hola! ¿Necesitas ayuda con seguridad?</p>
+                <div class="chat-bubble-arrow"></div>
+            </div>
+
+            <div id="chat-button">
+                <img src="imagenes/asistente.png" alt="Asistente" />
+            </div>
+
+            <div id="chat-window" class="hidden">
+                <div id="chat-header">
+                    <h3>Asistente Virtual 24-7</h3>
+                    <button id="close-chat">×</button>
+                </div>
+                <div id="chat-messages">
+                    <div class="message bot">
+                        ¡Hola! Soy el asistente virtual de 24-7 SEGURIDAD DEL ECUADOR. ¿En qué puedo ayudarte hoy?
+                    </div>
+                </div>
+                <div id="chat-input-container">
+                    <textarea id="user-input" placeholder="Escribe tu mensaje aquí..."></textarea>
+                    <button id="send-button">Enviar</button>
+                </div>
+            </div>
+        </div>
+
         <script src="scripts/script.js"></script>
         <script src="scripts/logo.js"></script>
         <script src="js/acordeon.js"></script>
+        <script src="scripts/asistenteVirutal.js"></script>
+        <script src="scripts/chatBubble.js"></script>
 
 </body>
 

@@ -1,0 +1,183 @@
+#asistente-virtual-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    font-family: 'Arial', sans-serif;
+}
+
+#chat-button {
+    width: 120px;
+    height: 120px;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: slideInUp 0.8s ease forwards;
+    border-radius: 50%;
+}
+
+#chat-button:hover {
+    transform: scale(1.05);
+}
+
+#chat-button img {
+    width: 100%;
+    height: auto;
+    max-height: 120px;
+    border-radius: 50%;
+}
+
+#chat-window {
+    position: absolute;
+    bottom: 140px;
+    right: 0;
+    width: 350px;
+    height: 500px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.hidden {
+    display: none !important;
+}
+
+#chat-header {
+    padding: 15px;
+    background-color: rgba(0, 148, 255, 0.5);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#chat-header h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+#close-chat {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+#chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.message {
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    border-radius: 18px;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+.message.user {
+    background-color: #e6f7ff;
+    margin-left: auto;
+    border-bottom-right-radius: 5px;
+}
+
+.message.bot {
+    background-color: #f0f0f0;
+    margin-right: auto;
+    border-bottom-left-radius: 5px;
+}
+
+#chat-input-container {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #e0e0e0;
+}
+
+#user-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 18px;
+    resize: none;
+    height: 40px;
+    font-family: inherit;
+}
+
+#send-button {
+    margin-left: 10px;
+    background-color: rgba(0, 148, 255, 0.5);
+    color: white;
+    border: none;
+    border-radius: 18px;
+    padding: 0 15px;
+    cursor: pointer;
+    height: 40px;
+}
+
+#send-button:hover {
+    background-color: rgba(0, 148, 255, 0.5);
+}
+
+/* Animación de entrada */
+@keyframes slideInUp {
+    from {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Animación de escribiendo */
+.typing-indicator {
+    display: flex;
+    padding: 10px 15px;
+}
+
+.typing-indicator span {
+    height: 8px;
+    width: 8px;
+    background-color: #bbb;
+    border-radius: 50%;
+    margin: 0 2px;
+    display: inline-block;
+    animation: typing 1s infinite ease-in-out;
+}
+
+.typing-indicator span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typing {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0); }
+}
+/* Estilo para resaltar números de teléfono */
+.phone-number {
+    color: #0094ff; /* Color azul que coincide con tu tema */
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.phone-number:hover {
+    color: #0077cc; /* Color más oscuro al pasar el cursor */
+}
