@@ -5,34 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paquetes - 24-7 Seguridad</title>
     <link rel="stylesheet" href="estilos/navbar.css">
-    <link rel="stylesheet" href="estilos/navbar.css">
     <link rel="stylesheet" href="estilos/Paquetes.css">
     <link rel="stylesheet" href="estilos/logo.css">
     <link rel="stylesheet" href="estilos/footer.css">
-    <link href="/website/css/uicons-solid-rounded.css"> 
     <link rel="stylesheet" href="estilos/Carrito.css">
+    <link href="/website/css/uicons-solid-rounded.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/lottie-web@5.7.4/build/player/lottie.min.js"></script>
-   
+    <script src="https://unpkg.com/scrollreveal/dist/scrollreveal.min.js"></script>
 </head>
 <body>
-      <!-- Elemento para la iluminación ambiental -->
-      <div class="background-neon-light" id="backgroundNeonLight"></div>
-      <div class="background-neon-light" id="backgroundNeonLight"></div>
-      <div class="content-overlay"></div>
-      <!-- Contenedor para el logo y los efectos visuales -->
-      <div class="neon-logo-wrap">
-          <img src="assets/Logo2.png" class="logo-neon" alt="Seguridad 24-7 Del Ecuador" id="neonLogo">
-          <!-- Las chispas se añadirán dinámicamente con JavaScript -->
-      </div>
-      
-      <!-- Background Elements desde CSS -->
-      <div class="background-container">
-          <div class="floating-logo"></div>
-          <div class="bg-glow bg-glow-1"></div>
-          <div class="bg-glow bg-glow-2"></div>
-      </div>
-      
-      <header>
+    <!-- Elemento para la iluminación ambiental -->
+    <div class="background-neon-light" id="backgroundNeonLight"></div>
+    <div class="background-neon-light" id="backgroundNeonLight"></div>
+    <div class="content-overlay"></div>
+    
+    <!-- Contenedor para el logo y los efectos visuales -->
+    <div class="neon-logo-wrap">
+        <img src="assets/Logo2.png" class="logo-neon" alt="Seguridad 24-7 Del Ecuador" id="neonLogo">
+        <!-- Las chispas se añadirán dinámicamente con JavaScript -->
+    </div>
+    
+    <!-- Background Elements desde CSS -->
+    <div class="background-container">
+        <div class="floating-logo"></div>
+        <div class="bg-glow bg-glow-1"></div>
+        <div class="bg-glow bg-glow-2"></div>
+    </div>
+    
+    <header>
         <nav>
             <div class="logo">
                 <a href="index.html">
@@ -40,11 +41,12 @@
                 </a>
             </div>
             <ul class="menu" id="menu">
-                <li><a href="#inicio" class="active">Inicio</a></li>
+                <li><a href="index.html" class="active">Inicio</a></li>
                 <li><a href="servicios.html">Servicios</a></li>
                 <li><a href="Paquetes.html">Paquetes</a></li>
                 <li><a href="nosotros.html">Nosotros</a></li>
-                <li><a href="#contacto" class="btn-contacto">Contacto</a></li>
+                <li><a href="productos.html">Productos</a></li>
+                
                 <li class="auth-buttons-mobile">
                     <a href="login.html" class="btn-login">
                         <i class="fas fa-user"></i>
@@ -74,75 +76,75 @@
         </nav>
         <div class="overlay" id="overlay"></div>
     </header>
-    <section class="image-section">
-        <div class="image-overlay">
-        </div>
+
+    <!-- Sección de Hero con imagen de fondo y texto sobrepuesto -->
+    <section class="hero-section">
+        <div class="hero-overlay"></div>
         <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE1.jpg" alt="Imagen de fondo">
-    </section>
-
-    <section class="paquetes">
-        <h2>ELIGE EL PAQUETE IDEAL PARA TI</h2>
-        <div class="paquete-container">
-          
-          <!-- Paquete Básico -->
-          <div class="paquete">
-            <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE4.jpg" alt="Paquete Básico" />
-            <div class="contenido">
-              <h3>🔒 Paquete Básico de Seguridad Integral</h3>
-              <p class="descripcion">Incluye los siguientes servicios esenciales para la protección de tu propiedad 24/7</p>
-              <ul>
-        <strong>🛡 Monitoreo en Tiempo Real</strong>
-        <li> Supervisión continua del sistema de cámaras de seguridad, 24 horas al día, los 7 días de la semana.</li>
-        <li>Monitoreo constante del cerco eléctrico*.</li>
-            <strong>📢 Perifoneo Preventivo y Disuasivo</strong>
-            <li> Comunicación en tiempo real a través de altavoces para disuadir comportamientos sospechosos o intrusiones, las 24 horas del día.</li> 
-            <strong>🏢 Portería Virtual 24/7</strong>
-        <li>Gestión remota de accesos peatonales y vehiculares.</li>
-        <li>Recepción de visitantes y control de entradas mediante tecnología avanzada.</li> 
-        <strong>🚔 Respuesta Armada Inmediata</strong>
-        <li>Atención inmediata en caso de emergencia mediante personal armado.</li>
-            <strong>👮‍♂️ Supervisión Presencial Diaria</strong>
-            <li>Visita diaria de guardias supervisores, debidamente uniformados, equipados y armados para reforzar la seguridad.</li>
-                <strong>*El monitoreo del cerco eléctrico aplica solo en caso de contar con dicho sistema instalado.</strong>
-
-              </ul>
-              <button>Seleccionar</button>
-            </div>
-          </div>
-      
-          <!-- Paquete Premium -->
-          <div class="paquete">
-            <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE6.jpg" alt="Paquete Premium" />
-            <div class="contenido">
-              <h3>👑 Paquete Premium de Seguridad Total</h3>
-              <p class="descripcion">Máximo nivel de protección, tecnología avanzada y atención inmediata 24/7.</p>
-                <ul>
-                <strong> ✅Incluye todo lo del Paquete Básico y mas estas Tecnológias.</strong>
-                     <br>
-                        <strong>📸 Cámara Inteligente con Reconocimiento Facial</strong>
-                    <li>Identificación automática de personas que pertenecen o no a la comunidad, edificio o empresa.</li>
-                    <li>Mejora del control de accesos y prevención de intrusos.</li>
-                    <strong>🚗 Cámara LPR (Reconocimiento de Placas Vehiculares)</strong>
-                    <li>Detección automática de placas de vehículos que ingresan o salen.</li>
-                    <li>Registro digital de entradas y salidas, con alertas en tiempo real.</li>
-                       <strong>🆘 Botón de Pánico Inteligente Global</strong>
-                       <li>Disponible desde cualquier dispositivo con acceso a internet, desde cualquier parte del mundo.</li>
-                       <li>Puede usarse en emergencias médicas, de seguridad o situaciones críticas.</li>
-                       <strong>🔧 Mantenimiento Tecnológico Preventivo</strong>
-                       <li>Revisión mensual del sistema completo: cámaras, sensores, cerco eléctrico, conexión remota, perifoneo y más.</li>
-                       <strong>📲 Acceso a Plataforma de Monitoreo en Tiempo Real</strong>
-                       <li>Control y visualización de cámaras desde app o navegador.</li>
-                       <li>Recibe notificaciones, alertas y controla accesos desde cualquier lugar.</li>
-                      </ul>
-
-              <button>Seleccionar</button>
-            </div>
-          </div>
-      
+        <div class="hero-content">
+            <h1 class="animated-title">ELIGE EL PAQUETE IDEAL PARA TI</h1>
+            <p class="hero-subtitle">Protección avanzada para lo que más valoras</p>
+            <a href="#paquetes" class="hero-cta">Ver opciones <i class="fas fa-arrow-down"></i></a>
         </div>
     </section>
+
+    <!-- Sección de paquetes rediseñada (solo 2 paquetes) -->
+    <section id="paquetes" class="pricing-section">
+        <h2 class="pricing-title">Precios <span>Paquetes</span></h2>
+    <p class="pricing-subtitle">Selecciona el plan que mejor se adapte a tus necesidades</p>
+    
+        <div class="price-cards-container two-cards">
+            <!-- Paquete Básico -->
+            <div class="price-card">
+                <div class="card-header">
+                    <h3>🔒 Paquete Básico</h3>
+                    <div class="price">
+                        <span class="amount">$399</span>
+                        <span class="period">USD</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Seguridad Integral para tu propiedad 24/7</p>
+                    <ul class="features">
+                        <li><i class="fas fa-shield-alt"></i> Monitoreo en Tiempo Real</li>
+                        <li><i class="fas fa-bullhorn"></i> Perifoneo Preventivo</li>
+                        <li><i class="fas fa-door-open"></i> Portería Virtual 24/7</li>
+                        <li><i class="fas fa-running"></i> Respuesta Armada Inmediata</li>
+                        <li><i class="fas fa-user-shield"></i> Supervisión Presencial Diaria</li>
+                    </ul>
+                    <button class="btn-select">Seleccionar</button>
+                </div>
+            </div>
+
+            <!-- Paquete Premium -->
+            <div class="price-card featured">
+                <div class="ribbon">Más contratado</div>
+                <div class="card-header">
+                    <h3>👑 Paquete Premium</h3>
+                    <div class="price">
+                        <span class="amount">$799</span>
+                        <span class="period">USD</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Máximo nivel de protección y tecnología avanzada</p>
+                    <ul class="features">
+                        <li><i class="fas fa-check-circle"></i> Todo del Paquete Básico</li>
+                        <li><i class="fas fa-user-check"></i> Reconocimiento Facial</li>
+                        <li><i class="fas fa-car"></i> Reconocimiento de Placas</li>
+                        <li><i class="fas fa-bell"></i> Botón de Pánico Inteligente</li>
+                        <li><i class="fas fa-tools"></i> Mantenimiento Preventivo</li>
+                        <li><i class="fas fa-mobile-alt"></i> App de Monitoreo</li>
+                    </ul>
+                    <button class="btn-select premium">Seleccionar</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de tecnologías (se mantiene igual) -->
     <section class="technologies">
-        <h2> Contamos con variedad de tecnologías para tu seguridad</h2>
+        <h2>Contamos con variedad de tecnologías para tu seguridad</h2>
         <div class="tech-container">
             <!-- Imagen a la izquierda -->
             <div class="tech-image">
@@ -165,7 +167,7 @@
                 </div>
                 <div class="icon-item">
                     <img src="assets/IMAGEN-PAQUETE/IMAGEN_PAQUETE12.png" alt="Icono 5">
-                    <p>Reconocimiento o facial</p>
+                    <p>Reconocimiento facial</p>
                 </div>
                 <div class="icon-item">
                     <img src="assets/IMAGEN-PAQUETE/IMAGEN_PAQUETE13.png" alt="Icono 6">
@@ -187,95 +189,126 @@
         </div>
     </section>
 
+    <!-- Sección de pasos mejorada con contenedor más ancho -->
     <section class="how-it-works">
-        <!-- Sección de pasos en una sola columna horizontal -->
-<div class="steps-section">
-    <h2>Así de fácil es proteger lo que más te importa:</h2>
-    
-    <div class="steps-container">
-        <!-- Paso 1 -->
-        <div class="step-item">
-            <div class="step-number">1</div>
-            <h3>Contáctanos</h3>
-            <p>Cuéntanos tus necesidades y te asesoramos en la selección del paquete ideal.</p>
-        </div>
+        <h2 class="section-title">Así de fácil es proteger lo que más te importa</h2>
         
-        <!-- Paso 2 -->
-        <div class="step-item">
-            <div class="step-number">2</div>
-            <h3>Instalación rápida y sencilla</h3>
-            <p>Nuestros técnicos configuran todo para que tu sistema de seguridad esté listo.</p>
+        <div class="steps-container">
+            <!-- Paso 1 -->
+            <div class="step-item">
+                <div class="step-icon">
+                    <div class="step-number">1</div>
+                </div>
+                <h3>Contáctanos</h3>
+                <p>Cuéntanos tus necesidades y te asesoramos en la selección del paquete ideal.</p>
+            </div>
+            
+            <!-- Paso 2 -->
+            <div class="step-item">
+                <div class="step-icon">
+                    <div class="step-number">2</div>
+                </div>
+                <h3>Instalación rápida</h3>
+                <p>Nuestros técnicos configuran todo para que tu sistema de seguridad esté listo en tiempo récord.</p>
+            </div>
+            
+            <!-- Paso 3 -->
+            <div class="step-item">
+                <div class="step-icon">
+                    <div class="step-number">3</div>
+                </div>
+                <h3>Monitoreo constante</h3>
+                <p>Monitoreamos tus cámaras 24/7 con alertas inmediatas ante cualquier actividad sospechosa.</p>
+            </div>
+            
+            <!-- Paso 4 -->
+            <div class="step-item">
+                <div class="step-icon">
+                    <div class="step-number">4</div>
+                </div>
+                <h3>Respuesta inmediata</h3>
+                <p>En caso de incidente, notificamos a las autoridades y a ti en tiempo real.</p>
+            </div>
+            
+            <!-- Paso 5 -->
+            <div class="step-item">
+                <div class="step-icon">
+                    <div class="step-number">5</div>
+                </div>
+                <h3>Prueba gratuita</h3>
+                <p>Disfruta de una prueba gratuita de nuestro servicio para comprobar su eficacia.</p>
+            </div>
         </div>
-        
-        <!-- Paso 3 -->
-        <div class="step-item">
-            <div class="step-number">3</div>
-            <h3>Monitoreo constante</h3>
-            <p>Desde ese momento, monitoreamos tus cámaras las 24 horas del día, con alertas inmediatas si algo sucede.</p>
-        </div>
-        
-        <!-- Paso 4 -->
-        <div class="step-item">
-            <div class="step-number">4</div>
-            <h3>Respuestas rápidas</h3>
-            <p>En caso de incidente, notificamos a las autoridades y a ti en tiempo real.</p>
-        </div>
-        
-        <!-- Paso 5 (opcional) -->
-        <div class="step-item">
-            <div class="step-number">5</div>
-            <h3>Prueba gratis</h3>
-            <p>Disfruta de una prueba gratuita de nuestro servicio para comprobar su eficacia.</p>
-        </div>
-    </div>
-</div>
     </section>
-    
 
-
-   <section class="product-categories">
-    <h2>Nuestros Productos</h2>
-    <div class="categories-container">
-        <a href="productos.html" class="category-item">
-            <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUTE16.jpg" alt="Camaras">
-            <span>Camaras</span>
-        </a>
-        <a href="productos.html" class="category-item">
-            <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE17.jpg" alt="Cercos Electricos">
-            <span>Cercos Electricos</span>
-        </a>
-        <a href="productos.html" class="category-item">
-            <img src="assetS/IMAGEN-PAQUETE/IMAGENPAQUETE18.jpg" alt="Control de acceso">
-            <span>Control de Acceso</span>
-        </a>
-        <a href="productos.html" class="category-item">
-            <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE19.jpg" alt="Custodia de carga ">
-            <span>Vocines</span>
-        </a>
-        <a href="productos.html" class="category-item">
-            <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE22.webp" alt="Rastreo Satelital Vehicular">
-            <span>Sistemas de alarma</span>
-        </a>
-        <a href="productos.html" class="category-item">
-            <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE20.jpeg" alt="Boton de panico">
-            <span>Botones de Panico</span>
-        </a> 
-  </section>
-
-  <section class="productsCar" id="productsCar"></section>
-    <!-- HTML Templates for JavaScript -->
-    <template id="product-card-template">
-        <figure class="products-seguridad">
-            <img>
-            <figcaption></figcaption>
-        </figure>
-    </template>
-    <script src="scripts/paquetesProdctos.js" type="module"></script>
-    <script src="scripts/productos.js"type="module"></script>
-    <script src="https://js.stripe.com/v3/"></script>
-    <script src="scripts/Paquetes.js"></script>
-    <script src="scripts/script.js"></script>
-    <script src="scripts/logo.js"></script>
+    <!-- Sección de productos mejorada -->
+    <section class="products-section">
+        <div class="section-container">
+            <h2 class="section-title">Nuestros Productos</h2>
+            
+            <div class="products-grid">
+                <a href="productos.html" class="product-card">
+                    <div class="product-image">
+                        <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUTE16.jpg" alt="Cámaras">
+                    </div>
+                    <div class="product-info">
+                        <h3>Cámaras de Seguridad</h3>
+                        <span class="product-link">Ver más <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                
+                <a href="productos.html" class="product-card">
+                    <div class="product-image">
+                        <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE17.jpg" alt="Cercos Eléctricos">
+                    </div>
+                    <div class="product-info">
+                        <h3>Cercos Eléctricos</h3>
+                        <span class="product-link">Ver más <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                
+                <a href="productos.html" class="product-card">
+                    <div class="product-image">
+                        <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE18.jpg" alt="Control de Acceso">
+                    </div>
+                    <div class="product-info">
+                        <h3>Control de Acceso</h3>
+                        <span class="product-link">Ver más <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                
+                <a href="productos.html" class="product-card">
+                    <div class="product-image">
+                        <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE19.jpg" alt="Vocinas">
+                    </div>
+                    <div class="product-info">
+                        <h3>Vocinas</h3>
+                        <span class="product-link">Ver más <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                
+                <a href="productos.html" class="product-card">
+                    <div class="product-image">
+                        <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE22.webp" alt="Sistemas de Alarma">
+                    </div>
+                    <div class="product-info">
+                        <h3>Sistemas de Alarma</h3>
+                        <span class="product-link">Ver más <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                
+                <a href="productos.html" class="product-card">
+                    <div class="product-image">
+                        <img src="assets/IMAGEN-PAQUETE/IMAGENPAQUETE20.jpeg" alt="Botones de Pánico">
+                    </div>
+                    <div class="product-info">
+                        <h3>Botones de Pánico</h3>
+                        <span class="product-link">Ver más <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
 
     <footer>
         <div class="container">
@@ -316,5 +349,78 @@
             </div>
         </div>
     </footer>
+
+    <script src="scripts/paquetesProdctos.js" type="module"></script>
+    <script src="scripts/productos.js" type="module"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="scripts/Paquetes.js"></script>
+    <script src="scripts/script.js"></script>
+    <script src="scripts/logo.js"></script>
+    <script>
+        // Inicializar ScrollReveal para animaciones de scroll
+        ScrollReveal().reveal('.pricing-section', { 
+            delay: 200,
+            distance: '50px',
+            origin: 'bottom',
+            duration: 1000
+        });
+        
+        ScrollReveal().reveal('.technologies', { 
+            delay: 300,
+            distance: '50px',
+            origin: 'left',
+            duration: 1000
+        });
+        
+        ScrollReveal().reveal('.how-it-works', { 
+            delay: 400,
+            distance: '50px',
+            origin: 'right',
+            duration: 1000
+        });
+        
+        ScrollReveal().reveal('.products-section', { 
+            delay: 500,
+            distance: '50px',
+            origin: 'bottom',
+            duration: 1000
+        });
+
+        // Animación individual para cada tarjeta de precio
+        ScrollReveal().reveal('.price-card', { 
+            delay: 200,
+            distance: '30px',
+            origin: 'bottom',
+            duration: 800,
+            interval: 200
+        });
+
+        // Animación para cada elemento de tecnología
+        ScrollReveal().reveal('.icon-item', { 
+            delay: 300,
+            distance: '20px',
+            origin: 'bottom',
+            duration: 600,
+            interval: 100
+        });
+
+        // Animación para cada paso
+        ScrollReveal().reveal('.step-item', { 
+            delay: 400,
+            distance: '20px',
+            origin: 'bottom',
+            duration: 700,
+            interval: 150
+        });
+
+        // Animación para cada producto
+        ScrollReveal().reveal('.product-card', { 
+            delay: 500,
+            distance: '20px',
+            origin: 'bottom',
+            duration: 600,
+            interval: 100
+        });
+    </script>
 </body>
 </html>

@@ -25,6 +25,7 @@ body {
     overflow-x: hidden;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
+    font-size: 16px; /* Tamaño base aumentado */
 }
 
 /* Optimize background container */
@@ -106,7 +107,7 @@ body {
 .section-title {
     font-size: clamp(2rem, 5vw, 2.5rem);
     font-weight: 800;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem; /* Aumentado para mejor espaciado */
     position: relative;
     display: inline-block;
 }
@@ -130,6 +131,12 @@ body {
         transform: scaleX(1);
     }
 }
+/* Aumentar tamaño de texto global para párrafos */
+p {
+    font-size: 1.1rem; /* Aumento global para todos los párrafos */
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
 
 /* Use modern CSS Grid with auto-fit for responsive layouts */
 .features-grid {
@@ -140,7 +147,128 @@ body {
     max-width: 1400px;
     padding: 0 1rem;
 }
+/* Aumentar tamaño de texto global para párrafos */
+p {
+    font-size: 1.1rem; /* Aumento global para todos los párrafos */
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+/* Aumentar tamaño en beneficios */
+.benefit-description {
+    color: #a0a8b3;
+    line-height: 1.6;
+    font-size: 1.1rem; /* Aumentado */
+}
 
+/* Mejorar tamaño en listas de características */
+.service-features-list li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 10px;
+    color: #a0a8b3;
+    font-size: 1.05rem; /* Aumentado */
+}
+
+/* Aumentar tamaño en seguridad electrónica */
+.security-feature-description {
+    color: var(--text-secondary);
+    font-size: 1.05rem; /* Aumentado de 0.95rem */
+    line-height: 1.5;
+}
+
+/* Aumentar tamaño en stickers de beneficios */
+.sticker-info p {
+    color: var(--text-secondary);
+    font-size: 1rem; /* Aumentado de 0.9rem */
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Aumentar tamaño en domótica */
+.feature-description {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    font-size: 1.1rem; /* Aumentado */
+}
+
+/* Aumentar tamaño en tabla comparativa */
+.table-cell {
+    padding: 20px;
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-size: 1.05rem; /* Añadido para aumentar el texto general de la tabla */
+}
+
+/* Aumentar tamaño en condominios */
+.service-details p {
+    color: var(--text-secondary);
+    line-height: 1.5;
+    font-size: 1.05rem; /* Aumentado de 0.95rem */
+}
+
+/* Subtítulos */
+.section-subtitle {
+    font-size: 1.3rem; /* Aumentado de 1.2rem */
+    color: #a0a8b3;
+    margin-bottom: 60px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Ajustar responsive para mantener buen tamaño en móviles */
+@media (max-width: 768px) {
+    body {
+        font-size: 15px; /* Base ligeramente menor en móviles */
+    }
+    
+    p {
+        font-size: 1.05rem; /* Sigue siendo mayor que el original */
+    }
+    
+    .feature-description,
+    .security-feature-description,
+    .sticker-info p,
+    .service-details p,
+    .service-features-list li {
+        font-size: 1rem; /* Sigue siendo adecuado para móviles */
+    }
+    
+    .section-subtitle {
+        font-size: 1.2rem;
+    }
+    
+    .table-cell {
+        font-size: 1rem;
+    }
+}
+
+/* Ajustes para pantallas muy pequeñas */
+@media (max-width: 576px) {
+    body {
+        font-size: 14px;
+    }
+    
+    p {
+        font-size: 1rem;
+    }
+    
+    .feature-description,
+    .security-feature-description,
+    .sticker-info p {
+        font-size: 0.95rem; /* Mantener legible pero optimizar espacio */
+    }
+    
+    .section-subtitle {
+        font-size: 1.1rem;
+    }
+}
 /* Optimize feature cards */
 .feature-card {
     background: rgba(1, 23, 48, 0.7);
@@ -550,26 +678,28 @@ body {
     line-height: 1.6;
 }
 
-/* How It Works Section */
+/* How It Works Section - ACTUALIZADO */
 .how-it-works-section {
-    margin-top: 60px;
+    margin-top: 80px; /* Aumentado el espaciado para mejor separación */
+    padding: 30px 0; /* Añadido padding para mejor visualización */
 }
 
 .how-it-works-grid {
     display: flex;
     justify-content: space-between;
-    gap: 20px;
-    margin-top: 40px;
+    gap: 30px; /* Aumentado el espacio entre elementos */
+    margin-top: 50px; /* Más espacio desde el título */
 }
 
 .how-it-works-step {
     text-align: center;
     flex: 1;
-    max-width: 280px;
+    max-width: 300px; /* Aumentado para dar más espacio al contenido */
     background: linear-gradient(135deg, rgba(12, 36, 53, 0.7) 0%, rgba(9, 47, 62, 0.7) 100%);
-    padding: 20px;
+    padding: 30px; /* Más padding para dar espacio al contenido */
     border-radius: 15px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Sombra sutil para destacar */
 }
 
 .how-it-works-step:hover {
@@ -579,8 +709,10 @@ body {
 
 .how-it-works-step img {
     width: 100%;
+    max-height: 120px; /* Control de altura para mejor visualización */
+    object-fit: contain; /* Mantiene proporciones de la imagen */
     border-radius: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 20px; /* Más espacio entre imagen y texto */
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease;
 }
@@ -590,14 +722,18 @@ body {
 }
 
 .how-it-works-step h3 {
-    margin-top: 15px;
-    font-size: 1.5rem;
+    margin: 15px 0; /* Espacio adicional alrededor de títulos */
+    font-size: 1.8rem; /* Aumentado tamaño */
     color: white;
+    font-weight: 700; /* Más peso visual */
 }
 
 .how-it-works-step p {
-    color: #a0a8b3;
-    margin-top: 10px;
+    color: #ffffff; /* Cambiado a blanco para mejor legibilidad */
+    margin-top: 15px;
+    font-size: 1.25rem; /* Aumentado significativamente */
+    line-height: 1.6; /* Mejor espaciado entre líneas */
+    font-weight: 400; /* Peso normal para mejor legibilidad */
 }
 
 /* Additional Services Section with Images */
@@ -742,109 +878,6 @@ body {
     animation: pulse 2s infinite;
 }
 
-/* Client Gallery */
-.client-gallery {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin-top: 40px;
-}
-
-.client-image {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #00FFC2;
-    transition: transform 0.3s ease;
-}
-
-.client-image:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 20px rgba(0, 255, 194, 0.5);
-}
-
-/* Testimonials Section */
-.testimonials-section {
-    background: linear-gradient(135deg, rgba(0, 30, 60, 0.9) 0%, rgba(1, 23, 48, 0.9) 100%);
-    padding: 80px 0;
-    margin-top: 80px;
-}
-
-.testimonial-video-container {
-    margin: 0 auto 60px;
-    max-width: 800px;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-}
-
-.testimonial-video {
-    width: 100%;
-    display: block;
-}
-
-.testimonials-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    justify-content: center;
-}
-
-.testimonial-card {
-    flex: 1;
-    min-width: 300px;
-    max-width: 500px;
-    background: linear-gradient(135deg, rgba(12, 36, 53, 0.7) 0%, rgba(9, 47, 62, 0.7) 100%);
-    border-radius: 15px;
-    padding: 30px;
-    position: relative;
-    border: 1px solid rgba(0, 148, 255, 0.2);
-    transition: transform 0.3s ease;
-}
-
-.testimonial-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 255, 194, 0.15);
-    border-color: #00FFC2;
-}
-
-.testimonial-quote {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    font-size: 2rem;
-    color: rgba(0, 255, 194, 0.2);
-}
-
-.testimonial-author {
-    display: flex;
-    align-items: center;
-    margin-top: 20px;
-    gap: 15px;
-}
-
-.testimonial-image {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #00FFC2;
-}
-
-.testimonial-author h4 {
-    margin: 0;
-    font-size: 1.1rem;
-    color: white;
-}
-
-.testimonial-author p {
-    margin: 0;
-    font-size: 0.9rem;
-    color: #a0a8b3;
-}
-
 /* Animations */
 @keyframes float {
     0%, 100% {
@@ -900,6 +933,14 @@ body {
     .hero-content p {
         font-size: 1.2rem;
     }
+    
+    .how-it-works-step h3 {
+        font-size: 1.6rem;
+    }
+    
+    .how-it-works-step p {
+        font-size: 1.15rem;
+    }
 }
 
 @media (max-width: 768px) {
@@ -931,11 +972,21 @@ body {
     .how-it-works-grid {
         flex-direction: column;
         align-items: center;
+        gap: 40px; /* Más espacio entre elementos cuando están apilados */
     }
     
     .how-it-works-step {
         max-width: 100%;
-        margin-bottom: 20px;
+        width: 100%;
+        padding: 25px;
+    }
+    
+    .how-it-works-step h3 {
+        font-size: 1.5rem;
+    }
+    
+    .how-it-works-step p {
+        font-size: 1.1rem;
     }
     
     .floating-logo {
@@ -983,6 +1034,18 @@ body {
         height: 50px;
     }
     
+    .how-it-works-step {
+        padding: 20px;
+    }
+    
+    .how-it-works-step h3 {
+        font-size: 1.4rem;
+    }
+    
+    .how-it-works-step p {
+        font-size: 1rem;
+    }
+    
     .cta-buttons-container {
         flex-direction: row;
         gap: 10px;
@@ -1020,8 +1083,8 @@ body {
     .service-box.reverse {
         flex-direction: column;
     }
-    
-} 
+}
+
 /* Stickers de beneficios */
 .benefit-stickers {
     display: flex;
@@ -1145,6 +1208,7 @@ body {
         max-width: 320px;
     }
 }
+
 /* Estilos para la sección de Seguridad Electrónica */
 .electronic-security-grid {
     display: grid;
@@ -1247,7 +1311,7 @@ body {
         font-size: 0.9rem;
     }
 }
-/* Estilos para la sección de Seguridad Electrónica */
+
 /* Estilos para la sección de Domótica */
 #domotica {
     padding: 80px 0;
@@ -1431,6 +1495,7 @@ body {
     color: #ffffff;
     margin: 0;
 }
+
 .feature-description {
     color: var(--text-secondary);
     /*aumentar tamano de letra*/
@@ -1599,6 +1664,7 @@ body {
         font-size: 1.2rem;
     }
 }
+
 /* Estilos para la sección de tabla comparativa - Sin scroll horizontal */
 #comparison-section {
     padding: 80px 0;
@@ -1904,6 +1970,7 @@ body {
         padding: 30px 20px;
     }
 }
+
 /* Estilos para la sección de Gestión de Condominios */
 #condominios {
     padding: 80px 0;
@@ -2107,152 +2174,6 @@ body {
     margin: 0;
 }
 
-/* CTA */
-.condominio-cta {
-    margin-top: 70px;
-    text-align: center;
-    padding: 40px;
-    background: linear-gradient(135deg, rgba(0, 30, 60, 0.7) 0%, rgba(1, 23, 48, 0.7) 100%);
-    border-radius: 15px;
-    border: 1px solid rgba(0, 148, 255, 0.2);
-    position: relative;
-    overflow: hidden;
-}
-
-.condominio-cta::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(0, 255, 194, 0.05), transparent);
-    transform: rotate(45deg);
-    animation: shimmer 5s linear infinite;
-    z-index: -1;
-}
-
-@keyframes shimmer {
-    0% {
-        transform: translateX(-50%) translateY(-50%) rotate(45deg);
-    }
-    100% {
-        transform: translateX(150%) translateY(150%) rotate(45deg);
-    }
-}
-
-.condominio-cta h3 {
-    font-size: 1.8rem;
-    margin-bottom: 25px;
-    color: #fff;
-}
-
-/* Media queries para responsividad */
-@media (max-width: 992px) {
-    .condominio-service {
-        flex: 1 1 100%;
-    }
-    
-    .service-content {
-        padding: 20px;
-    }
-    
-    .service-details h3 {
-        font-size: 1.2rem;
-    }
-    
-    .feature-item {
-        width: 150px;
-    }
-    
-    .condominio-cta h3 {
-        font-size: 1.6rem;
-    }
-}
-
-@media (max-width: 768px) {
-    #condominios {
-        padding: 60px 0;
-    }
-    
-    .condominio-services-container {
-        gap: 20px;
-        margin: 40px 0 30px;
-    }
-    
-    .service-icon {
-        width: 45px;
-        height: 45px;
-        min-width: 45px;
-    }
-    
-    .service-icon svg {
-        width: 24px;
-        height: 24px;
-    }
-    
-    .service-details p {
-        font-size: 0.9rem;
-    }
-    
-    .feature-icon {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .feature-icon svg {
-        width: 30px;
-        height: 30px;
-    }
-    
-    .feature-item h4 {
-        font-size: 1rem;
-    }
-    
-    .condominio-cta {
-        padding: 30px 20px;
-    }
-    
-    .condominio-cta h3 {
-        font-size: 1.4rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .condominio-service {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
-    
-    .service-number {
-        margin-left: 10px;
-    }
-    
-    .service-content {
-        width: 100%;
-    }
-    
-    .condominio-features {
-        gap: 20px;
-    }
-    
-    .feature-item {
-        width: 130px;
-    }
-    
-    .feature-icon {
-        width: 55px;
-        height: 55px;
-        margin-bottom: 10px;
-    }
-    
-    .feature-icon svg {
-        width: 28px;
-        height: 28px;
-    }
-}
-
 /* Espaciado uniforme para todas las secciones */
 section, .section-header, .features-section, .how-it-works-section, 
 .benefits-section, .additional-services, .cta-section {
@@ -2281,7 +2202,6 @@ section:first-of-type {
 .domotica-features-container, .condominio-services-container {
     margin-top: 1.5rem;
 }
-
 /* Ajuste para elementos dentro de las secciones */
 .section-title {
     margin-bottom: 1.2rem;
