@@ -10,7 +10,7 @@ const path = require('path');
 require('dotenv').config();
 
 // Obtener API key de variable de entorno o usar la proporcionada para desarrollo
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY || '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';
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 // Almacenamiento para las conversaciones
 const conversaciones = {};
