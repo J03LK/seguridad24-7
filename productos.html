@@ -3,21 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Productos - Seguridad 24/7</title>
     <!-- Meta tag para Content Security Policy -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.gstatic.com https://*.firebaseio.com https://*.googleapis.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://cdnjs.cloudflare.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://via.placeholder.com https://*.googleapis.com; connect-src 'self' https://*.firebaseio.com wss://*.firebaseio.com https://*.googleapis.com;">
-    
-    <!-- Font Awesome para iconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta http-equiv="Content-Security-Policy" content="
+  default-src 'self' https://www.gstatic.com https://.firebaseio.com https://.googleapis.com https://js.stripe.com;
+  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://cdnjs.cloudflare.com https://apis.google.com https://js.stripe.com;
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+  font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;
+  img-src 'self' data: https://via.placeholder.com https://*.googleapis.com;
+  connect-src 'self' http://localhost:4242 https://.firebaseio.com wss://.firebaseio.com https://*.googleapis.com https://js.stripe.com;">
+
     <!-- Google Fonts - Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- CSS principal -->
     <link rel="stylesheet" href="estilos/Paquetes.css">
     <link rel="stylesheet" href="estilos/productos.css">
-    <link rel="stylesheet" href="/estilos/navbar.css">
+    <link rel="stylesheet" href="estilos/navbar.css">
     <!-- CSS específico para el carrito -->
-    <link rel="stylesheet" href="estilos/carrito.css">
-        <link rel="stylesheet" href="/estilos/footer.css">
+        <link rel="stylesheet" href="estilos/footer.css">
 </head>
 <body>
       <header>
@@ -28,11 +32,11 @@
                 </a>
             </div>
             <ul class="menu" id="menu">
-                <li><a href="index.html" >Inicio</a></li>
+                <li><a href="#inicio" class="active">Inicio</a></li>
                 <li><a href="servicios.html">Servicios</a></li>
                 <li><a href="Paquetes.html">Paquetes</a></li>
                 <li><a href="nosotros.html">Nosotros</a></li>
-                <li><a href="nosotros.html" class="active">Productos</a></li>
+                <li><a href="#contacto" class="btn-contacto">Contacto</a></li>
                 <li class="auth-buttons-mobile">
                     <a href="login.html" class="btn-login">
                         <i class="fas fa-user"></i>
@@ -63,21 +67,19 @@
         <div class="overlay" id="overlay"></div>
     </header>
     
-    <!-- Elementos de fondo -->
+  
     <div class="background-container">
         <div class="floating-logo"></div>
         <div class="bg-glow bg-glow-1"></div>
         <div class="bg-glow bg-glow-2"></div>
     </div>
     
-    <!-- Sección de imagen principal -->
     <section class="image-section">
-        <img src="/assets/ImagenesCarrito/IMAGENPRINCIPAL.png" alt="Productos de Seguridad">
+        <img src="assets/ImagenesCarrito/IMAGENPRINCIPAL.png" alt="Productos de Seguridad">
         <div class="image-overlay"></div>
         <h1>Nuestros Productos</h1>
     </section>
     
-    <!-- Filtros de productos -->
     <section class="filtros-productos">
         <div class="container">
             <div class="filtro-grupo">
@@ -143,9 +145,24 @@
                     <button class="btn btn-vaciar" id="vaciar-carrito">
                         <i class="fas fa-trash-alt"></i> Vaciar Carrito
                     </button>
-                    <button class="btn btn-checkout" id="finalizar-compra">
-                        <i class="fas fa-check"></i> Finalizar Compra
-                    </button>
+                    
+        <h1>Checkout Page</h1>
+    <form action="/create-checkout-session" method="POST">
+      <button type="button" id="checkout-button">Terminar compra</button>
+    </form>
+    <script>
+      var stripe = Stripe('pk_test_51RHBmcFmRhxG23CjkIBg2A3lrcEgXQbDjdTYO6M0IsunkxKuib3VVc0VTj9BMhmPEHoJGtKBjt20N3eieUJdrKz00RQCYXigp');
+      var checkoutButton = document.getElementById('checkout-button');
+      checkoutButton.addEventListener('click', function() {
+        // Aquí puedes agregar lógica adicional si es necesario
+      });
+    </script>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script src="/js-sprite/ver.js"></script>
+
+
+
                 </div>
             </div>
         </div>
@@ -165,64 +182,105 @@
  
     <!-- Sistema de notificaciones -->
     <div id="notificacion" class="notificacion"></div>
+    
 
-    <!-- Scripts de Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-storage-compat.js"></script>
-    
-    <!-- Configuración de Firebase -->
-    <script src="scripts/independiente.js"></script>
-    <script src="scripts/productos.js"></script
-    
-    
-    <!-- Scripts adicionales -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/3.9.1/chart.min.js"></script>
-    
-    <!-- Scripts para cargar productos y manejar el carrito -->
-    <script src="scripts/carrito.js"></script>
-    <script src="scripts/script.js" defer></script>
-    <script src="firebase-independiente.js"></script>
+<!-- Firebase y scripts propios -->
+<script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-storage-compat.js"></script>
+<script src="scripts/independiente.js"></script>
+<script src="scripts/productos.js"></script>
+<script src="scripts/carrito.js"></script>
+<script src="/js-sprite/server.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/3.9.1/chart.min.js"></script>
+
+
+
     <footer>
-            <div class="container">
-                <div class="footer-content">
-                    <div class="footer-logo">
-                        <img src="assets/logo.png" alt="24-7 Logo" />
-                    </div>
-                    <div class="footer-links">
-                        <h4>Enlaces rápidos</h4>
-                        <ul>
-                            <li><a href="index.html">Inicio</a></li>
-                            <li><a href="servicios.html">Servicios</a></li>
-                            <li><a href="nosotros.html">Nosotros</a></li>
-                            <li><a href="casos.html">Casos de Éxito</a></li>
-                            <li><a href="contacto.html">Contacto</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-servicios">
-                        <h4>Servicios</h4>
-                        <ul>
-                            <li><a href="servicios.html#guardia-virtual">Guardia Virtual</a></li>
-                            <li><a href="servicios.html#reconocimiento">Reconocimiento Facial</a></li>
-                            <li><a href="servicios.html#monitoreo">Monitoreo 24/7</a></li>
-                            <li><a href="servicios.html#accesos">Control de Accesos</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-newsletter">
-                        <h4>Suscríbete</h4>
-                        <p>Recibe nuestras novedades y ofertas</p>
-                        <form id="newsletter-form">
-                            <input type="email" placeholder="Tu correo electrónico" required />
-                            <button type="submit">Suscribirse</button>
-                        </form>
-                    </div>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="assets/Logo2.png" alt="24-7 Logo" />
                 </div>
-                <div class="copyright">
-                    <p>&copy; 2025 24-7 SEGURIDAD DEL ECUADOR. Todos los derechos reservados.</p>
+                <div class="footer-links">
+                    <h4>Enlaces rápidos</h4>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="servicios.html">Servicios</a></li>
+                        <li><a href="nosotros.html">Nosotros</a></li>
+                        <li><a href="casos.html">Casos de Éxito</a></li>
+                        <li><a href="contacto.html">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-servicios">
+                    <h4>Servicios</h4>
+                    <ul>
+                        <li><a href="servicios.html#guardia-virtual">Guardia Virtual</a></li>
+                        <li><a href="servicios.html#reconocimiento">Reconocimiento Facial</a></li>
+                        <li><a href="servicios.html#monitoreo">Monitoreo 24/7</a></li>
+                        <li><a href="servicios.html#accesos">Control de Accesos</a></li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h4>Suscríbete</h4>
+                    <p>Recibe nuestras novedades y ofertas</p>
+                    <form id="newsletter-form">
+                        <input type="email" placeholder="Tu correo electrónico" required />
+                        <button type="submit">Suscribirse</button>
+                    </form>
                 </div>
             </div>
-        </footer>
+            <div class="copyright">
+                <p>&copy; 2025 24-7 SEGURIDAD DEL ECUADOR. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var btn = document.getElementById('checkout-button');
+  if (btn) {
+    btn.addEventListener('click', function() {
+      if (typeof procesarCompra === 'function') {
+        procesarCompra();
+      } else {
+        alert('No se encontró la función de compra.');
+      }
+    });
+  }
+});
+</script>
+
+<script>
+function procesarCompra() {
+    if (carrito.length === 0) {
+        alert('El carrito está vacío');
+        return;
+    }
+    const productosParaStripe = carrito.map(item => ({
+        nombre: item.nombre,
+        precio: item.precio,
+        cantidad: item.cantidad
+    }));
+    fetch('http://localhost:4242/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: productosParaStripe })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.url) {
+            window.location.href = data.url;
+        } else {
+            alert('Error al crear la sesión de pago');
+        }
+    })
+    .catch(() => {
+        alert('Error al procesar el pago');
+    });
+}
+</script>
 </body>
 </html>

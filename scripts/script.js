@@ -24,6 +24,39 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     };
+    // Script para enviar datos del formulario a WhatsApp
+document.getElementById('contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Obtener los valores del formulario
+    const nombre = document.getElementById('nombre').value;
+    const email = document.getElementById('email').value;
+    const whatsapp = document.getElementById('whatsapp').value;
+    const mensaje = document.getElementById('mensaje').value;
+    
+    // Crear el mensaje para WhatsApp
+    let mensajeWhatsApp = `¡Hola! Me interesa solicitar asesoría de seguridad.%0A%0A`;
+    mensajeWhatsApp += `👤 *Nombre:* ${nombre}%0A`;
+    mensajeWhatsApp += `📧 *Email:* ${email}%0A`;
+    
+    if (whatsapp) {
+        mensajeWhatsApp += `📱 *WhatsApp:* ${whatsapp}%0A`;
+    }
+    
+    mensajeWhatsApp += `%0A💬 *Mensaje:*%0A${mensaje}`;
+    
+    // Número de WhatsApp (formato internacional)
+    const numeroWhatsApp = '593984107006'; // Ecuador + tu número
+    
+    // Crear la URL de WhatsApp
+    const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensajeWhatsApp}`;
+    
+    // Abrir WhatsApp
+    window.open(urlWhatsApp, '_blank');
+    
+    // Opcional: limpiar el formulario después del envío
+    this.reset();
+});
  
     // Crear el observador de intersección
     const observer = new IntersectionObserver(callback, options);
@@ -154,3 +187,177 @@ document.addEventListener('DOMContentLoaded', function () {
         menuToggle.setAttribute('aria-expanded', 'false');
     });
 });
+// Script completo para integrar WhatsApp con todos los botones CTA
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // Número de WhatsApp (formato internacional)
+    const numeroWhatsApp = '593984107006';
+    
+    // Función para abrir WhatsApp con mensaje personalizado
+    function abrirWhatsApp(mensaje) {
+        const mensajeEncoded = encodeURIComponent(mensaje);
+        const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensajeEncoded}`;
+        window.open(urlWhatsApp, '_blank');
+    }
+    
+    // 1. Botón "Solicitar Demostración" del hero
+    const btnDemostracion = document.querySelector('a[href="#contacto"]');
+    if (btnDemostracion && btnDemostracion.textContent.includes('Solicitar Demostración')) {
+        btnDemostracion.addEventListener('click', function(e) {
+            e.preventDefault();
+            const mensaje = `🏢 ¡Hola! Me interesa solicitar una demostración de sus servicios de seguridad virtual.
+
+📋 Me gustaría conocer más sobre:
+• Guardia Virtual 24/7
+• Reconocimiento facial
+• Sistemas de monitoreo remoto
+• Análisis de vulnerabilidades
+
+¿Podrían agendar una demostración personalizada?`;
+            abrirWhatsApp(mensaje);
+        });
+    }
+    
+    // 2. Botones "Solicitar Asesoría Personalizada" (domótica)
+    const btnAsesoria = document.querySelectorAll('a[href="#contacto"]');
+    btnAsesoria.forEach(btn => {
+        if (btn.textContent.includes('Asesoría Personalizada')) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const mensaje = `🏠 ¡Hola! Estoy interesado en una asesoría personalizada sobre domótica y automatización del hogar.
+
+🔧 Me interesa conocer sobre:
+• Automatización de iluminación
+• Control de electrodomésticos
+• Simulación de presencia
+• Sistema de riego automatizado
+• Integración con seguridad
+
+¿Podrían brindarme una consulta personalizada?`;
+                abrirWhatsApp(mensaje);
+            });
+        }
+    });
+    
+    // 3. Botón "Solicitar Análisis Gratis"
+    const btnAnalisis = document.querySelectorAll('a[href="#contacto"]');
+    btnAnalisis.forEach(btn => {
+        if (btn.textContent.includes('Análisis Gratis')) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const mensaje = `🔍 ¡Hola! Me interesa el análisis gratuito de vulnerabilidades de seguridad. ¿Podrían agendar una evaluación?`;
+                abrirWhatsApp(mensaje);
+            });
+        }
+    });
+    
+    // 4. Formulario de contacto (si lo agregas después)
+    const formularioContacto = document.getElementById('contact-form');
+    if (formularioContacto) {
+        formularioContacto.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Obtener los valores del formulario
+            const nombre = document.getElementById('nombre').value;
+            const email = document.getElementById('email').value;
+            const whatsapp = document.getElementById('whatsapp').value;
+            const mensaje = document.getElementById('mensaje').value;
+            
+            // Crear el mensaje para WhatsApp
+            let mensajeWhatsApp = `📝 ¡Hola! Me interesa solicitar asesoría de seguridad.
+
+👤 *Datos de contacto:*
+• Nombre: ${nombre}
+• Email: ${email}`;
+            
+            if (whatsapp) {
+                mensajeWhatsApp += `
+• WhatsApp: ${whatsapp}`;
+            }
+            
+            mensajeWhatsApp += `
+
+💬 *Mensaje/Requerimiento:*
+${mensaje}
+
+¿Podrían contactarme para brindarme más información?`;
+            
+            // Abrir WhatsApp
+            abrirWhatsApp(mensajeWhatsApp);
+            
+            // Opcional: limpiar el formulario después del envío
+            this.reset();
+        });
+    }
+    
+    // 5. Newsletter - convertir a WhatsApp también
+    const newsletterForm = document.getElementById('newsletter-form');
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('input[type="email"]').value;
+            
+            const mensaje = `📧 ¡Hola! Me gustaría suscribirme para recibir novedades y ofertas.
+
+📬 Email para suscripción: ${email}
+
+Por favor, manténganme informado sobre:
+• Nuevos servicios de seguridad
+• Promociones especiales  
+• Tips de seguridad
+• Actualizaciones tecnológicas`;
+            
+            abrirWhatsApp(mensaje);
+            this.reset();
+        });
+    }
+    
+    // 6. Links del menú de servicios específicos
+    const linkGuardiaVirtual = document.querySelector('a[href="servicios.html#guardia-virtual"]');
+    if (linkGuardiaVirtual) {
+        linkGuardiaVirtual.addEventListener('click', function(e) {
+            e.preventDefault();
+            const mensaje = `🛡️ ¡Hola! Me interesa específicamente el servicio de Guardia Virtual.
+
+🔹 Quiero información sobre:
+• Monitoreo 24/7
+• Reconocimiento facial
+• Sistema de perifoneo
+• Botón de pánico
+• Costos y planes disponibles
+
+¿Podrían brindarme más detalles?`;
+            abrirWhatsApp(mensaje);
+        });
+    }
+    
+    // 7. Función genérica para otros botones CTA
+    function agregarEventoWhatsApp(selector, mensajePersonalizado) {
+        const elementos = document.querySelectorAll(selector);
+        elementos.forEach(elemento => {
+            elemento.addEventListener('click', function(e) {
+                e.preventDefault();
+                abrirWhatsApp(mensajePersonalizado);
+            });
+        });
+    }
+    
+    // Agregar más botones según necesites:
+    // agregarEventoWhatsApp('.mi-clase-boton', 'Mi mensaje personalizado');
+    
+});
+
+// Función adicional para crear botones dinámicos de WhatsApp
+function crearBotonWhatsApp(texto, mensaje, clases = 'cta-button') {
+    const boton = document.createElement('a');
+    boton.href = '#';
+    boton.className = clases;
+    boton.textContent = texto;
+    boton.addEventListener('click', function(e) {
+        e.preventDefault();
+        const mensajeEncoded = encodeURIComponent(mensaje);
+        const urlWhatsApp = `https://wa.me/593984107006?text=${mensajeEncoded}`;
+        window.open(urlWhatsApp, '_blank');
+    });
+    return boton;
+}
