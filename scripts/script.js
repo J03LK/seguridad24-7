@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     };
+    
     // Script para enviar datos del formulario a WhatsApp
 document.getElementById('contact-form').addEventListener('submit', function(e) {
     e.preventDefault();
